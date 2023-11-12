@@ -20,7 +20,7 @@ jobs:
       - name: Build Website
         run: |
           bun install
-          bun dev build
+          bun run build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
