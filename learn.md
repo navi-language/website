@@ -16,9 +16,9 @@ In addition to its capabilities as a statically typed, compiled language, Navi o
 
   The language enforces explicit type conversion to prevent unexpected behavior and errors, ensuring that data types are managed with intention and clarity.
 
-- **Modern Optional Type and Error Handling**
+- **Modern Optional-Type and Error-Handling Design**
 
-  With modern optional type and error handling, Navi allows developers to gracefully manage exceptional cases and abnormal data.
+  With a modern design of optional types and error handling, Navi allows developers to gracefully manage exceptional cases and abnormal data.
 
 - **No NULL Pointer Panic, Safe Runtime**
 
