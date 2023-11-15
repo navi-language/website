@@ -6,6 +6,7 @@ export default defineConfig({
   lang: 'en-US',
   title: 'Navi Language',
   description: 'Navi is a high-performance programming language.',
+  cleanUrls: true,
   markdown: {
     languages: [naviLanguage],
     toc: {
