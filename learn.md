@@ -157,7 +157,7 @@ In Navi we only have [int] (int64), and [float] (float64) types, there is no int
 | Name               | Description                           |
 | ------------------ | ------------------------------------- |
 | `true` and `false` | [bool] values                         |
-| `nil`              | Use to set a [optional] value to null |
+| `nil`              | Use to set an [optional] value to null |
 
 ### String Literals {#string}
 
@@ -520,9 +520,9 @@ Like other programming languages, Navi has a set of operators for performing ari
 | `a && 1`   | [bool]                               |
 | `a!`       | [optional]                           | Unwrap [optional] value or panic                                                 | `a!`         |
 | `a == b`   | [int], [float], [bool], [string] ... | `a` equal to `b`                                                                 | `1 == 2`     |
-| `a == nil` | [optional]                           | A [optional] value equal to nil                                                  | `a == nil`   |
+| `a == nil` | [optional]                           | An [optional] value equal to nil                                                  | `a == nil`   |
 | `a != b`   | [int], [float], [bool], [string] ... | `a` not equal to `b`                                                             | `1 != 2`     |
-| `a != nil` | [optional]                           | A [optional] value not equal to nil                                              | `a != nil`   |
+| `a != nil` | [optional]                           | An [optional] value not equal to nil                                              | `a != nil`   |
 
 ```nv
 test "test" {
@@ -1245,7 +1245,7 @@ Use `type?` to declare an optional type, e.g.: `string?`, `int?`, `float?`, `boo
 // a normal string
 let name: string = "Navi";
 
-// a optional string
+// an optional string
 let optional_name: string? = "Navi";
 let optional_name: string? = nil;
 ```
@@ -1384,7 +1384,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | Keyword     | Description                                                                                |
 | ----------- | ------------------------------------------------------------------------------------------ |
 | `let`       | Declare a variable.                                                                        |
-| `nil`       | A [optional] value of nil.                                                                 |
+| `nil`       | An [optional] value of nil.                                                                 |
 | `true`      | true                                                                                       |
 | `false`     | false                                                                                      |
 | `for`       | [for] loop                                                                                 |
