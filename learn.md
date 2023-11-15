@@ -1073,7 +1073,7 @@ fn main() {
 
 ### If let
 
-The `if let` statement is used to match a [optional] value.
+The `if let` statement is used to match an [optional] value.
 
 ```nv
 use std.io;
@@ -1260,7 +1260,7 @@ It is useful when you want to get a [value] from an [optional] value and you are
 ::: warning
 To keep your code safe, when you use `!`, you must be sure it is not `nil`.
 
-If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from a [optional] value.
+If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from an [optional] value.
 :::
 
 ```nv
@@ -1321,13 +1321,13 @@ fn main() {
 }
 ```
 
-When you imported, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url` to `url`, `std.net.http` to `http`.
+When you import, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url` to `url`, `std.net.http` to `http`.
 
 ### Import a Module from local
 
 In Navi a folder in the current directory is a module, and the module name is the folder name.
 
-For example we have a struct:
+For example, we have a struct:
 
 ```shell
 $ tree
@@ -1363,7 +1363,7 @@ fn main() {
 }
 ```
 
-Unlike Go, Navi is a single thread language, so the `spawn` is make code run concurrently, not parallelism.
+Unlike Go, Navi is a single-thread language, so the `spawn` is to make code run concurrently, not parallelism.
 
 ![Difference in execution](https://github.com/navi-language/navi/assets/5518/66bba4f1-6147-4c36-ab42-438408ee994d)
 
@@ -1390,9 +1390,9 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | `for`       | [for] loop                                                                                 |
 | `in`        | key use in [for] loop                                                                      |
 | `while`     | [while] loop                                                                               |
-| `loop`      | a infinite [loop]                                                                          |
+| `loop`      | an infinite [loop]                                                                          |
 | `continue`  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
-| `break`     | `break` used to exit a loop before iteration completes naturally.                          |
+| `break`     | `break` is used to exit a loop before iteration completes naturally.                          |
 | `if`        | [if] statement                                                                             |
 | `else`      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
 | `fn`        | Declare a function.                                                                        |
