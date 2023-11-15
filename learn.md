@@ -790,7 +790,7 @@ test "access variable after block scope" {
 Output:
 
 ```
-  ┌─ /Users/jason/Downloads/main.nv:6:12
+  ┌─ main.nv:6:12
   │
 6 │     assert n == 1;
   │            ^ variable `n` not exists
@@ -1235,6 +1235,194 @@ a: 1, b: 2, mode: +
 a: 1, b: 2, mode: +
 ```
 
+## Optional
+
+Navi provides a modern optional type, it is similar to Rust's `Option` type, to give us a safety way to handle `nil` value, we can avoid the `null pointer exception` in runtime.
+
+Use `type?` to declare a optional type, e.g.: `string?`, `int?`, `float?`, `bool?`, `User?` ...
+
+```nv
+// a normal string
+let name: string = "Navi";
+
+// a optional string
+let optional_name: string? = "Navi";
+let optional_name: string? = nil;
+```
+
+Now the `optional_name` is a [optional] type, it can be a [string] or `nil`.
+
+### Unwrap Optional
+
+The `!` operator is used to unwrap a [optional] value, if the value is `nil`, it will panic.
+It usefull when you want to get a [value] from a [optional] value and you are sure it is not `nil`.
+
+::: warning
+For keep your code safety, when you use `!`, you must be sure it is not `nil`.
+
+If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from a [optional] value.
+:::
+
+```nv
+use std.io;
+
+fn main() {
+    let name: string? = "Navi";
+    // This is ok.
+    io.println(name!);
+
+    let name: string? = nil;
+    // This will cause a panic.
+    io.println(name!);
+}
+```
+
+### Unwrap or Default
+
+The `||` operator is used to unwrap a [optional] value, if the value is `nil`, it will return the default value.
+
+Right side of `||` can be a [value] or a [expression] that return a [value], if left side is not nill, the right side will not be evaluated.
+
+```nv
+use std.io;
+
+test "unwrap or default" {
+    let name: string? = "Navi";
+    let result = name || "";
+    // result is a string type
+    assert_eq result, "Navi";
+
+    let name: string? = nil;
+    let result = name || "";
+    // result is a string type
+    assert_eq result, "";
+}
+```
+
+## Error
+
+TODO
+
+## Casting
+
+TODO
+
+## Use
+
+The `use` keyword is used to import a module from the standard library or a file.
+
+```nv
+use std.io;
+use std.url;
+
+fn main() {
+    let my_url = url.parse("https://navi-lang.org");
+    io.println(my_url.host);
+}
+```
+
+When you imported, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url` to `url`, `std.net.http` to `http`.
+
+### Import a Module from local
+
+In Navi a folder in the current directory is a module, and the module name is the folder name.
+
+For example we have a struct:
+
+```shell
+$ tree
+main.nv
+models
+|── profile
+|   |── a.nv
+|   └── b.nv
+└── user.nv
+utils
+|── string.nv
+└── url.nv
+```
+
+Now you can import them in `main.nv`:
+
+```nv
+use models;
+use models.profile;
+use utils;
+```
+
+## Spawn
+
+Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
+
+```nv
+fn main() {
+    spawn {
+        io.println("Hello");
+    }
+    io.println("World");
+}
+```
+
+Unlike Go, Navi is a single thread language, so the `spawn` is make code run concurrently, not parallelism.
+
+![Difference in execution](https://github.com/navi-language/navi/assets/5518/66bba4f1-6147-4c36-ab42-438408ee994d)
+
+> Graph from [Concurrency is NOT Parallelism]
+
+See also:
+
+- [Concurrency is NOT Parallelism]
+
+## Channel
+
+TODO
+
+## Keywords
+
+The following are reserved keywords in Navi, they can't be used as [identifier].
+
+| Keyword     | Description                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| `let`       | Declare a variable.                                                                        |
+| `nil`       | A [optional] value of nil.                                                                 |
+| `true`      | true                                                                                       |
+| `false`     | false                                                                                      |
+| `for`       | [for] loop                                                                                 |
+| `in`        | key use in [for] loop                                                                      |
+| `while`     | [while] loop                                                                               |
+| `loop`      | a infinite [loop]                                                                          |
+| `continue`  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
+| `break`     | `break` used to exit a loop before iteration completes naturally.                          |
+| `if`        | [if] statement                                                                             |
+| `else`      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
+| `fn`        | Declare a function.                                                                        |
+| `return`    | Return a value from a function.                                                            |
+| `use`       | [use] a module from the standard library or a file.                                        |
+| `as`        | Convert a value to a type.                                                                 |
+| `switch`    | [switch] statement                                                                         |
+| `case`      | `case` for `switch` statement.                                                             |
+| `default`   | `default` case for `switch` statement.                                                     |
+| `struct`    | Define a struct.                                                                           |
+| `spawn`     | [Spawn] a coroutine.                                                                       |
+| `select`    | Use to select a [channel].                                                                 |
+| `assert`    | assert                                                                                     |
+| `assert_eq` | assert equal                                                                               |
+| `assert_ne` | assert not equal                                                                           |
+| `impl`      | Declare a struct implementation.                                                           |
+| `self`      | A reference to the current struct instance.                                                |
+| `test`      | Test function                                                                              |
+| `bench`     | Benchmark function                                                                         |
+| `tests`     | Test group                                                                                 |
+| `benches`   | Benchmark group                                                                            |
+| `interface` | Define a [interface]                                                                       |
+| `is`        |                                                                                            |
+| ---         | Reserved for future use                                                                    |
+| `pub`       | TODO                                                                                       |
+| `error`     | TODO                                                                                       |
+| `private`   | TODO                                                                                       |
+| `mod`       | TODO                                                                                       |
+
+[Use]: #use
 [Intergers]: #int
 [int]: #int
 [string]: #string
@@ -1252,3 +1440,13 @@ a: 1, b: 2, mode: +
 [normal arguments]: #normal-arguments
 [Keyword Arguments]: #keyword-arguments
 [Kw Argument]: #keyword-arguments
+[while]: #while
+[loop]: #loop
+[for]: #for
+[switch]: #switch
+[if]: #if
+[channel]: #channel
+[spawn]: #spawn
+[unwrap || default]: #unwrap-or-default
+[Unwrap or Default]: #unwrap-or-default
+[Concurrency is NOT Parallelism]: https://ics.uci.edu/~rickl/courses/ics-h197/2014-fq-h197/talk-Wu-Concurrency-is-NOT-parallelism.pdf
