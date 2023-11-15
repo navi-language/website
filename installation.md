@@ -12,30 +12,15 @@ curl -sSL https://navi-lang.org/install | sh
 
 You can install a specific version by passing the version number to the script.
 
-```bash
-curl -sSL https://navi-lang.org/install | sh -s -- v0.9.0-nightly
-```
+::: code-group
 
-## Install a nightly version
-
-This script will install the latest nightly version.
-
-```bash
+```bash [Latest Nightly]
+# This script will install the latest nightly version.
 curl -sSL https://navi-lang.org/install | sh -s -- nightly
 ```
 
-## Use for GitHub Actions
-
-We have a GitHub Action for Navi, you can use it like this:
-
-```yaml
-- uses: navi-language/setup-navi@v1
+```bash [Special Version]
+curl -sSL https://navi-lang.org/install | sh -s -- v0.9.0-nightly
 ```
 
-If you wants special a Navi version:
-
-```
-- uses: navi-language/setup-navi@v1
-  with:
-    navi-version: 0.9.0-nightly
-```
+:::

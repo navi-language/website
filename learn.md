@@ -139,26 +139,27 @@ impl User {
 }
 ```
 
-## Values
+## Values {#value}
 
 ### Primitive Types
 
-| Type   | Rust Equivalent | Description           | Example               |
-| ------ | --------------- | --------------------- | --------------------- |
-| int    | i64             | A signed integer type | `1`, `-29`, `0`       |
-| string | String          | A UTF-8 string type.  | "Hello World"         |
-| bool   | bool            | A boolean type.       | `true`, `false`       |
-| float  | f64             | A floating point type | `1.0`, `-29.0`, `0.0` |
+| Type     | Rust Equivalent | Description           | Example               |
+| -------- | --------------- | --------------------- | --------------------- |
+| [int]    | i64             | A signed integer type | `1`, `-29`, `0`       |
+| [string] | String          | A UTF-8 string type.  | "Hello World"         |
+| [bool]   | bool            | A boolean type.       | `true`, `false`       |
+| [float]  | f64             | A floating point type | `1.0`, `-29.0`, `0.0` |
 
-In Navi we only have int (int64), and float (float64) types, there is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
+In Navi we only have [int] (int64), and [float] (float64) types, there is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
 
 ### Primitive Values
 
-| Name | Description |
-| `true` and `false` | `bool` values |
-| `nil` | Use to set a optional value to null |
+| Name               | Description                           |
+| ------------------ | ------------------------------------- |
+| `true` and `false` | [bool] values                         |
+| `nil`              | Use to set a [optional] value to null |
 
-### String Literals
+### String Literals {#string}
 
 String is a UTF-8 string type, and it is immutable in Navi, all string literals are immutable.
 
@@ -218,7 +219,7 @@ Unknow escape sequence: a
 
 #### String Interpolation
 
-String interpolation is a way to construct a new String value from a mix of constants, variables, literals, and expressions by including their values inside a string literal.
+String interpolation is a way to construct a new String value from a mix of constants, variables, literals, and expressions by including their values inside a [string] literal.
 
 Navi's string interpolation is similar to JavaScript's template literals.
 
@@ -406,9 +407,9 @@ test main.nv .. fail in 708ms
 All 2 tests 0 passed, 2 failed finished in 0.79s.
 ```
 
-## Variables
+## Variable
 
-### Identifiers
+### Identifier
 
 An identifier is a name used to identify a variable, function, struct, or any other user-defined item. An identifier starts with a letter or underscore `_`, followed by any number of letters, underscores, or digits.
 
@@ -473,7 +474,7 @@ Hello World!
 Hello Name in global scope!
 ```
 
-## Integers
+## Integer {#int}
 
 In Navi, the `int` type is a signed integer type, and it is 64-bit on all platforms. This means it can hold values from `-9223372036854775808` to `9223372036854775807`.
 
@@ -484,7 +485,7 @@ let n = 246;
 let n1 = -100;
 ```
 
-## Floats
+## Float {#float}
 
 Navi has a `float` type (53 bits of precision), and it is 64-bit on all platforms.
 
@@ -496,30 +497,32 @@ let v3 = 10.23e+10;
 let v4 = 2.0e+2;
 ```
 
-## Operators
+## Operator
 
 Like other programming languages, Navi has a set of operators for performing arithmetic and logical operations.
 
-| Operator   | Relevant Types                                    | Description                                                                      | Example      |
-| ---------- | ------------------------------------------------- | -------------------------------------------------------------------------------- | ------------ |
-| `+`        | [int](#integers), [float](#floats)                | Addition                                                                         | `1 + 2`      |
-| `+=`       | [int](#integers), [float](#floats)                | Addition                                                                         | `a += 1`     |
-| `-`        | [int](#integers), [float](#floats)                | Subtraction                                                                      | `1 - 2`      |
-| `-=`       | [int](#integers), [float](#floats)                | Subtraction                                                                      | `a -= 1`     |
-| `*`        | [int](#integers), [float](#floats)                | Multiplication                                                                   | `1 * 2`      |
-| `*=`       | [int](#integers), [float](#floats)                | Multiplication                                                                   | `a *= 1`     |
-| `/`        | [int](#integers), [float](#floats)                | Division.<br/>Can cause Division by Zero for integers.                           | `1 / 2`      |
-| `/=`       | [int](#integers), [float](#floats)                | Division                                                                         | `a /= 1`     |
-| `%`        | [int](#integers), [float](#floats)                | Modulo                                                                           | `1 % 2`      |
-| `%=`       | [int](#integers), [float](#floats)                | Modulo                                                                           | `a %= 1`     |
-| `-a`       | [int](#integers), [float](#floats)                | Negation                                                                         | `-1`         |
-| `a?.`      | [optional](#optional)                             | Optional                                                                         | `user?.name` |
-| `a \|\| 1` | [optional](#optional)                             | Unwrap optional value or use default value.<br/>                                 | `a \|\| 0`   |
-| `a \|\| b` | [bool](#bool)                                     | If `a` is `true`, returns `true` without evaluating `b`. Otherwise, returns `b`. |              |
-| `a && 1`   | [bool](#bool)                                     |
-| `a!`       | [optional](#optional)                             | Unwrap optional value or panic                                                   | `a!`         |
-| `a == b`   | [int](#integers), [float](#floats), [bool](#bool) | Equal to                                                                         | `1 == 2`     |
-| `a == nil` | [optional](#optional)                             | Equal to                                                                         | `a == nil`   |
+| Operator   | Relevant Types                       | Description                                                                      | Example      |
+| ---------- | ------------------------------------ | -------------------------------------------------------------------------------- | ------------ |
+| `+`        | [int], [float]                       | Addition                                                                         | `1 + 2`      |
+| `+=`       | [int], [float]                       | Addition                                                                         | `a += 1`     |
+| `-`        | [int], [float]                       | Subtraction                                                                      | `1 - 2`      |
+| `-=`       | [int], [float]                       | Subtraction                                                                      | `a -= 1`     |
+| `*`        | [int], [float]                       | Multiplication                                                                   | `1 * 2`      |
+| `*=`       | [int], [float]                       | Multiplication                                                                   | `a *= 1`     |
+| `/`        | [int], [float]                       | Division.<br/>Can cause Division by Zero for integers.                           | `1 / 2`      |
+| `/=`       | [int], [float]                       | Division                                                                         | `a /= 1`     |
+| `%`        | [int], [float]                       | Modulo                                                                           | `1 % 2`      |
+| `%=`       | [int], [float]                       | Modulo                                                                           | `a %= 1`     |
+| `-a`       | [int], [float]                       | Negation                                                                         | `-1`         |
+| `a?.`      | [optional]                           | Optional                                                                         | `user?.name` |
+| `a \|\| 1` | [optional]                           | Unwrap [optional] value or use default value.<br/>                               | `a \|\| 0`   |
+| `a \|\| b` | [bool]                               | If `a` is `true`, returns `true` without evaluating `b`. Otherwise, returns `b`. |              |
+| `a && 1`   | [bool]                               |
+| `a!`       | [optional]                           | Unwrap [optional] value or panic                                                 | `a!`         |
+| `a == b`   | [int], [float], [bool], [string] ... | `a` equal to `b`                                                                 | `1 == 2`     |
+| `a == nil` | [optional]                           | A [optional] value equal to nil                                                  | `a == nil`   |
+| `a != b`   | [int], [float], [bool], [string] ... | `a` not equal to `b`                                                             | `1 != 2`     |
+| `a != nil` | [optional]                           | A [optional] value not equal to nil                                              | `a != nil`   |
 
 ```nv
 test "test" {
@@ -570,3 +573,682 @@ Testing .
 test main.nv .. ok in 1ms
 All 2 tests 2 passed finished in 0.02s.
 ```
+
+## Array
+
+Array is a collection of items, in Navi array is a mutable collection.
+
+Use `[type] {}` to declare an array, every array must have a type, you can't create a array without type.
+
+```nv
+struct Item {
+    name: string
+}
+
+test "array" {
+    let a: [int] = [int] { 1, 2, 3 };
+    let b = [string] { "Rust", "Navi" };
+
+    assert a.len() == 3;
+    assert b.len() == 2;
+
+    // get array item
+    assert a[1] == 2;
+    assert b[0] == "Rust";
+
+    // set array item
+    a[1] = 3;
+    assert a[1] == 3;
+
+    // Init a struct array
+    let items = [Item] {
+        Item { name: "foo" },
+        Item { name: "bar" },
+        Item { name: "baz" }
+    };
+    assert_eq items[2].name, "baz";
+
+
+}
+```
+
+### Get & Set Item
+
+Use `[idx]`, `[idx]=` to get and set a item from array, the index must be a [int] type.
+
+```nv
+let a = [string] { "Rust", "Navi" };
+
+a[0]; // "Rust"
+a[1]; // "Navi"
+a[2]; // panic: index out of bounds
+
+a[0] = "Rust 1";
+a[0]; // "Rust 1"
+```
+
+### Mutate Array
+
+There have `push`, `pop`, `shift`, `unshift` ... methods in array, you can use them to mutate a array.
+
+```nv
+test "push | pop" {
+    let items = [string] {};
+    items.push("foo");
+    items.push("bar");
+
+    assert_eq items.len(), 2;
+    assert_eq items[0], "foo";
+    assert_eq items[1], "bar";
+
+    assert_eq items.pop(), "bar";
+    assert_eq items.pop(), "foo";
+    assert_eq items.pop(), nil;
+}
+
+test "shift | unshift" {
+    let items = [string] {};
+    items.unshift("foo");
+    items.unshift("bar");
+
+    assert_eq items.len(), 2;
+    assert_eq items[0], "bar";
+    assert_eq items[1], "foo";
+
+    assert_eq items.shift(), "bar";
+    assert_eq items.len(), 1;
+    assert_eq items.shift(), "foo";
+    assert_eq items.len(), 0;
+    assert_eq items.shift(), nil;
+
+    let items = [string] { "foo", "bar" };
+    assert_eq items.shift(), "foo";
+    assert_eq items.len(), 1;
+    assert_eq items.shift(), "bar";
+    assert_eq items.len(), 0;
+    assert_eq items.shift(), nil;
+}
+```
+
+### Nested Array
+
+The array can be nested.
+
+```nv
+let items = [[string]] {
+    [string] { "foo", "bar" },
+    [string] { "baz", "qux" }
+};
+let numbers = [[int]] {
+    [int] { 1, 2 },
+    [int] { 3, 4 }
+};
+```
+
+## Struct
+
+The Navi struct is a collection of fields, and it is a [value] type, it's like struct in Go and Rust.
+
+### Declare a Struct
+
+Use `struct` keyword to declare a struct, and use `.` to access a field.
+
+- The struct name must be a [identifier] with `CamelCase` style, e.g.: `User`, `UserGroup`, `UserGroupItem`.
+- And the field name must be a [identifier], with `snake_case` style, e.g.: `user_name`, `user_group`, `user_group_item`.
+- The filed type can be a type or a [optional] type.
+
+```nv
+struct User {
+    name: string,
+    id: int,
+    profile: Profile?,
+}
+
+struct Profile {
+    bio: string?,
+    city: string?,
+}
+```
+
+To create a struct instance, use `StructName { field: value }` syntax.
+
+::: info
+In current version, you must assign `nil` to a [optional] field if you don't want to set a [value].
+
+We will support [optional] field default value to `nil` in the future.
+:::
+
+```nv
+let user = User {
+    name: "Jason Lee",
+    id: 1,
+    profile: Profile {
+        bio: nil,
+        city: "Chengdu",
+    },
+};
+
+test "user" {
+    assert_eq user.name, "Jason Lee";
+    assert_eq user.profile?.bio, nil;
+    assert_eq user.profile?.city, "Chengdu";
+}
+```
+
+### Implement a Struct
+
+Use `impl` to declare a struct method. The `self` is a keyword, it is a reference to the current struct instance.
+Unlike Rust, you don't need declare `self` as the first parameter.
+
+```nv
+impl User {
+    fn say(): string {
+        return `Hello ${self.name}!`;
+    }
+}
+```
+
+::: warning
+In Navi, we can't define a struct function, e.g. `User.new`, `User.create`, `User.delete`, and etc.
+
+There just have struct instance method, `user.say()`, `user.save()`, `user.delete()`, and etc.
+:::
+
+For example:
+
+You can define a `new_user` function in module level, and use it to create a new struct instance.
+
+```nv
+fn new_user(name: string, id: int): User {
+    return User {
+        name: name,
+        id: id,
+        profile: nil,
+    };
+}
+
+fn main() {
+    let user = new_user("Sunli", 1);
+    io.println(user.say());
+}
+```
+
+## Block
+
+Blocks are a collection of statements enclosed by `{}` for limiting the scope of variables and for grouping statements together.
+
+```nv
+test "access variable after block scope" {
+    {
+        let n = 1;
+    }
+    // This will cause a compile error.
+    assert n == 1;
+}
+```
+
+Output:
+
+```
+  ┌─ /Users/jason/Downloads/main.nv:6:12
+  │
+6 │     assert n == 1;
+  │            ^ variable `n` not exists
+```
+
+See also:
+
+- [While]
+- [Loop]
+
+### Shadowing
+
+[Identifiers] are never allowed to "hide" other identifiers by using the same name:
+
+```nv
+test "shadowing blocks 1" {
+    let a = 1;
+    {
+        let a = 2;
+        assert_eq a, 2;
+    }
+    assert_eq a, 1;
+}
+
+test "shadowing blocks 2" {
+    {
+        let a = 1;
+        assert_eq a, 1;
+    }
+    {
+        let a = 2;
+        assert_eq a, 2;
+    }
+}
+```
+
+## Switch
+
+The `switch` statement is used to execute one of many blocks of code.
+
+```nv
+use std.io;
+
+fn get_message(n: int): string {
+    let message = "";
+    switch (n) {
+    case 1:
+        message = "One";
+    case 2:
+        message = "Two";
+    default:
+        message = "Other";
+    }
+
+    return message;
+}
+
+fn main() {
+    iop.println(get_message(1));
+    iop.println(get_message(2));
+    iop.println(get_message(3));
+}
+```
+
+Output:
+
+```shell
+$ navi run
+One
+Two
+Other
+```
+
+Use `switch` keyword to declare a switch statement, the condition must have `()` and return a value. And use `case` and `default` to declare a case.
+The `default` case is optional, means if the condition not match any case, it will execute the `default` case.
+
+You can also use `{}` to declare a [block] in case for more complex logic.
+
+```nv
+fn get_message(n: int): string {
+    let message = "";
+    switch (n) {
+        case 1: {
+            message = "One";
+        }
+        case 2: {
+            message = "Two";
+        }
+        default: {
+            message = "Other";
+        }
+    }
+
+    return message;
+}
+```
+
+## While
+
+A while loop is used to repeatedly execute an expression until some condition is no longer true.
+
+Use `while` keyword to declare a while loop, the condition is a [expression] in `()` that return a [bool] value.
+
+```nv
+use std.io;
+
+fn main() {
+    let n = 0;
+    while (n < 5) {
+        io.println(`${n}`);
+        n += 1;
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+0
+1
+2
+3
+4
+```
+
+Use `break` keyword to exit a while loop.
+
+```nv
+use std.io;
+
+fn main() {
+    let n = 0;
+    while (true) {
+        io.println(`${n}`);
+        n += 1;
+        if (n == 2) {
+            break;
+        }
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+0
+1
+```
+
+Use `continue` to jump back to the beginning of the loop.
+
+```nv
+use std.io;
+
+fn main() {
+    let n = 0;
+    while (n < 5) {
+        n += 1;
+        if (n % 2 == 0) {
+            continue;
+        }
+        io.println(`${n}`);
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+1
+3
+5
+```
+
+## For
+
+For loops are used to iterate over a range, an array, or a map.
+
+Like `while` loop, you can use `break` and `continue` to control the loop.
+
+### Iter a Range
+
+The `for (let ...)` statement is used to iterate over a [range].
+
+```nv
+use std.io;
+
+fn main() {
+    for (let n in 0..5) {
+        if (n % 2 == 0) {
+            continue;
+        }
+        io.println(`n: ${n}`);
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+n: 1
+n: 3
+```
+
+### Iter an Array
+
+The `for (let ...)` statement is used to iterate over an [array].
+
+```nv
+use std.io;
+
+fn main() {
+    let items = [string] { "foo", "bar", "baz" };
+    for (let item in items) {
+        io.println(item);
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+foo
+bar
+baz
+```
+
+### Iter Key, Value Pairs from a Map
+
+The `for (let ...)` statement is used to iterate over a [map].
+
+```nv
+use std.io;
+
+fn main() {
+    let items = <string, string> {
+        "title": "Navi",
+        "url": "https://navi-lang.org"
+    };
+
+    for (let key, value in items) {
+        io.println(`${key}: ${value}`);
+    }
+}
+```
+
+Output:
+
+```shell
+$ navi run
+title: Navi
+url: https://navi-lang.org
+```
+
+## If
+
+Like must programming languages, Navi has `if` statement for conditional execution.
+
+```nv
+use std.io;
+
+fn main() {
+    let n = 1;
+    if (n == 1) {
+        io.println("One");
+    } else if (n == 2) {
+        io.println("Two");
+    } else if (n == 3) {
+        io.println("Three");
+    } else {
+        io.println("Other");
+    }
+}
+```
+
+### If let
+
+The `if let` statement is used to match a [optional] value.
+
+```nv
+use std.io;
+
+fn get_a(a: string?) {
+    if (let a = a) {
+        io.println(a);
+    } else {
+        io.println("a is nil");
+    }
+}
+
+fn main() {
+    get_a("foo");
+    get_a(nil);
+}
+```
+
+Output:
+
+```shell
+$ navi run
+foo
+a is nil
+```
+
+## Function
+
+Use `fn` keyword to declare a function, the function name must be a [identifier], and the function body must be a [block].
+
+::: info
+Navi recommend use `snake_case` for function name, e.g.: `send_message`, `get_user`, `get_user_by_id`.
+
+And the argument name also use `snake_case`, e.g.: `title`, `user_id`.
+:::
+
+You can define a function in module level, or in a struct `impl` block.
+
+- The function name must be a [identifier].
+- The arguments can be [normal arguments] or [keyword arguments].
+
+```nv
+use std.io;
+
+fn add(a: int, b: int, mode: string = "+"): string {
+    let result = a + b;
+    return `${a} + ${b} = ${result}`;
+}
+
+struct User {
+    name: string,
+}
+
+impl User {
+    fn say(): string {
+        return `Hello ${self.name}!`;
+    }
+}
+
+fn main() {
+    io.println(add(1, 2));
+    let user = User { name: "Navi" };
+    io.println(user.say());
+}
+```
+
+Output:
+
+```shell
+$ navi run
+a + b = 3
+Hello Navi!
+```
+
+### Normal Arguments
+
+Normal arguments are arguments that are passed by position.
+
+Use `name: type` to declare a normal argument, you can put a normal argument after the keyword argument.
+
+```nv
+fn add(a: int, b: int, mode: string = "+"): string {
+    let result = a + b;
+    return `${a} + ${b} = ${result}`;
+}
+```
+
+You use define a [optional] type for a argument by use `?` after the type, e.g.: `b: int?`.
+
+```nv
+use std.io;
+
+fn add(a: int, b: int?): string {
+    // unwrap b or default to 0
+    let b = b || 0;
+
+    let result = a + b;
+    return `${a} + ${b} = ${result}`;
+}
+
+fn main() {
+    io.println(add(1, 2));
+    io.println(add(1, nil));
+}
+```
+
+Output:
+
+```shell
+$ navi run
+1 + 2 = 3
+1 + 0 = 1
+```
+
+### Keyword Arguments
+
+Keyword arguments are arguments that are passed by name. They are useful when a function has many arguments or default arguments.
+
+Use `name: value = default` to declare a keyword argument, the keyword argument must be after normal arguments.
+
+```nv
+use std.io;
+
+fn add(a: int, b: int, mode: string = "+", debug: bool = false): string {
+    if (debug) {
+        return `a: ${a}, b: ${b}, mode: ${mode}`;
+    }
+
+    let result: int = 0;
+
+    if (mode == "-") {
+        result = a + b;
+    } else {
+        result = a - b;
+    }
+
+    return `${a} ${mode} ${b} = ${result}`;
+}
+
+fn main() {
+    io.println(add(1, 2));
+    io.println(add(1, 2, mode: "+"));
+    io.println(add(1, 2, mode: "-"));
+    io.println(add(1, 2, mode: "-", debug: true));
+    io.println(add(1, 2, debug: true, mode: "+"));
+    io.println(add(1, 2, debug: true));
+}
+```
+
+Output:
+
+```shell
+$ navi run
+1 + 2 = -1
+1 + 2 = -1
+1 - 2 = 3
+a: 1, b: 2, mode: -
+a: 1, b: 2, mode: +
+a: 1, b: 2, mode: +
+```
+
+[Intergers]: #int
+[int]: #int
+[string]: #string
+[Floats]: #float
+[float]: #float
+[optional]: #optional
+[bool]: #bool
+[String interpolation]: #string-interpolation
+[identifier]: #identifier
+[identifiers]: #identifier
+[values]: #value
+[value]: #value
+[block]: #block
+[expression]: #expression
+[normal arguments]: #normal-arguments
+[Keyword Arguments]: #keyword-arguments
+[Kw Argument]: #keyword-arguments

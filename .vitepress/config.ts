@@ -10,7 +10,7 @@ export default defineConfig({
   markdown: {
     languages: [naviLanguage],
     toc: {
-      level: [2, 3, 4],
+      level: [1, 2, 3],
     },
   },
   themeConfig: {
