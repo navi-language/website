@@ -4,7 +4,7 @@
 
 Navi (/ˈnævi/) is a high-performance programming and stream computing language developed in Rust, originally designed for complex and high-performance computing tasks. It is also suited as a glue language embedded within heterogeneous services in financial systems.
 
-In addition to its capabilities as a statically-typed, compiled language, Navi offers the convenience of script-like execution. It can compile source code into Bytecode (without JIT) or Machine Code (with JIT), providing a flexible development workflow. Theoretically, Navi delivering competitive performance on par with Go, Rust, and C.
+In addition to its capabilities as a statically typed, compiled language, Navi offers the convenience of script-like execution. It can compile source code into Bytecode (without JIT) or Machine Code (with JIT), providing a flexible development workflow. Theoretically, Navi delivers competitive performance on par with Go, Rust, and C.
 
 ### Language Design Philosophy
 
@@ -24,9 +24,9 @@ In addition to its capabilities as a statically-typed, compiled language, Navi o
 
   No NULL pointer exceptions. Once your code compiles, you can expect consistent and reliable execution.
 
-- **Scripted or Compilied Execution**
+- **Scripted or Compiled Execution**
 
-  Supports script-like execution, but offering same performance comparable to compiled languages like Go.
+  Supports script-like execution, but offers the same performance comparable to compiled languages like Go.
 
 ### Functionalities
 
@@ -36,7 +36,7 @@ In addition to its capabilities as a statically-typed, compiled language, Navi o
 
 - **High Performance**
 
-  As a statically-typed, compiled language, which is comparable to Go, Rust, and C.
+  As a statically typed, compiled language, which is comparable to Go, Rust, and C.
 
 - **Cross-platform**
 
@@ -49,7 +49,7 @@ In addition to its capabilities as a statically-typed, compiled language, Navi o
 - **Native Financial Support (WIP)**
 
   Navi is equipped with native support for incremental financial data computation, making it ideal for real-time calculation and analysis of stock market data.
-  It boasts a rich set of scientific computing capabilities, includes built-in functions for technical stock market indicators, and standard library support for
+  It boasts a rich set of scientific computing capabilities, including built-in functions for technical stock market indicators, and standard library support for
   LongPort OpenAPI, significantly reducing development costs for programmatic trading.
 
 ## Standard Library
@@ -58,7 +58,7 @@ The [Navi Standard Library] has its own documentation.
 
 ## Hello World
 
-Write a `main.nv`, `.nv` is the file extension of Navi language.
+Write a `main.nv`, `.nv` is the file extension of the Navi language.
 
 ```nv
 use std.io;
@@ -77,7 +77,7 @@ $ navi run
 Hello World!
 ```
 
-> NOTE: If the file name is `main.nv` and it have `main` function. The `navi run` will use it as program entry.
+> NOTE: If the file name is `main.nv` and it have `main` function. The `navi run` will use it as the program entry.
 > You also can execute with `navi run main.nv`.
 
 This code sample demonstrates the basic syntax of Navi.
@@ -88,10 +88,10 @@ This code sample demonstrates the basic syntax of Navi.
 - The `main` function is the entry point of the program.
 - The `let` keyword is used to declare a variable.
 - The `name` variable is a string type, or you can use `let name: string = "World";` to declare it.
-- The `message` variable is defaine by a string interpolation (Like JavaScript) by use "``", and the `${name}` is a variable reference.
+- The `message` variable is defined by a string interpolation (Like JavaScript) by using "``", and the `${name}` is a variable reference.
 - The `println` function is used to print a string to the console.
 - Use `;` to end a statement.
-- And finally, Code style is use 4 spaces for indentation.
+- Finally, the Code style uses 4 spaces for indentation.
 
 ## Comments
 
@@ -99,7 +99,7 @@ Navi supports 2 types of comments (Like Rust).
 
 ### Normal Comments
 
-The `//` started is normal comment, and it will be ignored by the compiler.
+The `//` started is a normal comment, and it will be ignored by the compiler.
 
 For example:
 
@@ -107,12 +107,12 @@ For example:
 // This is a normal comment.
 fn say(name: string): string {
     // This is a normal comment.
-    // This is second line of normal comment.
+    // This is the second line of normal comment.
     return `Hello ${name}!`;
 }
 ```
 
-There no multi-line comment in Navi. If you wants write a multi-line comment, just use `//` for each line.
+There is no multi-line comment in Navi. If you want write a multi-line comment, just use `//` for each line.
 
 ### Doc Comments
 
@@ -128,7 +128,7 @@ struct User {
 }
 
 impl User {
-  /// This is doc comment for a function.
+  /// This is a doc comment for a function.
   ///
   /// ## Args
   ///
@@ -203,7 +203,7 @@ use std.io;
 fn main() {
     io.println("\"Hello, \nWorld!\"");
     io.println("Hello, \\nWorld!");
-    io.println("Unknow escape sequence: \a");
+    io.println("Unknown escape sequence: \a");
 }
 ```
 
@@ -214,7 +214,7 @@ $ navi run
 "Hello,
 World!"
 Hello, \nWorld!
-Unknow escape sequence: a
+Unknown escape sequence: a
 ```
 
 #### String Interpolation
@@ -234,9 +234,9 @@ Hello, ${name}!
 
 ### Assignment
 
-Use `let` keyword to declare a variable to an identifier, the variable is mutable.
+Use the `let` keyword to declare a variable to an identifier, the variable is mutable.
 
-> TODO: We will have `const` keyword for inmutable in the future.
+> TODO: We will have a `const` keyword for immutable in the future.
 
 ```nv
 # main.nv
@@ -294,9 +294,9 @@ Output:
 
 ## Testing
 
-You can use `test` keyword to declare a test function in any Navi file, it will be run when you execute `navi test`.
+You can use the `test` keyword to declare a test function in any Navi file, it will be run when you execute `navi test`.
 
-There have built-in `assert`, `assert_eq`, and `assert_ne` keyword for assertion.
+There are built-in `assert`, `assert_eq`, and `assert_ne` keyword for assertion.
 
 ```nv
 use std.io;
@@ -323,11 +323,11 @@ All 1 tests 1 passed finished in 0.03s
 
 Like `navi run`, you can use `navi test main.nv` to run a specific file, if you don't pass a file name, it will run all files in the current directory (Like `navi test .`).
 
-The code in `test` block will be ignored by the compiler when you execute `navi run`.
+The code in the `test` block will be ignored by the compiler when you execute `navi run`.
 
 ### Test Declarations
 
-You can use `test` keyword to declare a test function, followed by a string literal as the test name, and then a block of code.
+You can use the `test` keyword to declare a test function, followed by a string literal as the test name, and then a block of code.
 
 The `test` block can at anywhere in a Navi file, but it is recommended to put it at the end of the file.
 
@@ -368,7 +368,7 @@ All 2 tests 2 passed finished in 0.02s.
 
 ### Test Failures
 
-Test runner will print the error message when a test failed, and with a `exit 1` code to let CI know the test failed.
+The test runner will print the error message when a test fails, and with an `exit 1` code to let CI know the test failed.
 
 ```nv
 test "expect to fail" {
@@ -578,7 +578,7 @@ All 2 tests 2 passed finished in 0.02s.
 
 Array is a collection of items, in Navi array is a mutable collection.
 
-Use `[type] {}` to declare an array, every array must have a type, you can't create a array without type.
+Use `[type] {}` to declare an array, every array must have a type, you can't create an array without a type.
 
 ```nv
 struct Item {
@@ -614,7 +614,7 @@ test "array" {
 
 ### Get & Set Item
 
-Use `[idx]`, `[idx]=` to get and set a item from array, the index must be a [int] type.
+Use `[idx]`, `[idx]=` to get and set an item from the array, the index must be an [int] type.
 
 ```nv
 let a = [string] { "Rust", "Navi" };
@@ -629,7 +629,7 @@ a[0]; // "Rust 1"
 
 ### Mutate Array
 
-There have `push`, `pop`, `shift`, `unshift` ... methods in array, you can use them to mutate a array.
+There are `push`, `pop`, `shift`, `unshift` ... methods in Array, you can use them to mutate an array.
 
 ```nv
 test "push | pop" {
@@ -687,15 +687,15 @@ let numbers = [[int]] {
 
 ## Struct
 
-The Navi struct is a collection of fields, and it is a [value] type, it's like struct in Go and Rust.
+The Navi struct is a collection of fields, and it is a [value] type, it's like a struct in Go and Rust.
 
 ### Declare a Struct
 
-Use `struct` keyword to declare a struct, and use `.` to access a field.
+Use the `struct` keyword to declare a struct, and use `.` to access a field.
 
-- The struct name must be a [identifier] with `CamelCase` style, e.g.: `User`, `UserGroup`, `UserGroupItem`.
-- And the field name must be a [identifier], with `snake_case` style, e.g.: `user_name`, `user_group`, `user_group_item`.
-- The filed type can be a type or a [optional] type.
+- The struct name must be an [identifier] with `CamelCase` style, e.g.: `User`, `UserGroup`, `UserGroupItem`.
+- And the field name must be an [identifier], with `snake_case` style, e.g.: `user_name`, `user_group`, `user_group_item`.
+- The filed type can be a type or an [optional] type.
 
 ```nv
 struct User {
@@ -713,7 +713,7 @@ struct Profile {
 To create a struct instance, use `StructName { field: value }` syntax.
 
 ::: info
-In current version, you must assign `nil` to a [optional] field if you don't want to set a [value].
+In the current version, you must assign `nil` to an [optional] field if you don't want to set a [value].
 
 We will support [optional] field default value to `nil` in the future.
 :::
@@ -738,7 +738,7 @@ test "user" {
 ### Implement a Struct
 
 Use `impl` to declare a struct method. The `self` is a keyword, it is a reference to the current struct instance.
-Unlike Rust, you don't need declare `self` as the first parameter.
+Unlike Rust, you don't need to declare `self` as the first parameter.
 
 ```nv
 impl User {
@@ -756,7 +756,7 @@ There just have struct instance method, `user.say()`, `user.save()`, `user.delet
 
 For example:
 
-You can define a `new_user` function in module level, and use it to create a new struct instance.
+You can define a `new_user` function in the module level, and use it to create a new struct instance.
 
 ```nv
 fn new_user(name: string, id: int): User {
@@ -775,7 +775,7 @@ fn main() {
 
 ## Block
 
-Blocks are a collection of statements enclosed by `{}` for limiting the scope of variables and for grouping statements together.
+Blocks are a collection of statements enclosed by `{}` for limiting the scope of variables and for grouping statements.
 
 ```nv
 test "access variable after block scope" {
@@ -864,10 +864,10 @@ Two
 Other
 ```
 
-Use `switch` keyword to declare a switch statement, the condition must have `()` and return a value. And use `case` and `default` to declare a case.
-The `default` case is optional, means if the condition not match any case, it will execute the `default` case.
+Use the `switch` keyword to declare a switch statement, the condition must have `()` and return a value. And use `case` and `default` to declare a case.
+The `default` case is optional, which means if the condition does not match any case, it will execute the `default` case.
 
-You can also use `{}` to declare a [block] in case for more complex logic.
+You can also use `{}` to declare a [block] in case of more complex logic.
 
 ```nv
 fn get_message(n: int): string {
@@ -892,7 +892,7 @@ fn get_message(n: int): string {
 
 A while loop is used to repeatedly execute an expression until some condition is no longer true.
 
-Use `while` keyword to declare a while loop, the condition is a [expression] in `()` that return a [bool] value.
+Use the `while` keyword to declare a while loop, the condition is an [expression] in `()` that returns a [bool] value.
 
 ```nv
 use std.io;
@@ -917,7 +917,7 @@ $ navi run
 4
 ```
 
-Use `break` keyword to exit a while loop.
+Use the `break` keyword to exit a while loop.
 
 ```nv
 use std.io;
@@ -1052,7 +1052,7 @@ url: https://navi-lang.org
 
 ## If
 
-Like must programming languages, Navi has `if` statement for conditional execution.
+Like most programming languages, Navi has the `if` statement for conditional execution.
 
 ```nv
 use std.io;
@@ -1102,17 +1102,17 @@ a is nil
 
 ## Function
 
-Use `fn` keyword to declare a function, the function name must be a [identifier], and the function body must be a [block].
+Use `fn` keyword to declare a function, the function name must be an [identifier], and the function body must be a [block].
 
 ::: info
-Navi recommend use `snake_case` for function name, e.g.: `send_message`, `get_user`, `get_user_by_id`.
+Navi recommends using `snake_case` for the function name, e.g.: `send_message`, `get_user`, `get_user_by_id`.
 
-And the argument name also use `snake_case`, e.g.: `title`, `user_id`.
+And the argument name also uses `snake_case`, e.g.: `title`, `user_id`.
 :::
 
-You can define a function in module level, or in a struct `impl` block.
+You can define a function in the module level, or in a struct `impl` block.
 
-- The function name must be a [identifier].
+- The function name must be an [identifier].
 - The arguments can be [normal arguments] or [keyword arguments].
 
 ```nv
@@ -1161,7 +1161,7 @@ fn add(a: int, b: int, mode: string = "+"): string {
 }
 ```
 
-You use define a [optional] type for a argument by use `?` after the type, e.g.: `b: int?`.
+To define an [optional] type for an argument, we use `?` after the type, e.g.: `b: int?`.
 
 ```nv
 use std.io;
