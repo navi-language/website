@@ -1,4 +1,4 @@
-# Installation
+# Install Navi
 
 If you are on Linux or macOS, you can install Navi by running the following command in your terminal:
 

@@ -18,35 +18,20 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
+
+      {
+        text: 'Install',
+        link: '/installation',
+      },
       { text: 'Learn', link: '/learn' },
+      { text: 'Tools', link: '/tools' },
       {
         text: 'Releases',
         link: 'https://github.com/navi-language/navi/releases',
       },
     ],
 
-    sidebar: [
-      {
-        text: 'Introduction',
-        link: '/',
-      },
-      {
-        text: 'Installation',
-        link: '/installation',
-      },
-      {
-        text: 'Getting Started',
-        link: '/getting-started',
-      },
-      {
-        text: 'Development Tools',
-        link: '/development-tools',
-      },
-      {
-        text: 'Language Reference',
-        link: '/learn',
-      },
-    ],
+    sidebar: {},
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/navi-language' }],
   },
