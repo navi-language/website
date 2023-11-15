@@ -40,6 +40,22 @@ export default defineConfig({
   },
   head: [
     [
+      'link',
+      {
+        rel: 'icon',
+        href: '/logo.svg',
+        media: '(prefers-color-scheme: light)',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        href: '/logo-dark.svg',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
+    [
       'script',
       {
         src: 'https://cdn.lr-intake.com/LogRocket.min.js',
