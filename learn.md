@@ -1237,9 +1237,9 @@ a: 1, b: 2, mode: +
 
 ## Optional
 
-Navi provides a modern optional type, it is similar to Rust's `Option` type, to give us a safety way to handle `nil` value, we can avoid the `null pointer exception` in runtime.
+Navi provides a modern optional type, which is similar to Rust's `Option` type, to give us a safe way to handle `nil` value, we can avoid the `null pointer exception` in runtime.
 
-Use `type?` to declare a optional type, e.g.: `string?`, `int?`, `float?`, `bool?`, `User?` ...
+Use `type?` to declare an optional type, e.g.: `string?`, `int?`, `float?`, `bool?`, `User?` ...
 
 ```nv
 // a normal string
@@ -1250,15 +1250,15 @@ let optional_name: string? = "Navi";
 let optional_name: string? = nil;
 ```
 
-Now the `optional_name` is a [optional] type, it can be a [string] or `nil`.
+Now the `optional_name` is an [optional] type, it can be a [string] or `nil`.
 
 ### Unwrap Optional
 
-The `!` operator is used to unwrap a [optional] value, if the value is `nil`, it will panic.
-It usefull when you want to get a [value] from a [optional] value and you are sure it is not `nil`.
+The `!` operator is used to unwrap an [optional] value, if the value is `nil`, it will panic.
+It is useful when you want to get a [value] from an [optional] value and you are sure it is not `nil`.
 
 ::: warning
-For keep your code safety, when you use `!`, you must be sure it is not `nil`.
+To keep your code safe, when you use `!`, you must be sure it is not `nil`.
 
 If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from a [optional] value.
 :::
@@ -1279,9 +1279,9 @@ fn main() {
 
 ### Unwrap or Default
 
-The `||` operator is used to unwrap a [optional] value, if the value is `nil`, it will return the default value.
+The `||` operator is used to unwrap an [optional] value, if the value is `nil`, it will return the default value.
 
-Right side of `||` can be a [value] or a [expression] that return a [value], if left side is not nill, the right side will not be evaluated.
+Right side of `||` can be a [value] or an [expression] that returns a [value], if the left side is not nill, the right side will not be evaluated.
 
 ```nv
 use std.io;
