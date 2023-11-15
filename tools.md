@@ -62,4 +62,4 @@ If you want a special Navi version:
 Visit [navi-language/setup-navi] to learn more.
 
 [Language Server Protocol]: https://microsoft.github.io/language-server-protocol/
-[navi-language/setup-navi]: https://github.com/navi-lang/setup-navi
+[navi-language/setup-navi]: https://github.com/navi-language/setup-navi

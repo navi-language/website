@@ -66,7 +66,7 @@ export default defineConfig({
     [
       'script',
       {},
-      `window.LogRocket && window.LogRocket.init('navi-lang/website');`,
+      `window.LogRocket && window.LogRocket.init('navi-language/website');`,
     ],
   ],
 });
