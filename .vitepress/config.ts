@@ -1,15 +1,23 @@
 import { defineConfig } from 'vitepress';
+import { naviLanguage } from './language';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'en-US',
   title: 'Navi Language',
   description: 'Navi is a high-performance programming language.',
+  markdown: {
+    languages: [naviLanguage],
+    toc: {
+      level: [2, 3, 4],
+    },
+  },
   themeConfig: {
     logo: 'https://avatars.githubusercontent.com/u/145518894',
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
+      { text: 'Learn', link: '/learn' },
       {
         text: 'Releases',
         link: 'https://github.com/navi-language/navi/releases',
@@ -32,6 +40,10 @@ export default defineConfig({
       {
         text: 'Development Tools',
         link: '/development-tools',
+      },
+      {
+        text: 'Language Reference',
+        link: '/learn',
       },
     ],
 
