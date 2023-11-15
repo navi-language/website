@@ -14,7 +14,10 @@ export default defineConfig({
     },
   },
   themeConfig: {
-    logo: 'https://avatars.githubusercontent.com/u/145518894',
+    logo: {
+      light: '/logo.svg',
+      dark: '/logo-dark.svg',
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },

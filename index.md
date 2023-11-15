@@ -4,7 +4,8 @@ hero:
   name: Navi
   text: A high-performance programming language.
   image:
-    src: /logo.svg
+    light: /logo.svg
+    dark: /logo-dark.svg
     alt: VitePress
   actions:
     - theme: brand
