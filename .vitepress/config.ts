@@ -1,5 +1,14 @@
 import { defineConfig } from 'vitepress';
+import stdlib from '../stdlib.json';
 import { naviLanguage } from './language';
+
+const stdlibItems = Object.keys(stdlib).map((module: any) => {
+  if (module == '#prelude') {
+    return { text: 'Preludo', link: '/' };
+  }
+
+  return { text: module, link: `/stdlib/${module.replace(/\./g, '_')}` };
+});
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -27,14 +36,17 @@ export default defineConfig({
         link: '/installation',
       },
       { text: 'Learn', link: '/learn' },
+      { text: 'Stdlib', link: '/stdlib/' },
       { text: 'Tools', link: '/tools' },
       {
         text: 'Releases',
-        link: 'https://github.com/navi-language/navi/releases',
+        link: '/releases',
       },
     ],
 
-    sidebar: {},
+    sidebar: {
+      '/stdlib/': stdlibItems,
+    },
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/navi-language' }],
   },

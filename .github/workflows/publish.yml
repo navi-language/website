@@ -20,6 +20,8 @@ jobs:
       - name: Build Website
         run: |
           bun install
+          bun script/generate-release.ts
+          bun script/generate-stdlib.ts
           bun run build
       - name: Setup Pages
         uses: actions/configure-pages@v3
