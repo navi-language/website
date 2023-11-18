@@ -19,7 +19,7 @@ export default defineConfig({
   markdown: {
     languages: [naviLanguage],
     toc: {
-      level: [1, 2, 3],
+      level: [2, 3],
     },
   },
   themeConfig: {
@@ -27,6 +27,7 @@ export default defineConfig({
       light: '/logo.svg',
       dark: '/logo-dark.svg',
     },
+    outline: [2, 3],
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
