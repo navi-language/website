@@ -9,7 +9,7 @@ const target = 'stdlib';
 interface Module {
   name: string;
   functions: [Function];
-  structs: [Struct];
+  structs: Record<string, Struct>;
 }
 
 interface Struct {
@@ -108,31 +108,71 @@ const buildBody = (module: Module) => {
   buf.write(`# ${module.name}\n`);
 
   module.functions.forEach((fn) => {
-    let prefix = fn.desc.async ? 'async ' : '';
-    let returns = fn.desc.return ? `: ${fn.desc.return.join(', ')}` : '';
-    let args = fn.desc.args
-      .map((arg) => {
-        let default_value = arg.default_value ? ` = ${arg.default_value}` : '';
-        return `${arg.name}: ${arg.type}${default_value}`;
-      })
-      .join(', ');
+    buf.write(generateFunctionDoc(fn, links));
+  });
 
-    buf.write(`## ${fn.name}\n`);
-    buf.write(`\`${prefix}fn ${fn.name}(${args})${returns}\`\n`);
+  buf.write('------------------------\n');
 
-    links.write(`[${fn.name}]: #${fn.name}`);
+  Object.keys(module.structs)?.forEach((structName) => {
+    let struct = module.structs[structName];
+    buf.write(`## ${module.name}.${struct.name}\n`);
 
-    if (fn.desc.deprecated) {
-      buf.write('::: warning\nDeprecated.\n:::');
-      buf.write('\n');
+    if (struct.properties) {
+      buf.write('**Properties**\n');
     }
 
-    buf.write(`${fn.desc.doc || 'TODO'}`);
-    buf.write('\n');
+    Object.keys(struct.properties).forEach((name) => {
+      let prop = struct.properties[name];
+      if (prop.getter) {
+        buf.write('- ' + name);
+      }
+      if (prop.setter) {
+        buf.write('- ' + name + '=');
+      }
+    });
+
+    Object.keys(struct.methods).forEach((name) => {
+      let fn = struct.methods[name];
+      buf.write(generateFunctionDoc(fn, links, 3));
+    });
   });
 
   buf.write('\n');
   buf.write(links.toString('\n'));
+
+  return buf.toString('\n');
+};
+
+const generateFunctionDoc = (
+  fn: Function,
+  links: StringBuffer,
+  level: number = 2
+) => {
+  let buf = new StringBuffer();
+  let prefix = fn.desc.async ? 'async ' : '';
+  let returns = fn.desc.return ? `: ${fn.desc.return.join(', ')}` : '';
+  let args = fn.desc.args
+    .map((arg) => {
+      let default_value = arg.default_value ? ` = ${arg.default_value}` : '';
+      return `${arg.name}: ${arg.type}${default_value}`;
+    })
+    .join(', ');
+
+  let headingPrefix = '#'.repeat(level);
+
+  buf.write(`${headingPrefix} ${fn.name}\n`);
+
+  buf.write(`\`\`\`nv\n${prefix}fn ${fn.name}(${args})${returns}\n\`\`\`\n`);
+
+  links.write(`[${fn.name}]: #${fn.name}`);
+
+  if (fn.desc.deprecated) {
+    buf.write('::: Deprecated\n\n:::');
+    buf.write('\n');
+  }
+
+  buf.write(`${fn.desc.doc || 'TODO'}`);
+  buf.write('\n');
 
   return buf.toString('\n');
 };
