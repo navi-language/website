@@ -33,7 +33,7 @@ const fetchRelease = async () => {
     releaseBody += `## [${name}](${release.html_url})\n\n`;
     let body = release.body;
     // Replace h2 with h3
-    body = replaceHeadings(body || '');
+    body = replaceHeadings(body || '', 2);
     releaseBody += `${body}\n\n`;
   });
   fs.writeFileSync(targetFile, releaseBody, 'utf-8');

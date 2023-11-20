@@ -7,9 +7,15 @@ export class Buffer {
     this.length = 0;
   }
 
-  write(s: string) {
+  write(s: string | Buffer) {
     this.length += s.length;
-    this.buffer.push(s);
+    if (s instanceof Buffer) {
+      s.buffer.forEach((s) => {
+        this.buffer.push(s.toString());
+      });
+    } else {
+      this.buffer.push(s);
+    }
   }
 
   toString(joiner: string = '') {

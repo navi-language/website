@@ -7,7 +7,7 @@ permissions:
   pages: write
   id-token: write
 jobs:
-  feishu-pages:
+  publish:
     name: Publish Website
     runs-on: ubuntu-latest
     steps:

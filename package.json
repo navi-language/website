@@ -5,6 +5,7 @@
   "devDependencies": {
     "@types/node": "^20.9.0",
     "bun-types": "latest",
+    "sass": "^1.69.5",
     "vitepress": "^1.0.0-rc.25"
   },
   "peerDependencies": {

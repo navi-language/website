@@ -4,7 +4,7 @@ import { naviLanguage } from './language';
 
 const stdlibItems = Object.keys(stdlib).map((module: any) => {
   if (module == '#prelude') {
-    return { text: 'Preludo', link: '/' };
+    return { text: 'Preludo', link: '/stdlib/prelude' };
   }
 
   return { text: module, link: `/stdlib/${module.replace(/\./g, '_')}` };

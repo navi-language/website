@@ -100,3 +100,23 @@
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
+
+.vp-doc {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  h7,
+  h8 {
+    code {
+      font-size: 12px;
+      font-weight: normal;
+    }
+  }
+}
+
+.VPSidebar {
+  border-right: 1px solid var(--vp-c-gray-3);
+}
