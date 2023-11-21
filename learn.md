@@ -97,8 +97,6 @@ This code sample demonstrates the basic syntax of Navi.
 
 Navi supports 2 types of comments (Like Rust).
 
-### Normal Comments
-
 The `//` started is a normal comment, and it will be ignored by the compiler.
 
 For example:
@@ -114,13 +112,13 @@ fn say(name: string): string {
 
 There is no multi-line comment in Navi. If you want write a multi-line comment, just use `//` for each line.
 
-### Doc Comments
+## Doc Comments
 
 A doc comment is started with `///`, and it will be parsed by the compiler and generate documentation. You can write Markdown in it.
 
 For example:
 
-```nv
+````nv
 /// A struct doc comment.
 struct User {
     /// The user's name.
@@ -133,11 +131,87 @@ impl User {
   /// ## Args
   ///
   /// - name: The name of the person to say hello to.
+  ///
+  /// ```nv
+  /// let user = User { name: "Navi" };
+  /// assert_eq user.say(), "Hello Navi!";
+  /// ```
   fn say(): string {
       return `Hello ${self.name}!`;
   }
 }
+````
+
+### Doctest
+
+You can write Markdown Code Block in your doc comment, use `navi test --doc` to run the doc tests.
+
+Like regular tests, doc tests use the `assert`, `assert_eq`, and `assert_ne` keywords for assertion.
+
+For example:
+
+````nv
+/// This is a doc comment for a function.
+///
+/// ```nv
+/// let s = say("World");
+/// assert_eq s, "Hello World!";
+/// ```
+fn say(name: string): string {
+    return `Hello ${name}!`;
+}
+````
+
+Then you can run `navi test --doc` to run the doc test.
+
+```shell
+$ navi test --doc
 ```
+
+This will parse the Codeblock in the doc comment and run it.
+
+### Annotation for doctest
+
+Code blocks can be annotated with attributes that help `navi test` do the right thing when testing your code:
+
+- `ignore`: Ignore doc test (No compile and run).
+- `should_panic`: This code should panic or assert failed.
+- `no_run`: This code should passed compile but not run.
+- `compile_fail`: This code block should fail to compile.
+
+#### For example:
+
+Expect to ignore (No compile and run)
+
+````nv
+/// ```ignore
+/// fn foo() {
+/// ```
+````
+
+Expect to **panic** or **assert failed**
+
+````nv
+/// ```should_panic
+/// assert_eq 1 == 2;
+/// ```
+````
+
+Expect to **passed compile** but **not run**
+
+````nv
+/// ```no_run
+/// loop { };
+/// ```
+````
+
+Expect to **compile failed**
+
+````nv
+/// ```compile_fail
+/// a = 1
+/// ```
+````
 
 ## Values {#value}
 
@@ -154,9 +228,9 @@ In Navi we only have [int] (int64), and [float] (float64) types, there is no int
 
 ### Primitive Values
 
-| Name               | Description                           |
-| ------------------ | ------------------------------------- |
-| `true` and `false` | [bool] values                         |
+| Name               | Description                            |
+| ------------------ | -------------------------------------- |
+| `true` and `false` | [bool] values                          |
 | `nil`              | Use to set an [optional] value to null |
 
 ### String Literals {#string}
@@ -520,9 +594,9 @@ Like other programming languages, Navi has a set of operators for performing ari
 | `a && 1`   | [bool]                               |
 | `a!`       | [optional]                           | Unwrap [optional] value or panic                                                 | `a!`         |
 | `a == b`   | [int], [float], [bool], [string] ... | `a` equal to `b`                                                                 | `1 == 2`     |
-| `a == nil` | [optional]                           | An [optional] value equal to nil                                                  | `a == nil`   |
+| `a == nil` | [optional]                           | An [optional] value equal to nil                                                 | `a == nil`   |
 | `a != b`   | [int], [float], [bool], [string] ... | `a` not equal to `b`                                                             | `1 != 2`     |
-| `a != nil` | [optional]                           | An [optional] value not equal to nil                                              | `a != nil`   |
+| `a != nil` | [optional]                           | An [optional] value not equal to nil                                             | `a != nil`   |
 
 ```nv
 test "test" {
@@ -1384,15 +1458,15 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | Keyword     | Description                                                                                |
 | ----------- | ------------------------------------------------------------------------------------------ |
 | `let`       | Declare a variable.                                                                        |
-| `nil`       | An [optional] value of nil.                                                                 |
+| `nil`       | An [optional] value of nil.                                                                |
 | `true`      | true                                                                                       |
 | `false`     | false                                                                                      |
 | `for`       | [for] loop                                                                                 |
 | `in`        | key use in [for] loop                                                                      |
 | `while`     | [while] loop                                                                               |
-| `loop`      | an infinite [loop]                                                                          |
+| `loop`      | an infinite [loop]                                                                         |
 | `continue`  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
-| `break`     | `break` is used to exit a loop before iteration completes naturally.                          |
+| `break`     | `break` is used to exit a loop before iteration completes naturally.                       |
 | `if`        | [if] statement                                                                             |
 | `else`      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
 | `fn`        | Declare a function.                                                                        |
@@ -1450,3 +1524,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [unwrap || default]: #unwrap-or-default
 [Unwrap or Default]: #unwrap-or-default
 [Concurrency is NOT Parallelism]: https://ics.uci.edu/~rickl/courses/ics-h197/2014-fq-h197/talk-Wu-Concurrency-is-NOT-parallelism.pdf
+
+```
+
+```
