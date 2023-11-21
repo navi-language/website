@@ -23,6 +23,9 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    editLink: {
+      pattern: 'https://github.com/navi-language/website/edit/main/:path',
+    },
     logo: {
       light: '/logo.svg',
       dark: '/logo-dark.svg',

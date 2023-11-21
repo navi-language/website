@@ -15,7 +15,7 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "generate": "bun script/generate-stdlib.ts"
+    "generate": "bun script/generate-release.ts && bun script/generate-stdlib.ts"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.9",

@@ -22,7 +22,9 @@ const fetchRelease = async () => {
     )
   ).json()) as Release[];
 
-  let releaseBody = '# Releases\n\n';
+  let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
+
+  let releaseBody = frontmatter + '# Releases\n\n';
   data.forEach((release: any) => {
     if (release.prerelease) {
       return;

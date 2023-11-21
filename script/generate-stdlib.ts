@@ -131,6 +131,7 @@ const buildBody = (module: Module) => {
   let title = module.name.replace('#', '');
   buf.write('---');
   buf.write(`title: ${title}`);
+  buf.write('editLink: false');
   buf.write('---\n');
 
   buf.write(`# ${module.name}\n`);
