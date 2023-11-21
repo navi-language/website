@@ -155,7 +155,7 @@ For example:
 ///
 /// ```nv
 /// let s = say("World");
-/// assert_eq s, "Hello World!";
+/// assert_eq s, "Hello";
 /// ```
 fn say(name: string): string {
     return `Hello ${name}!`;
@@ -166,6 +166,11 @@ Then you can run `navi test --doc` to run the doc test.
 
 ```shell
 $ navi test --doc
+test doc `say` . ok
+thread 'main' at 'assertion failed: s == "Hello"', main:9
+
+   left: Hello World!
+  right: Hello
 ```
 
 This will parse the Codeblock in the doc comment and run it.
@@ -184,7 +189,7 @@ Code blocks can be annotated with attributes that help `navi test` do the right 
 Expect to ignore (No compile and run)
 
 ````nv
-/// ```ignore
+/// ```nv, ignore
 /// fn foo() {
 /// ```
 ````
@@ -192,7 +197,7 @@ Expect to ignore (No compile and run)
 Expect to **panic** or **assert failed**
 
 ````nv
-/// ```should_panic
+/// ```nv, should_panic
 /// assert_eq 1 == 2;
 /// ```
 ````
@@ -200,7 +205,7 @@ Expect to **panic** or **assert failed**
 Expect to **passed compile** but **not run**
 
 ````nv
-/// ```no_run
+/// ```nv, no_run
 /// loop { };
 /// ```
 ````
@@ -208,7 +213,7 @@ Expect to **passed compile** but **not run**
 Expect to **compile failed**
 
 ````nv
-/// ```compile_fail
+/// ```nv, compile_fail
 /// a = 1
 /// ```
 ````
