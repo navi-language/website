@@ -22,7 +22,7 @@ jobs:
           navi-version: 0.9.0
       - name: Build Website
         run: |
-          navi doc --stdlib -o stdlib.json
+          # navi doc --stdlib -o stdlib.json
           navi run script/generate-release.nv
           bun install
           bun script/generate-stdlib.ts
