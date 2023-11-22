@@ -19,7 +19,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: navi-language/setup-navi@v1
         with:
-          navi-version: 0.9.0
+          navi-version: nightly
       - name: Build Website
         run: |
           # navi doc --stdlib -o stdlib.json

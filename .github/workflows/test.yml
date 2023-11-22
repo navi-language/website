@@ -12,6 +12,10 @@ jobs:
           path: dist/.cache
           key: cache-dist
       - uses: oven-sh/setup-bun@v1
+      - uses: navi-language/setup-navi@v1
+        with:
+          navi-version: nightly
       - run: |
+          navi test .
           bun install
           bun test

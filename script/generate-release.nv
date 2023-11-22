@@ -1,6 +1,7 @@
 use std.fs;
 use std.io;
 use std.net.http;
+use utils;
 
 let target_file = "releases.md";
 let repo = "navi-language/navi";
@@ -29,7 +30,7 @@ fn fetch_releases() {
             name = release.get("tag_name")?.string();
         }
         let html_url = release.get("html_url")?.string();
-        let body = release.get("body")?.string();
+        let body = utils.replace_headings(release.get("body")?.string(), level: 1);
         release_body += `## [${name}](${html_url})\n\n`;
         release_body += `${body}\n\n`;
     }
@@ -43,4 +44,3 @@ fn main() {
     fetch_releases();
     io.println("Generate releases success.");
 }
-

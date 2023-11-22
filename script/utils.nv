@@ -1,0 +1,48 @@
+use std.regex;
+use std.io;
+
+let heading_re = regex.parse("(?m)^\\s*([#]+)\\s*");
+
+/// Replace all headings in a markdown document with headings of a different level.
+fn replace_headings(body: string?, level: int = 1): string {
+    if (body == nil) {
+        return "";
+    }
+
+    let result = heading_re.replace_all_with(
+        body!,
+        fn(caps: regex.Captures?): string {
+            let p0 = caps?.get(0)!.text;
+            let p1 = caps?.get(1)!.text;
+            let indent_level = p1.len() + level;
+            return p0.replace(p1, "#".repeat(indent_level));
+        }
+    );
+
+    return result;
+}
+
+/// Format module name to slug
+///
+/// e.g. `foo.bar.dar` => `foo_bar_dar`
+fn format_slug(name: string?): string {
+    if (name == nil) {
+        return "";
+    }
+
+    return name!.replace(".", "_").to_lowercase();
+}
+
+test "replace_headings" {
+    let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
+    let expected = "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
+    let result = replace_headings(raw, level: 2);
+    assert_eq result, expected;
+}
+
+test "format_slug" {
+    let raw = "foo.bar.dar";
+    let expected = "foo_bar_dar";
+    let result = format_slug(raw);
+    assert_eq result, expected;
+}
