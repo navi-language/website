@@ -1,0 +1,46 @@
+use std.fs;
+use std.io;
+use std.net.http;
+
+let target_file = "releases.md";
+let repo = "navi-language/navi";
+let page_size = 200;
+
+fn fetch_releases() {
+    let release_url = `https://api.github.com/repos/${repo}/releases?per_page=${page_size}`;
+    let headers = http.new_headers();
+    headers.set("User-Agent", "Navi-Release-Generator");
+
+    let res = http.get(release_url, headers: headers);
+    let data = res.json();
+
+    let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
+    let release_body = frontmatter + "# Releases\n\n";
+
+    for (let release in data.array()!) {
+        let prerelease = release.get("prerelease")?.bool() || false;
+        if (prerelease) {
+            // ignore pre-releases
+            continue;
+        }
+
+        let name = release.get("name")?.string();
+        if (name == nil) {
+            name = release.get("tag_name")?.string();
+        }
+        let html_url = release.get("html_url")?.string();
+        let body = release.get("body")?.string();
+        release_body += `## [${name}](${html_url})\n\n`;
+        release_body += `${body}\n\n`;
+    }
+
+    let f = fs.create(target_file);
+    f.write_string(release_body);
+    f.flush();
+}
+
+fn main() {
+    fetch_releases();
+    io.println("Generate releases success.");
+}
+
