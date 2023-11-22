@@ -68,7 +68,7 @@ echo $download_url
 
 mkdir -p $tmpdir && cd $tmpdir
 curl -Lo $bin_name.tar.gz $download_url
-mkdir navi/
+mkdir -p navi/
 tar zxf $bin_name.tar.gz --directory navi/
 
 if test $(id -u) -eq 0; then
