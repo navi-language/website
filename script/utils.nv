@@ -46,3 +46,19 @@ test "format_slug" {
     let result = format_slug(raw);
     assert_eq result, expected;
 }
+
+bench "replace_headings" {
+    let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
+    let expected = "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
+    bench.run(fn() {
+        replace_headings(raw, level: 2);
+    });
+}
+
+bench "format_slug" {
+    let raw = "foo.bar.dar";
+    let expected = "foo_bar_dar";
+    bench.run(fn() {
+        format_slug(raw);
+    });
+}
