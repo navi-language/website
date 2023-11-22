@@ -101,7 +101,7 @@ The `//` started is a normal comment, and it will be ignored by the compiler.
 
 For example:
 
-```nv
+```nv, no_run
 // This is a normal comment.
 fn say(name: string): string {
     // This is a normal comment.
@@ -118,7 +118,7 @@ A doc comment is started with `///`, and it will be parsed by the compiler and g
 
 For example:
 
-````nv
+````nv, no_run
 /// A struct doc comment.
 struct User {
     /// The user's name.
@@ -150,7 +150,7 @@ Like regular tests, doc tests use the `assert`, `assert_eq`, and `assert_ne` key
 
 For example:
 
-````nv
+````nv, no_run
 /// This is a doc comment for a function.
 ///
 /// ```nv
@@ -242,7 +242,7 @@ In Navi we only have [int] (int64), and [float] (float64) types, there is no int
 
 String is a UTF-8 string type, and it is immutable in Navi, all string literals are immutable.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -276,7 +276,7 @@ bytes len: 18
 
 If you use `\` in a string outside of an escape sequence, it will be ignored.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -303,6 +303,7 @@ String interpolation is a way to construct a new String value from a mix of cons
 Navi's string interpolation is similar to JavaScript's template literals.
 
 ```nv
+let name = "World";
 let hello = `Hello, ${name}!`;
 
 // You can write multi-line string interpolation.
@@ -317,8 +318,8 @@ Use the `let` keyword to declare a variable to an identifier, the variable is mu
 
 > TODO: We will have a `const` keyword for immutable in the future.
 
-```nv
-# main.nv
+```nv, no_run
+// main.nv
 use std.io;
 
 let name = "World";
@@ -350,7 +351,7 @@ let passed: bool = true;
 
 Variables must be initialized:
 
-```nv
+```nv, compile_fail
 use std.io;
 
 fn main() {
@@ -508,7 +509,7 @@ let name1 = "World";
 
 And they are invalid identifiers:
 
-```nv
+```nv, compile_fail
 let 1name = "World";
 let name-1 = "World";
 // `use` is a keyword.
@@ -519,7 +520,7 @@ let use = "World";
 
 Variables are scoped to the block in which they are declared. A block is a collection of statements enclosed by `{}`.
 
-```nv
+```nv, no_run
 use std.io;
 
 let name = "Name in global scope";
@@ -695,7 +696,7 @@ test "array" {
 
 Use `[idx]`, `[idx]=` to get and set an item from the array, the index must be an [int] type.
 
-```nv
+```nv, should_panic
 let a = [string] { "Rust", "Navi" };
 
 a[0]; // "Rust"
@@ -837,7 +838,7 @@ For example:
 
 You can define a `new_user` function in the module level, and use it to create a new struct instance.
 
-```nv
+```nv, no_run
 fn new_user(name: string, id: int): User {
     return User {
         name: name,
@@ -910,7 +911,7 @@ test "shadowing blocks 2" {
 
 The `switch` statement is used to execute one of many blocks of code.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn get_message(n: int): string {
@@ -973,7 +974,7 @@ A while loop is used to repeatedly execute an expression until some condition is
 
 Use the `while` keyword to declare a while loop, the condition is an [expression] in `()` that returns a [bool] value.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -998,7 +999,7 @@ $ navi run
 
 Use the `break` keyword to exit a while loop.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1023,7 +1024,7 @@ $ navi run
 
 Use `continue` to jump back to the beginning of the loop.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1057,7 +1058,7 @@ Like `while` loop, you can use `break` and `continue` to control the loop.
 
 The `for (let ...)` statement is used to iterate over a [range].
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1082,7 +1083,7 @@ n: 3
 
 The `for (let ...)` statement is used to iterate over an [array].
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1106,7 +1107,7 @@ baz
 
 The `for (let ...)` statement is used to iterate over a [map].
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1133,7 +1134,7 @@ url: https://navi-lang.org
 
 Like most programming languages, Navi has the `if` statement for conditional execution.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn main() {
@@ -1154,7 +1155,7 @@ fn main() {
 
 The `if let` statement is used to match an [optional] value.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn get_a(a: string?) {
@@ -1194,7 +1195,7 @@ You can define a function in the module level, or in a struct `impl` block.
 - The function name must be an [identifier].
 - The arguments can be [normal arguments] or [keyword arguments].
 
-```nv
+```nv, no_run
 use std.io;
 
 fn add(a: int, b: int, mode: string = "+"): string {
@@ -1242,7 +1243,7 @@ fn add(a: int, b: int, mode: string = "+"): string {
 
 To define an [optional] type for an argument, we use `?` after the type, e.g.: `b: int?`.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn add(a: int, b: int?): string {
@@ -1273,7 +1274,7 @@ Keyword arguments are arguments that are passed by name. They are useful when a 
 
 Use `name: value = default` to declare a keyword argument, the keyword argument must be after normal arguments.
 
-```nv
+```nv, no_run
 use std.io;
 
 fn add(a: int, b: int, mode: string = "+", debug: bool = false): string {
@@ -1342,7 +1343,7 @@ To keep your code safe, when you use `!`, you must be sure it is not `nil`.
 If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from an [optional] value.
 :::
 
-```nv
+```nv, should_panic
 use std.io;
 
 fn main() {
@@ -1396,7 +1397,7 @@ use std.url;
 
 fn main() {
     let my_url = url.parse("https://navi-lang.org");
-    io.println(my_url.host);
+    assert_eq my_url.host, "navi-lang.org";
 }
 ```
 
@@ -1423,7 +1424,7 @@ utils
 
 Now you can import them in `main.nv`:
 
-```nv
+```nv, ignore
 use models;
 use models.profile;
 use utils;
@@ -1433,7 +1434,7 @@ use utils;
 
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
 
-```nv
+```nv, no_run
 fn main() {
     spawn {
         io.println("Hello");
