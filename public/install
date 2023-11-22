@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+# Install Navi language into `/usr/local/navi/`.
+# And then link `navi`, `navi-lsp-server` to `/usr/local/bin/`.
 set -u
 type curl > /dev/null || { echo "curl: not found"; exit 1; }
 
@@ -66,16 +68,28 @@ echo $download_url
 
 mkdir -p $tmpdir && cd $tmpdir
 curl -Lo $bin_name.tar.gz $download_url
-tar zxf $bin_name.tar.gz
+mkdir navi/
+tar zxf $bin_name.tar.gz --directory navi/
 
 if test $(id -u) -eq 0; then
-  mv navi /usr/local/bin/navi
+  cp -Rf navi /usr/local/
 
-  # mv navi-lsp-server to /usr/local/bin/navi-lsp-server if exist
-  test -f navi-lsp-server && mv navi-lsp-server /usr/local/bin/navi-lsp-server
+  # For /bin
+  if test -d /usr/local/navi/bin; then
+    ln -sf /usr/local/navi/bin/* /usr/local/bin/
+  else
+    ln -sf /usr/local/navi/navi /usr/local/bin/navi
+    test -f /usr/local/navi/navi-lsp-server && ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/navi-lsp-server
+  fi
 else
-  sudo mv navi /usr/local/bin/navi
-  test -f navi-lsp-server && sudo mv navi-lsp-server /usr/local/bin/navi-lsp-server
+  sudo cp -Rf navi /usr/local/
+
+  if test -d /usr/local/navi/bin; then
+    sudo ln -sf /usr/local/navi/bin/* /usr/local/bin/
+  else
+    sudo ln -sf /usr/local/navi/navi /usr/local/bin/navi
+    test -f /usr/local/navi/navi-lsp-server && sudo ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/navi-lsp-server
+  fi
 fi
 
 rm $bin_name.tar.gz
