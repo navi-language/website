@@ -37,6 +37,7 @@ export default withMermaid(
         level: [2, 3],
       },
     },
+    ignoreDeadLinks: true,
     themeConfig: {
       editLink: {
         pattern: 'https://github.com/navi-language/website/edit/main/:path',
