@@ -57,5 +57,5 @@ default
 plot
 ```
 
-[let]: ./statement/assign.md
-[fn]: ./expression/function.md
+[let]: statement/assign.md
+[fn]: statement/function.md

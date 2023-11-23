@@ -34,4 +34,4 @@ let avg = ta.ma(value, 10);
 
 ```
 
-[ta]: ../../functions/ta.md
+[ta]: ../../stdlib/ta.md
