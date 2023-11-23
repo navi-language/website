@@ -16,13 +16,15 @@ const naviStreamSidebar = generateSidebar({
   includeRootIndexFile: true,
 });
 
-const stdlibItems = Object.keys(stdlib).map((module: any) => {
-  if (module == '#prelude') {
-    return { text: 'Preludo', link: '/stdlib/prelude' };
-  }
+const stdlibItems = Object.keys(stdlib)
+  .sort()
+  .map((module: string) => {
+    if (module == '#prelude') {
+      return { text: 'Preludo', link: '/stdlib/prelude' };
+    }
 
-  return { text: module, link: `/stdlib/${module.replace(/\./g, '_')}` };
-});
+    return { text: module, link: `/stdlib/${module.replace(/\./g, '_')}` };
+  });
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(

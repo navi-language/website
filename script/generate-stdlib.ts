@@ -112,12 +112,14 @@ const generateStdlibDocs = () => {
 const buildModuleIndex = (stdlib: Record<string, Module>) => {
   let buf = new StringBuffer();
 
-  Object.keys(stdlib).forEach((moduleName) => {
-    let module = stdlib[moduleName];
-    buf.write(
-      `- [${module.name}](${formatSlug(module.name.replace('#', ''))}.md)`
-    );
-  });
+  Object.keys(stdlib)
+    .sort()
+    .forEach((moduleName) => {
+      let module = stdlib[moduleName];
+      buf.write(
+        `- [${module.name}](${formatSlug(module.name.replace('#', ''))}.md)`
+      );
+    });
 
   return buf.toString('\n');
 };
@@ -174,46 +176,52 @@ const generateStructs = (
     if (Object.keys(struct.properties).length > 0) {
       buf.write('**Properties**\n');
 
-      Object.keys(struct.properties).forEach((name) => {
-        let prop = struct.properties[name];
+      Object.keys(struct.properties)
+        .sort()
+        .forEach((name) => {
+          let prop = struct.properties[name];
 
-        let propSuffix: string[] = [];
-        if (prop.getter) {
-          propSuffix.push('getter');
-        }
-        if (prop.setter) {
-          propSuffix.push('setter');
-        }
-        let propSuffixStr =
-          propSuffix.length > 0 ? `\`(${propSuffix.join(', ')})\` ` : '';
+          let propSuffix: string[] = [];
+          if (prop.getter && !prop.setter) {
+            propSuffix.push('readonly');
+          }
+          if (prop.setter) {
+            propSuffix.push('writable');
+          }
+          let propSuffixStr =
+            propSuffix.length > 0 ? `\`${propSuffix.join(', ')}\` ` : '';
 
-        let anchor = `{#${struct.name}#prop#${name}}`;
+          let anchor = `{#${struct.name}#prop#${name}}`;
 
-        buf.write('### `prop` ' + name + anchor + '\n');
+          buf.write('### ' + name + ' `prop`' + anchor + '\n');
 
-        buf.write(propSuffixStr);
+          buf.write(propSuffixStr);
 
-        if (prop.doc) {
-          buf.write('\n');
-          buf.write(
-            `    ` + replaceHeadings(prop.doc, indocHeadingLevel) + '\n'
-          );
-        }
-      });
+          if (prop.doc) {
+            buf.write('\n');
+            buf.write(
+              `    ` + replaceHeadings(prop.doc, indocHeadingLevel) + '\n'
+            );
+          }
+        });
       buf.write('\n');
     }
 
+    buf.write('---------------------------\n');
+
     if (Object.keys(struct.methods).length > 0) {
-      Object.keys(struct.methods).forEach((name) => {
-        let fn = struct.methods[name];
-        buf.write(
-          generateFunctionDoc(fn, links, {
-            level: 3,
-            anchorPrefix: `${struct.name}#`,
-            kind: 'method',
-          })
-        );
-      });
+      Object.keys(struct.methods)
+        .sort()
+        .forEach((name) => {
+          let fn = struct.methods[name];
+          buf.write(
+            generateFunctionDoc(fn, links, {
+              level: 3,
+              anchorPrefix: `${struct.name}#`,
+              kind: 'method',
+            })
+          );
+        });
       buf.write('\n');
     }
   });
@@ -237,10 +245,12 @@ const generateStructToc = (module: Module, structs: Record<string, Struct>) => {
   buf.write('**Structs**\n\n');
 
   let structNames: string[] = [];
-  Object.keys(structs)?.forEach((structName) => {
-    let struct = structs[structName];
-    structNames.push(`[${struct.name}](#${module.name}.${struct.name})`);
-  });
+  Object.keys(structs)
+    ?.sort()
+    .forEach((structName) => {
+      let struct = structs[structName];
+      structNames.push(`[${struct.name}](#${module.name}.${struct.name})`);
+    });
   buf.write(structNames.join(', '));
   buf.write('\n');
 
@@ -263,8 +273,9 @@ const generateModuleFunctionToc = (module: Module, functions: [Function]) => {
   buf.write('**Functions**\n\n');
 
   let fnNames: string[] = [];
-  functions.forEach((fn) => {
-    fnNames.push(`[${fn.name}](#${fn.name})`);
+  let names = functions.map((fn) => fn.name).sort();
+  names.forEach((name) => {
+    fnNames.push(`[${name}](#${name})`);
   });
   buf.write(fnNames.join(', '));
   buf.write('\n');
