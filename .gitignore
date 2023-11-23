@@ -173,7 +173,7 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
-.vitepress/cache
-stdlib/
-stdlib.json
-releases.md
+/.vitepress/cache
+/stdlib/
+/stdlib.json
+/releases.md

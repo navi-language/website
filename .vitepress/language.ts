@@ -5,10 +5,21 @@ const naviLanguageGrammar = JSON.parse(
 );
 
 const naviLanguage: any = {
-  id: 'naviLanguage',
+  id: 'navi',
   scopeName: 'source.navi',
   grammar: naviLanguageGrammar,
   aliases: ['navi', 'nv'],
 };
 
-export { naviLanguage };
+const naviStreamLanguageGrammar = JSON.parse(
+  readFileSync('./.vitepress/navi-stream.tmLanguage.json').toString()
+);
+
+const naviStreamLanguage: any = {
+  id: 'navi-stream',
+  scopeName: 'source.navi-stream',
+  grammar: naviStreamLanguageGrammar,
+  aliases: ['nvs'],
+};
+
+export { naviLanguage, naviStreamLanguage };

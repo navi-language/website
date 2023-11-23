@@ -489,6 +489,21 @@ All 2 tests 0 passed, 2 failed finished in 0.79s.
 
 ## Variable
 
+### Declarations
+
+The syntax of variable declarations is:
+
+```
+[<declaration_mode>] :[<type>] <identifier> = <expression>
+```
+
+where:
+
+- `declaration_mode` - is the variable mode, we can use `let`.
+- `type` - used to declare the variable type, such as `number`, `string` (optional parameter).
+- `identifier` - variable name.
+- `expression` - the value of the variable, can be any expression.
+
 ### Identifier
 
 An identifier is a name used to identify a variable, function, struct, or any other user-defined item. An identifier starts with a letter or underscore `_`, followed by any number of letters, underscores, or digits.

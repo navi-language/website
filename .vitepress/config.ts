@@ -1,6 +1,20 @@
 import { defineConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid';
+import { generateSidebar } from 'vitepress-sidebar';
+
 import stdlib from '../stdlib.json';
-import { naviLanguage } from './language';
+import { naviLanguage, naviStreamLanguage } from './language';
+
+/**
+ * https://github.com/jooy2/vitepress-sidebar
+ */
+const naviStreamSidebar = generateSidebar({
+  scanStartPath: 'navi-stream',
+  resolvePath: '/navi-stream/',
+  useTitleFromFileHeading: true,
+  sortMenusByFrontmatterOrder: true,
+  includeRootIndexFile: true,
+});
 
 const stdlibItems = Object.keys(stdlib).map((module: any) => {
   if (module == '#prelude') {
@@ -11,78 +25,87 @@ const stdlibItems = Object.keys(stdlib).map((module: any) => {
 });
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
-  lang: 'en-US',
-  title: 'Navi Language',
-  description: 'Navi is a high-performance programming language.',
-  cleanUrls: true,
-  markdown: {
-    languages: [naviLanguage],
-    toc: {
-      level: [2, 3],
+export default withMermaid(
+  defineConfig({
+    lang: 'en-US',
+    title: 'Navi Language',
+    description: 'Navi is a high-performance programming language.',
+    cleanUrls: true,
+    markdown: {
+      languages: [naviLanguage, naviStreamLanguage],
+      toc: {
+        level: [2, 3],
+      },
     },
-  },
-  themeConfig: {
-    editLink: {
-      pattern: 'https://github.com/navi-language/website/edit/main/:path',
-    },
-    logo: {
-      light: '/logo.svg',
-      dark: '/logo-dark.svg',
-    },
-    outline: [2, 3],
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
+    themeConfig: {
+      editLink: {
+        pattern: 'https://github.com/navi-language/website/edit/main/:path',
+      },
+      logo: {
+        light: '/logo.svg',
+        dark: '/logo-dark.svg',
+      },
+      outline: [2, 3],
+      // https://vitepress.dev/reference/default-theme-config
+      nav: [
+        {
+          text: 'Install',
+          link: '/installation',
+        },
+        { text: 'Learn', link: '/learn' },
+        { text: 'Stdlib', link: '/stdlib/' },
+        { text: 'Navi Stream', link: '/navi-stream/' },
+        { text: 'Tools', link: '/tools' },
+        {
+          text: 'Releases',
+          link: '/releases',
+        },
+      ],
 
-      {
-        text: 'Install',
-        link: '/installation',
+      sidebar: {
+        '/stdlib/': stdlibItems,
+        '/navi-stream/': [
+          {
+            base: '/navi-stream/',
+            items: naviStreamSidebar as any,
+          },
+        ],
       },
-      { text: 'Learn', link: '/learn' },
-      { text: 'Stdlib', link: '/stdlib/' },
-      { text: 'Tools', link: '/tools' },
-      {
-        text: 'Releases',
-        link: '/releases',
-      },
-    ],
 
-    sidebar: {
-      '/stdlib/': stdlibItems,
+      socialLinks: [
+        { icon: 'github', link: 'https://github.com/navi-language' },
+      ],
     },
-
-    socialLinks: [{ icon: 'github', link: 'https://github.com/navi-language' }],
-  },
-  head: [
-    [
-      'link',
-      {
-        rel: 'icon',
-        href: '/logo.svg',
-        media: '(prefers-color-scheme: light)',
-      },
+    head: [
+      [
+        'link',
+        {
+          rel: 'icon',
+          href: '/logo.svg',
+          media: '(prefers-color-scheme: light)',
+        },
+      ],
+      [
+        'link',
+        {
+          rel: 'icon',
+          href: '/logo-dark.svg',
+          media: '(prefers-color-scheme: dark)',
+        },
+      ],
+      [
+        'script',
+        {
+          src: 'https://cdn.lr-intake.com/LogRocket.min.js',
+          crossorigin: 'anonymous',
+        },
+        '',
+      ],
+      [
+        'script',
+        {},
+        `window.LogRocket && window.LogRocket.init('navi-language/website');`,
+      ],
     ],
-    [
-      'link',
-      {
-        rel: 'icon',
-        href: '/logo-dark.svg',
-        media: '(prefers-color-scheme: dark)',
-      },
-    ],
-    [
-      'script',
-      {
-        src: 'https://cdn.lr-intake.com/LogRocket.min.js',
-        crossorigin: 'anonymous',
-      },
-      '',
-    ],
-    [
-      'script',
-      {},
-      `window.LogRocket && window.LogRocket.init('navi-language/website');`,
-    ],
-  ],
-});
+  })
+);

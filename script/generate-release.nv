@@ -27,7 +27,7 @@ fn fetch_releases() {
 
         let name = release.get("name")?.string() || "";
         if (name.is_empty()) {
-            name = release.get("tag_name")?.string()!;
+            name = release.get("tag_name")?.string();
         }
         let html_url = release.get("html_url")?.string();
         let body = utils.replace_headings(release.get("body")?.string(), level: 1);
