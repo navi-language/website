@@ -17,9 +17,9 @@ jobs:
           path: dist/.cache
           key: cache-dist
       - uses: oven-sh/setup-bun@v1
-      - uses: navi-language/setup-navi@v1
-        with:
-          navi-version: nightly
+      - name: Setup Navi
+        run: |
+          ./public/install nightly
       - name: Build Website
         run: |
           # navi doc --stdlib -o stdlib.json

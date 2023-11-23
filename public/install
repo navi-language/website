@@ -77,24 +77,16 @@ fi
 mkdir -p navi/
 tar zxf $bin_name.tar.gz --directory navi/ && rm $bin_name.tar.gz
 
-# Bin names
-bin_names=(
-  navi 
-  navi-lsp-server
-)
-
 if test $(id -u) -eq 0; then
   cp -Rf navi /usr/local/
 
-  for bin in "${bin_names[@]}"; do
-    test -f /usr/local/navi/$bin && ln -sf /usr/local/navi/$bin /usr/local/bin/
-  done
+  test -f /usr/local/navi/navi && ln -sf /usr/local/navi/navi /usr/local/bin/
+  test -f /usr/local/navi/navi-lsp-server && ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/
 else
   sudo cp -Rf navi /usr/local/
 
-  for bin in "${bin_names[@]}"; do
-    sudo test -f /usr/local/navi/$bin && sudo ln -sf /usr/local/navi/$bin /usr/local/bin/
-  done
+  sudo test -f /usr/local/navi/navi && sudo ln -sf /usr/local/navi/navi /usr/local/bin/
+  sudo test -f /usr/local/navi/navi-lsp-server && sudo ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/
 fi
 
 cd ..
