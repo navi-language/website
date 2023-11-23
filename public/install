@@ -67,32 +67,33 @@ download_url=https://github.com/$repo/releases/download/$version/$bin_name-$plat
 echo $download_url
 
 mkdir -p $tmpdir && cd $tmpdir
-curl -Lo $bin_name.tar.gz $download_url
+if curl --fail -Lo $bin_name.tar.gz $download_url; then
+  echo "Download successfully."
+else
+  echo "Download failed, please check your network."
+  exit 1
+fi
+
 mkdir -p navi/
-tar zxf $bin_name.tar.gz --directory navi/
+tar zxf $bin_name.tar.gz --directory navi/ && rm $bin_name.tar.gz
+
+# Bin names
+bin_names=(navi navi-lsp-server)
 
 if test $(id -u) -eq 0; then
   cp -Rf navi /usr/local/
 
-  # For /bin
-  if test -d /usr/local/navi/bin; then
-    ln -sf /usr/local/navi/bin/* /usr/local/bin/
-  else
-    ln -sf /usr/local/navi/navi /usr/local/bin/navi
-    test -f /usr/local/navi/navi-lsp-server && ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/navi-lsp-server
-  fi
+  for bin in "${bin_names[@]}"; do
+    test -f /usr/local/navi/$bin && ln -sf /usr/local/navi/$bin /usr/local/bin/
+  done
 else
   sudo cp -Rf navi /usr/local/
 
-  if test -d /usr/local/navi/bin; then
-    sudo ln -sf /usr/local/navi/bin/* /usr/local/bin/
-  else
-    sudo ln -sf /usr/local/navi/navi /usr/local/bin/navi
-    test -f /usr/local/navi/navi-lsp-server && sudo ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/navi-lsp-server
-  fi
+  for bin in "${bin_names[@]}"; do
+    sudo test -f /usr/local/navi/$bin && sudo ln -sf /usr/local/navi/$bin /usr/local/bin/
+  done
 fi
 
-rm $bin_name.tar.gz
 cd ..
 rm -Rf $tmpdir
 
