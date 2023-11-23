@@ -18,7 +18,7 @@ Arguments:
 Options:
   -e, --emit <EMIT>  Emit formatted code to stdout or write to file [default: files] [possible values: files, stdout]
   -s, --stdin        Read code from stdin
-  -t, --type <TYPE>  Whether to read Navi code or Navi Stream code [default: nv] [possible values: nv, nvs]
+  -t, --type <TYPE>  Whether to read Navi code or Navi Stream code [default: nv] [possible values: nv,nvs]
   -h, --help         Print help information
 ```
 

@@ -33,6 +33,7 @@ export default withMermaid(
     cleanUrls: true,
     markdown: {
       languages: [naviLanguage, naviStreamLanguage],
+      defaultHighlightLang: 'nv',
       toc: {
         level: [2, 3],
       },
