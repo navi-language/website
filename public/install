@@ -78,7 +78,10 @@ mkdir -p navi/
 tar zxf $bin_name.tar.gz --directory navi/ && rm $bin_name.tar.gz
 
 # Bin names
-bin_names=(navi navi-lsp-server)
+bin_names=(
+  navi 
+  navi-lsp-server
+)
 
 if test $(id -u) -eq 0; then
   cp -Rf navi /usr/local/
