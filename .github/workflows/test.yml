@@ -19,3 +19,11 @@ jobs:
           navi test .
           bun install
           bun test
+  test_install:
+    name: Test Install Navi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          ./public/install
+          ./public/install nightly
