@@ -44,6 +44,18 @@
       ]
     },
     {
+      "comment": "exclamation dot",
+      "match": "(\\!)(\\.)",
+      "captures": {
+        "1": {
+          "name": "constant.numeric.decimal.exclamation.navi"
+        },
+        "2": {
+          "name": "keyword.operator.access.dot.navi"
+        }
+      }
+    },
+    {
       "comment": "modules",
       "match": "(mod)\\s+((?:r#(?!self))?[a-z][A-Za-z0-9_]*)",
       "captures": {
@@ -338,10 +350,13 @@
               "name": "punctuation.brackets.round.navi"
             }
           },
-          "end": "\\)",
+          "end": "(\\))(\\!?)",
           "endCaptures": {
-            "0": {
+            "1": {
               "name": "punctuation.brackets.round.navi"
+            },
+            "2": {
+              "name": "constant.numeric.decimal.exclamation.navi"
             }
           },
           "patterns": [
@@ -392,10 +407,13 @@
               "name": "entity.name.function.navi"
             }
           },
-          "end": "\\)",
+          "end": "(\\))(\\!?)",
           "endCaptures": {
-            "0": {
+            "1": {
               "name": "punctuation.brackets.round.navi"
+            },
+            "2": {
+              "name": "constant.numeric.decimal.exclamation.navi"
             }
           },
           "patterns": [
@@ -453,7 +471,7 @@
         },
         {
           "comment": "Built-in functions",
-          "match": "\\b(print|println|assert|assert_eq|assert_ne|trace|try|error)\\b",
+          "match": "\\b(print|println|assert|assert_eq|assert_ne|trace|try|catch|error)\\b",
           "name": "support.function.core.navi"
         },
         {
@@ -489,7 +507,7 @@
         {
           "comment": "other keywords",
           "name": "keyword.other.navi",
-          "match": "\\b(as|async|become|box|dyn|move|final|impl|in|override|priv|pub|ref|typeof|union|unsafe|unsized|use|virtual|where)\\b"
+          "match": "\\b(as|async|become|box|dyn|move|final|impl|in|override|priv|pub|ref|typeof|union|unsafe|unsized|use|virtual|where|panic|operator|throw|throws)\\b"
         },
         {
           "comment": "fn",
@@ -757,6 +775,11 @@
           "comment": "parentheses, round brackets",
           "name": "punctuation.brackets.round.navi",
           "match": "[()]"
+        },
+        {
+          "comment": "exclamation",
+          "name": "constant.numeric.decimal.exclamation.navi",
+          "match": "\\!"
         },
         {
           "comment": "semicolon",
