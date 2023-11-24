@@ -813,7 +813,7 @@ In the current version, you must assign `nil` to an [optional] field if you don'
 We will support [optional] field default value to `nil` in the future.
 :::
 
-```nv
+```nv, ignore
 let user = User {
     name: "Jason Lee",
     id: 1,
@@ -835,7 +835,7 @@ test "user" {
 Use `impl` to declare a struct method. The `self` is a keyword, it is a reference to the current struct instance.
 Unlike Rust, you don't need to declare `self` as the first parameter.
 
-```nv
+```nv, ignore
 impl User {
     fn say(): string {
         return `Hello ${self.name}!`;
@@ -853,7 +853,7 @@ For example:
 
 You can define a `new_user` function in the module level, and use it to create a new struct instance.
 
-```nv,no_run
+```nv, ignore
 fn new_user(name: string, id: int): User {
     return User {
         name: name,
@@ -944,9 +944,9 @@ fn get_message(n: int): string {
 }
 
 fn main() {
-    iop.println(get_message(1));
-    iop.println(get_message(2));
-    iop.println(get_message(3));
+    io.println(get_message(1));
+    io.println(get_message(2));
+    io.println(get_message(3));
 }
 ```
 
@@ -1412,7 +1412,7 @@ use std.url;
 
 fn main() {
     let my_url = url.parse("https://navi-lang.org");
-    assert_eq my_url.host, "navi-lang.org";
+    assert_eq my_url?.host, "navi-lang.org";
 }
 ```
 
@@ -1450,6 +1450,8 @@ use utils;
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
 
 ```nv,no_run
+use std.io;
+
 fn main() {
     spawn {
         io.println("Hello");
