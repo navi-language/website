@@ -12,10 +12,6 @@ In addition to its capabilities as a statically typed, compiled language, Navi o
 
   Designed with a straightforward and clean syntax.
 
-- **No Implicit Type Conversion**
-
-  The language enforces explicit type conversion to prevent unexpected behavior and errors, ensuring that data types are managed with intention and clarity.
-
 - **Modern Optional-Type and Error-Handling Design**
 
   With a modern design of optional types and error handling, Navi allows developers to gracefully manage exceptional cases and abnormal data.
@@ -866,6 +862,112 @@ fn main() {
     let user = new_user("Sunli", 1);
     io.println(user.say());
 }
+```
+
+## Interface
+
+The Navi interface is a collection of methods, and it is a [value] type, it's like an interface in Go.
+
+### Declare an Interface
+
+Use the `interface` keyword to declare an interface, and use `.` to access a method.
+
+- The interface name must be an [identifier] with `CamelCase` style, e.g.: `ToString`, `Reader`, `Writer`.
+- And the method name must be an [identifier], with `snake_case` style, e.g.: `to_string`, `read`, `write`.
+
+```nv
+interface ToString {
+    fn to_string(): string;
+}
+
+interface Reader {
+    fn read(): string;
+}
+
+fn read_all(reader: Reader): ToString {
+    let s = reader.read();
+    // Navi's string has a `to_string` method.
+    return s;
+}
+```
+
+### Implement an Interface
+
+If any struct has all methods of an interface, it will implement the interface.
+
+```nv
+interface ToString {
+    fn to_string(): string;
+}
+
+interface Reader {
+    fn read(): string;
+}
+
+struct User {
+    name: string
+}
+
+impl User {
+    fn to_string(): string {
+        return `${self.name}`;
+    }
+
+    fn read(): string {
+        return `Hello ${self.name}!`;
+    }
+}
+```
+
+Now we can use a `User` type as a `ToString` or a `Reader` interface.
+
+```nv, ignore
+fn foo(item: ToString) {
+    io.println(item.to_string());
+}
+
+fn read_info(item: Reader) {
+    io.println(item.read());
+}
+
+fn main() {
+    let user = User {
+        name: "Sunli",
+    };
+
+    foo(user);
+    read_info(user);
+}
+```
+
+### Cast an Interface to a Type
+
+Use `.(type)` to cast an interface to a type.
+
+```nv, should_panic
+interface ToString {
+    fn to_string(): string;
+}
+
+struct User {
+}
+
+impl User {
+    fn to_string(): string {
+        return "User";
+    }
+}
+
+let a: ToString = "hello";
+// Cast a from interface to string.
+let b = a.(string);
+// now b is a `string`.
+
+let user: ToString = User {};
+// Cast user from interface to User.
+let user = user.(User);
+// now use is `User`.
+let user = user.(string); // panic: User can't cast to string.
 ```
 
 ## Block
