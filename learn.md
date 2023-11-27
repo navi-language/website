@@ -1284,9 +1284,11 @@ For loops are used to iterate over a range, an array, or a map.
 
 Like `while` loop, you can use `break` and `continue` to control the loop.
 
-### Iter a Range
+### Iter a Range {#range}
 
-The `for (let ...)` statement is used to iterate over a [range].
+The range `start..end` contains all values with `start <= x < end`. It is empty if `start >= end`.
+
+The `for (let i in start..end)` statement is used to iterate over a `range`.
 
 ```nv,no_run
 use std.io;
@@ -1309,9 +1311,19 @@ n: 1
 n: 3
 ```
 
+Use `step` method to crate a new range with a step.
+
+```nv
+let items = [int] {};
+for (let i in (1..10).step(2)) {
+    items.push(i);
+}
+assert_eq items, [int] { 1, 3, 5, 7, 9 };
+```
+
 ### Iter an Array
 
-The `for (let ...)` statement is used to iterate over an [array].
+The `for (let item in array)` statement is used to iterate over an [array].
 
 ```nv,no_run
 use std.io;
@@ -1333,23 +1345,21 @@ bar
 baz
 ```
 
-### Iter Key, Value Pairs from a Map
+### Iter a Map
 
-The `for (let ...)` statement is used to iterate over a [map].
+The `for (let k, v in map)` statement is used to iterate over a [map].
 
-```nv,no_run
-use std.io;
+```nv
+let items = <string, string> {
+    "title": "Navi",
+    "url": "https://navi-lang.org"
+};
 
-fn main() {
-    let items = <string, string> {
-        "title": "Navi",
-        "url": "https://navi-lang.org"
-    };
-
-    for (let key, value in items) {
-        io.println(`${key}: ${value}`);
-    }
+let result = [string] {};
+for (let k, v in items) {
+    result.push(`${k}: ${v}`);
 }
+assert_eq result.join(", "), "title: Navi, url: https://navi-lang.org";
 ```
 
 Output:
