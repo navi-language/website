@@ -940,9 +940,9 @@ fn main() {
 }
 ```
 
-### Cast an Interface to a Type
+### Type Assertion
 
-Use `.(type)` to cast an interface to a type.
+Use `.(type)` to assert an interfacce to a type.
 
 ```nv, should_panic
 interface ToString {
