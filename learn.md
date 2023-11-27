@@ -218,12 +218,12 @@ Expect to **compile failed**
 
 ### Primitive Types
 
-| Type     | Rust Equivalent | Description           | Example               |
-| -------- | --------------- | --------------------- | --------------------- |
-| [int]    | i64             | A signed integer type | `1`, `-29`, `0`       |
-| [string] | String          | A UTF-8 string type.  | "Hello World"         |
-| [bool]   | bool            | A boolean type.       | `true`, `false`       |
-| [float]  | f64             | A floating point type | `1.0`, `-29.0`, `0.0` |
+| Type     | Rust Equivalent | Description              | Example               |
+| -------- | --------------- | ------------------------ | --------------------- |
+| [int]    | i64             | A signed integer type    | `1`, `-29`, `0`       |
+| [bool]   | bool            | A boolean type.          | `true`, `false`       |
+| [float]  | f64             | A floating point type    | `1.0`, `-29.0`, `0.0` |
+| [string] | str             | A immutable UTF-8 string | `"Hello, 世界"`       |
 
 ::: info
 💡 Navi only have [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
@@ -233,12 +233,50 @@ There is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
 
 ### Primitive Values
 
-| Name               | Description                            |
-| ------------------ | -------------------------------------- |
-| `true` and `false` | [bool] values                          |
-| `nil`              | Use to set an [optional] value to null |
+| Name               | Description                    |
+| ------------------ | ------------------------------ |
+| `true` and `false` | [bool] values                  |
+| `nil`              | Set an [optional] value to nil |
 
-### String Literals {#string}
+### Integer {#int}
+
+In Navi, the `int` type is a signed integer type, and it is 64-bit on all platforms. This means it can hold values from `-9223372036854775808` to `9223372036854775807`.
+
+We don't have `uint` type or other integer types.
+
+```nv
+let n = 246;
+let n1 = -100;
+```
+
+### Float {#float}
+
+Navi has a `float` type (53 bits of precision), and it is 64-bit on all platforms.
+
+```nv
+let v = 3.14;
+let v1 = -2.0;
+let v2 = 0.0;
+let v3 = 10.23e+10;
+let v4 = 2.0e+2;
+```
+
+### Bool {#bool}
+
+Navi has a `bool` type, and it has two values: `true` and `false`.
+
+```nv
+let passed = true;
+if (passed) {
+    io.println("Passed!");
+} else {
+    io.println("Failed!");
+}
+
+let passed = false;
+```
+
+### String {#string}
 
 String is a UTF-8 string type, and it is immutable in Navi, all string literals are immutable.
 
@@ -594,7 +632,7 @@ The syntax of variable declarations is:
 where:
 
 - `declaration_mode` - is the variable mode, we can use `let`.
-- `type` - used to declare the variable type, such as `number`, `string` (optional parameter).
+- `type` - used to declare the variable type, such as `int`, `string`, or a optional type `int?`, `string?`.
 - `identifier` - variable name.
 - `expression` - the value of the variable, can be any expression.
 
@@ -661,29 +699,6 @@ Hello World!
 Hello Navi!
 Hello World!
 Hello Name in global scope!
-```
-
-## Integer {#int}
-
-In Navi, the `int` type is a signed integer type, and it is 64-bit on all platforms. This means it can hold values from `-9223372036854775808` to `9223372036854775807`.
-
-We don't have `uint` type or other integer types.
-
-```nv
-let n = 246;
-let n1 = -100;
-```
-
-## Float {#float}
-
-Navi has a `float` type (53 bits of precision), and it is 64-bit on all platforms.
-
-```nv
-let v = 3.14;
-let v1 = -2.0;
-let v2 = 0.0;
-let v3 = 10.23e+10;
-let v4 = 2.0e+2;
 ```
 
 ## Operator
@@ -1595,10 +1610,6 @@ test "unwrap or default" {
 ```
 
 ## Error
-
-TODO
-
-## Casting
 
 TODO
 
