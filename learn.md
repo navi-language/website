@@ -225,7 +225,11 @@ Expect to **compile failed**
 | [bool]   | bool            | A boolean type.       | `true`, `false`       |
 | [float]  | f64             | A floating point type | `1.0`, `-29.0`, `0.0` |
 
-In Navi we only have [int] (int64), and [float] (float64) types, there is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
+::: info
+💡 Navi only have [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
+
+There is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
+:::
 
 ### Primitive Values
 
@@ -292,7 +296,7 @@ Hello, \nWorld!
 Unknown escape sequence: a
 ```
 
-#### String Interpolation
+### String Interpolation
 
 String interpolation is a way to construct a new String value from a mix of constants, variables, literals, and expressions by including their values inside a [string] literal.
 
@@ -366,6 +370,100 @@ Output:
   │
 4 │     let name: string;
   │                     ^ unrecognized token: ;, expected tokens: ",", "=", "?"
+```
+
+### Type Casting
+
+Use `as` to cast a value to a type.
+
+You can cast a value from [int] to [float], or from [float] to [int].
+
+| FROM  | TO    |
+| ----- | ----- |
+| int   | float |
+| float | int   |
+| bool  | int   |
+
+```nv
+test "cast" {
+    let n = 100 as float;
+    assert_eq n, 100.0;
+
+    let n = 3.1415 as int;
+    assert_eq n, 3;
+
+    let n = true as int;
+    assert_eq n, 1;
+    let n = false as int;
+    assert_eq n, 0;
+}
+```
+
+There follow are invalid type casting:
+
+```nv,compile_fail
+let n = 300 as string; // unable cast type `int` to `string`
+let n = 3.1415 as string; // unable cast type `float` to `string`
+let n = "10" as int; // unable cast type `string` to `int`
+let n = "10" as float; // unable cast type `string` to `float`
+let n = 0 as bool; // unable cast type `int` to `bool`
+let n = true as float; // unable cast type `bool` to `float`
+```
+
+### Type Conversion
+
+Use `parse_int`, `parse_float` to convert a `string` to a `int` or `float`, the return value is a optional type. If the string value is invalid, it will return `nil`.
+
+And use `to_string` to convert all [Primitive Types] to a `string`, this always success.
+
+```nv
+test "parse_int" {
+    let n = "100".parse_int();
+    assert_eq n, 100;
+
+    let n = "abc100".parse_int();
+    assert_eq n, nil;
+
+    let n = "100abc".parse_int();
+    assert_eq n, nil;
+
+    let n = 3.1415 as int;
+    assert_eq n, 3;
+
+    let n = true as int;
+    assert_eq n, 1;
+
+    let n = false as int;
+    assert_eq n, 0;
+}
+
+test "to_float" {
+    let n = "100".parse_float();
+    assert_eq n, 100.0;
+
+    let n = "3.1415".parse_float();
+    assert_eq n, 3.1415;
+
+    let n = "3.9abc".parse_float();
+    assert_eq n, nil;
+
+    let n = 3 as float;
+    assert_eq n, 3.0;
+}
+
+test "to_string" {
+    let n = 100.to_string();
+    assert_eq n, "100";
+
+    let n = 3.1415.to_string();
+    assert_eq n, "3.1415";
+
+    let n = true.to_string();
+    assert_eq n, "true";
+
+    let n = false.to_string();
+    assert_eq n, "false";
+}
 ```
 
 ## Testing
@@ -1621,6 +1719,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | `private`   | TODO                                                                                       |
 | `mod`       | TODO                                                                                       |
 
+[Primitive Types]: #primitive-types
 [Use]: #use
 [Intergers]: #int
 [int]: #int
