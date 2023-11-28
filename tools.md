@@ -2,23 +2,81 @@
 
 # Navi Tools
 
-## Navi Fmt {#fmt}
+## Cli Commands
 
-Navi Fmt is a code formatter for Navi, it can format your code to a standard style.
+Navi has a command line tool `navi`, you can use it to run, test, and benchmark your Navi code.
+
+Use `navi -h` to see the help.
+
+### navi run
+
+Use `navi run` to run a Navi file, default it will run `main.nv` in the current directory.
+
+```shell
+$ navi run
+```
+
+Or you can pass a file name to run it.
+
+```shell
+$ navi run main.nv
+```
+
+Or use `-s` to run a script.
+
+```shell
+navi run -s 'use std.io; io.println("Hello World!");'
+```
+
+### navi test
+
+Use `navi test` to run tests in a Navi file, default it will run all tests (\*_/_.{nv,nvs}) in the current directory.
+
+```shell
+$ navi test
+```
+
+Or you can pass a file name to run it.
+
+```shell
+$ navi test foo/bar.nv
+```
+
+### navi bench
+
+Use `navi bench` to run benchmarks in a Navi file, default it will run all benchmarks (\*.{nv,nvs}) in the current directory.
+
+::: warning
+Unlike `navi test`, `navi bench` will not iter all subdirectories, it will only run benchmarks in the current directory.
+:::
+
+```shell
+$ navi bench
+```
+
+Or you can pass a file name to run it.
+
+```shell
+$ navi bench foo/bar.nv
+```
+
+### navi fmt {#fmt}
+
+`navi fmt` is a code formatter for Navi, it can format your code to a standard style.
 
 ```bash
 $ navi fmt -h
 Format all Navi files (*.nv)
 
-Usage: navi fmt [OPTIONS] [ENTRY]
+Usage: navi fmt [OPTIONS] [INPUT]
 
 Arguments:
-  [ENTRY]  Entry module name or a file path [default: .]
+  [INPUT]  File (.nv) or path to format [default: .]
 
 Options:
   -e, --emit <EMIT>  Emit formatted code to stdout or write to file [default: files] [possible values: files, stdout]
   -s, --stdin        Read code from stdin
-  -t, --type <TYPE>  Whether to read Navi code or Navi Stream code [default: nv] [possible values: nv,nvs]
+  -t, --type <TYPE>  Whether to read Navi code or Navi Stream code [default: nv] [possible values: nv, nvs]
   -h, --help         Print help information
 ```
 

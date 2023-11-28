@@ -50,9 +50,9 @@ In addition to its capabilities as a statically typed, compiled language, Navi o
 
 ## Standard Library
 
-The [Navi Standard Library] has its own documentation.
+The [Navi Standard Library](/stdlib/) has its own documentation.
 
-## Hello World
+## Getting Started
 
 Write a `main.nv`, `.nv` is the file extension of the Navi language.
 
@@ -87,7 +87,7 @@ This code sample demonstrates the basic syntax of Navi.
 - The `message` variable is defined by a string interpolation (Like JavaScript) by using "``", and the `${name}` is a variable reference.
 - The `println` function is used to print a string to the console.
 - Use `;` to end a statement.
-- Finally, the Code style uses 4 spaces for indentation.
+- Finally, the Code style uses 4 spaces for indentation.\
 
 ## Comments
 
