@@ -265,7 +265,9 @@ let v4 = 2.0e+2;
 
 Navi has a `bool` type, and it has two values: `true` and `false`.
 
-```nv
+```nv, no_run
+use std.io;
+
 let passed = true;
 if (passed) {
     io.println("Passed!");
@@ -676,13 +678,6 @@ fn main() {
     let name = "World";
     io.println(`Hello ${name}!`);
 
-    {
-        let name = "Navi";
-        io.println(`Hello ${name}!`);
-    }
-
-    io.println(`Hello ${name}!`);
-
     foo();
 }
 
@@ -952,7 +947,7 @@ impl User {
 }
 ```
 
-::: warning
+::: warning TIP
 In Navi, we can't define a struct function, e.g. `User.new`, `User.create`, `User.delete`, and etc.
 
 There just have struct instance method, `user.say()`, `user.save()`, `user.delete()`, and etc.
@@ -1081,60 +1076,6 @@ let user: ToString = User {};
 let user = user.(User);
 // now use is `User`.
 let user = user.(string); // panic: User can't cast to string.
-```
-
-## Block
-
-Blocks are a collection of statements enclosed by `{}` for limiting the scope of variables and for grouping statements.
-
-```nv
-test "access variable after block scope" {
-    {
-        let n = 1;
-    }
-    // This will cause a compile error.
-    assert n == 1;
-}
-```
-
-Output:
-
-```
-  ┌─ main.nv:6:12
-  │
-6 │     assert n == 1;
-  │            ^ variable `n` not exists
-```
-
-See also:
-
-- [While]
-- [Loop]
-
-### Shadowing
-
-[Identifiers] are never allowed to "hide" other identifiers by using the same name:
-
-```nv
-test "shadowing blocks 1" {
-    let a = 1;
-    {
-        let a = 2;
-        assert_eq a, 2;
-    }
-    assert_eq a, 1;
-}
-
-test "shadowing blocks 2" {
-    {
-        let a = 1;
-        assert_eq a, 1;
-    }
-    {
-        let a = 2;
-        assert_eq a, 2;
-    }
-}
 ```
 
 ## Switch
@@ -1577,7 +1518,7 @@ Now the `optional_name` is an [optional] type, it can be a [string] or `nil`.
 The `!` operator is used to unwrap an [optional] value, if the value is `nil`, it will panic.
 It is useful when you want to get a [value] from an [optional] value and you are sure it is not `nil`.
 
-::: warning
+::: warning NOTE
 To keep your code safe, when you use `!`, you must be sure it is not `nil`.
 
 If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from an [optional] value.
@@ -1621,7 +1562,156 @@ test "unwrap or default" {
 
 ## Error
 
-TODO
+The `throws` keyword on a function to describe that the function can be thrown an error.
+
+::: warning NOTE
+All function that signature is `throws` must use `try`, `try?` or `try!` keyword before it when you call it.
+:::
+
+| Keyword   | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| `throws`  | The function can throw an error.                             |
+| `try`     | The error will be thrown, if the function throws an error.   |
+| `try?`    | If error is thrown, the `try?` will return `nil`.            |
+| `try!`    | If error is thrown, the `try!` will panic.                   |
+| `throw`   | Throw an error.                                              |
+| `do`      | The `do` block is used to handle an error.                   |
+| `catch`   | The `catch` block is used to match an error interface.       |
+| `finally` | The `finally` block is optional, it will always be executed. |
+
+### Error Type
+
+By default, `throw` can throw a [string] or a custom error type that implement the `Error` interface.
+
+```nv
+interface Error {
+    fn error(): string;
+}
+```
+
+So you can just throw [string]:
+
+```nv, ignore
+throw "error message";
+```
+
+Or implement the `Error` interface for a custom error type:
+
+```nv, ignore
+struct MyError {
+    message: string
+}
+
+impl MyError {
+    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an error interface.
+    fn error(): string {
+        return self.message;
+    }
+}
+```
+
+We can use `throws` to declare an error type, or just use the default (The default error is a [string]).
+
+```nv, ignore
+fn hello(name: string): string throws {
+    if (name == "Navi") {
+        throw "name can't be Navi";
+    }
+    return `Hello ${name}!`;
+}
+
+fn hello_with_custom_error(name: string): string throws MyError {
+    if (name == "Navi") {
+        throw MyError { message: "name can't be Navi" };
+    }
+    return `Hello ${name}!`;
+}
+```
+
+For example:
+
+```nv
+fn hello(name: string): string throws {
+    if (name == "Navi") {
+        throw "name can't be Navi";
+    }
+    return `Hello ${name}!`;
+}
+
+fn main() throws {
+    let result = try? hello("Navi");
+    io.println(result);
+}
+```
+
+### Catch Error
+
+Use `do ... catch` statement to catch an error.
+
+- The `do` block, you must use `try` keyword before the all functions that can throw an error.
+- The `catch` block use to match an error interface, it can have multiple `catch` blocks to match different error types.
+- And the `finally` block is optional, it will always be executed.
+
+Every types that implement the `error` method can be used as an error interface.
+
+```nv, ignore
+struct MyError {
+    message: string
+}
+
+impl MyError {
+    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an error interface.
+    fn error(): string {
+        return self.message;
+    }
+}
+
+do {
+    let result = try hello("Navi");
+    io.println(result);
+    let result1 = try hello("Sunli");
+} catch (e) {
+    io.println(e.error());
+} catch (e: MyError) {
+    // ...
+} finally {
+    // This block always be executed.
+}
+```
+
+### Handle Error
+
+#### try
+
+If the function throws an error, the `try` will throw the error.
+
+```nv, no_run
+fn main() throws {
+    let result = try hello("Navi");
+    // if error is thrown, the `try` will throw the error.
+}
+```
+
+#### try?
+
+If the function throws an error, the `try?` will return `nil`.
+
+```nv, ignore
+let result = try? hello("Navi");
+assert_eq result, nil;
+
+let result = try? hello("Sunli");
+assert_eq result, "Hello Sunli!";
+```
+
+#### try!
+
+If the function throws an error, the `try!` will panic.
+
+```nv, should_panic
+let result = try! hello("Navi");
+// This will cause a panic. It same as:
+```
 
 ## Use
 
@@ -1666,6 +1756,12 @@ use models.profile;
 use utils;
 ```
 
+## Type alias
+
+Use `type` keyword to create a type alias.
+
+TODO
+
 ## Spawn
 
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
@@ -1699,46 +1795,53 @@ TODO
 
 The following are reserved keywords in Navi, they can't be used as [identifier].
 
-| Keyword     | Description                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------ |
-| `let`       | Declare a variable.                                                                        |
-| `nil`       | An [optional] value of nil.                                                                |
-| `true`      | true                                                                                       |
-| `false`     | false                                                                                      |
-| `for`       | [for] loop                                                                                 |
-| `in`        | key use in [for] loop                                                                      |
-| `while`     | [while] loop                                                                               |
-| `loop`      | an infinite [loop]                                                                         |
-| `continue`  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
-| `break`     | `break` is used to exit a loop before iteration completes naturally.                       |
-| `if`        | [if] statement                                                                             |
-| `else`      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
-| `fn`        | Declare a function.                                                                        |
-| `return`    | Return a value from a function.                                                            |
-| `use`       | [use] a module from the standard library or a file.                                        |
-| `as`        | Convert a value to a type.                                                                 |
-| `switch`    | [switch] statement                                                                         |
-| `case`      | `case` for `switch` statement.                                                             |
-| `default`   | `default` case for `switch` statement.                                                     |
-| `struct`    | Define a struct.                                                                           |
-| `spawn`     | [Spawn] a coroutine.                                                                       |
-| `select`    | Use to select a [channel].                                                                 |
-| `assert`    | assert                                                                                     |
-| `assert_eq` | assert equal                                                                               |
-| `assert_ne` | assert not equal                                                                           |
-| `impl`      | Declare a struct implementation.                                                           |
-| `self`      | A reference to the current struct instance.                                                |
-| `test`      | Test function                                                                              |
-| `bench`     | Benchmark function                                                                         |
-| `tests`     | Test group                                                                                 |
-| `benches`   | Benchmark group                                                                            |
-| `interface` | Define a [interface]                                                                       |
-| `is`        |                                                                                            |
-| ---         | Reserved for future use                                                                    |
-| `pub`       | TODO                                                                                       |
-| `error`     | TODO                                                                                       |
-| `private`   | TODO                                                                                       |
-| `mod`       | TODO                                                                                       |
+| Keyword                     | Description                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------ |
+| `let`                       | Declare a variable.                                                                        |
+| `nil`                       | An [optional] value of nil.                                                                |
+| `true`                      | true                                                                                       |
+| `false`                     | false                                                                                      |
+| `for`                       | [for] loop                                                                                 |
+| `in`                        | key use in [for] loop                                                                      |
+| `while`                     | [while] loop                                                                               |
+| `loop`                      | an infinite [loop]                                                                         |
+| `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
+| `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
+| `if`                        | [if] statement                                                                             |
+| `else`                      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
+| `fn`                        | Declare a function.                                                                        |
+| `return`                    | Return a value from a function.                                                            |
+| `use`                       | [use] a module from the standard library or a file.                                        |
+| `as`                        | Convert a value to a type.                                                                 |
+| `switch`                    | [switch] statement                                                                         |
+| `case`                      | `case` for `switch` statement.                                                             |
+| `default`                   | `default` case for `switch` statement.                                                     |
+| `struct`                    | Define a struct.                                                                           |
+| `spawn`                     | [Spawn] a coroutine.                                                                       |
+| `select`                    | Use to select a [channel].                                                                 |
+| `assert`                    | assert                                                                                     |
+| `assert_eq`                 | assert equal                                                                               |
+| `assert_ne`                 | assert not equal                                                                           |
+| `impl`                      | Declare a struct implementation.                                                           |
+| `self`                      | A reference to the current struct instance.                                                |
+| `test`                      | Test function                                                                              |
+| `bench`                     | Benchmark function                                                                         |
+| `tests`                     | Test group                                                                                 |
+| `benches`                   | Benchmark group                                                                            |
+| `interface`                 | Define a [interface]                                                                       |
+| `throws`                    | Declare a function can throw an [error].                                                   |
+| `throw`                     | Throw an error.                                                                            |
+| `try`<br/>`try?`<br/>`try!` | Use `try` to handle an error.                                                              |
+| `do`                        | Use `do` to handle an error.                                                               |
+| `catch`                     | Use `catch` to catch an error.                                                             |
+| `finally`                   | Use `finally` to execute a block of code after `try` and `catch` blocks.                   |
+| `type`                      | Create a type alias.                                                                       |
+| `panic!`                    | Panic an error.                                                                            |
+| ---                         | Reserved for future use                                                                    |
+| `enum`                      | Declare an enum. TODO                                                                      |
+| `pub`                       | TODO                                                                                       |
+| `private`                   | TODO                                                                                       |
+| `mod`                       | TODO                                                                                       |
 
 [Primitive Types]: #primitive-types
 [Use]: #use
@@ -1769,7 +1872,5 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [unwrap || default]: #unwrap-or-default
 [Unwrap or Default]: #unwrap-or-default
 [Concurrency is NOT Parallelism]: https://ics.uci.edu/~rickl/courses/ics-h197/2014-fq-h197/talk-Wu-Concurrency-is-NOT-parallelism.pdf
-
-```
-
-```
+[Error]: #error
+[Type Alias]: #type-alias
