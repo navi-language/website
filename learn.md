@@ -1581,10 +1581,14 @@ All function that signature is `throws` must use `try`, `try?` or `try!` keyword
 
 ### Error Type
 
-By default, `throw` can throw a [string] or a custom error type that implement the `Error` interface.
+By default, `throw` can throw with a [string] or a custom error type that implement the `error` interface.
+
+::: info TIP
+Because Navi has implemented the `error` interface for [string], so you can throw a [string] directly.
+:::
 
 ```nv
-interface Error {
+interface error {
     fn error(): string;
 }
 ```
@@ -1595,7 +1599,7 @@ So you can just throw [string]:
 throw "error message";
 ```
 
-Or implement the `Error` interface for a custom error type:
+Or implement the `error` interface for a custom error type:
 
 ```nv, ignore
 struct MyError {
@@ -1603,14 +1607,14 @@ struct MyError {
 }
 
 impl MyError {
-    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an error interface.
+    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an `error` interface.
     fn error(): string {
         return self.message;
     }
 }
 ```
 
-We can use `throws` to declare an error type, or just use the default (The default error is a [string]).
+We can use `throws` to declare an error type, or keep it empty to use default error.
 
 ```nv, ignore
 fn hello(name: string): string throws {
@@ -1652,7 +1656,7 @@ Use `do ... catch` statement to catch an error.
 - The `catch` block use to match an error interface, it can have multiple `catch` blocks to match different error types.
 - And the `finally` block is optional, it will always be executed.
 
-Every types that implement the `error` method can be used as an error interface.
+Every types that implement the `error` method can be used as an `error` interface.
 
 ```nv, ignore
 struct MyError {
