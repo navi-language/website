@@ -7,13 +7,13 @@ let target_file = "releases.md";
 let repo = "navi-language/navi";
 let page_size = 200;
 
-fn fetch_releases() {
+fn fetch_releases() throws {
     let release_url = `https://api.github.com/repos/${repo}/releases?per_page=${page_size}`;
     let headers = http.new_headers();
     headers.set("User-Agent", "Navi-Release-Generator");
 
-    let res = http.get(release_url, headers: headers);
-    let data = res.json();
+    let res = try http.get(release_url, headers: headers);
+    let data = try res.json();
 
     let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
     let release_body = frontmatter + "# Releases\n\n";
@@ -35,12 +35,12 @@ fn fetch_releases() {
         release_body += `${body}\n\n`;
     }
 
-    let f = fs.create(target_file);
-    f.write_string(release_body);
-    f.flush();
+    let f = try fs.create(target_file);
+    try f.write_string(release_body);
+    try f.flush();
 }
 
 fn main() throws {
-    fetch_releases();
+    try fetch_releases();
     io.println("Generate releases success.");
 }
