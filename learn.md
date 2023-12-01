@@ -59,7 +59,7 @@ Write a `main.nv`, `.nv` is the file extension of the Navi language.
 ```nv
 use std.io;
 
-fn main() {
+fn main() throws {
     let name = "World";
     let message = `Hello ${name}!\n`;
     io.println(message);
@@ -81,11 +81,12 @@ This code sample demonstrates the basic syntax of Navi.
 - The `use` keyword is used to import the `io` module from the standard library.
 - The `//` is used to comment a line.
 - The `fn` keyword is used to define a function.
-- The `main` function is the entry point of the program.
+- The `main` function is the entry point of the program, the `main` function must have `throws` keyword, and it can throw an error.
+- The `throws` keyword is used to declare a function can throw an error.
 - The `let` keyword is used to declare a variable.
 - The `name` variable is a string type, or you can use `let name: string = "World";` to declare it.
 - The `message` variable is defined by a string interpolation (Like JavaScript) by using "``", and the `${name}` is a variable reference.
-- The `println` function is used to print a string to the console.
+- The `io.println` function is used to print a string to the console.
 - Use `;` to end a statement.
 - Finally, the Code style uses 4 spaces for indentation.\
 
@@ -285,7 +286,7 @@ String is a UTF-8 string type, and it is immutable in Navi, all string literals 
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let message = "Hello, World 🎉!";
 
     io.println(message);
@@ -319,7 +320,7 @@ If you use `\` in a string outside of an escape sequence, it will be ignored.
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     io.println("\"Hello, \nWorld!\"");
     io.println("Hello, \\nWorld!");
     io.println("Unknown escape sequence: \a");
@@ -366,7 +367,7 @@ let name = "World";
 let pi = 3.14;
 let passed = true;
 
-fn main() {
+fn main() throws {
     name = "Navi";
     pi = 3.1415926;
     passed = false;
@@ -394,7 +395,7 @@ Variables must be initialized:
 ```nv,compile_fail
 use std.io;
 
-fn main() {
+fn main() throws {
     // This will cause a compile error.
     let name: string;
 
@@ -410,6 +411,12 @@ Output:
   │
 4 │     let name: string;
   │                     ^ unrecognized token: ;, expected tokens: ",", "=", "?"
+```
+
+If we changed to give a default value, then it will be ok.
+
+```nv, no_run
+let name: string = "";
 ```
 
 ### Type Casting
@@ -674,7 +681,7 @@ use std.io;
 
 let name = "Name in global scope";
 
-fn main() {
+fn main() throws {
     let name = "World";
     io.println(`Hello ${name}!`);
 
@@ -811,6 +818,18 @@ test "array" {
 }
 ```
 
+If you decalre the array type, then you can assigment a array without the type prefix.
+
+```nv
+let items: [string] = { "Rust", "Navi" };
+
+fn receive_method(items: [string]) {
+    // ...
+}
+
+receive_method({ "Rust", "Navi" });
+```
+
 ### Get & Set Item
 
 Use `[idx]`, `[idx]=` to get and set an item from the array, the index must be an [int] type.
@@ -895,17 +914,21 @@ Use the `struct` keyword to declare a struct, and use `.` to access a field.
 - The struct name must be an [identifier] with `CamelCase` style, e.g.: `User`, `UserGroup`, `UserGroupItem`.
 - And the field name must be an [identifier], with `snake_case` style, e.g.: `user_name`, `user_group`, `user_group_item`.
 - The filed type can be a type or an [optional] type.
+- The field can have a default value, e.g.: `confirmed: bool = false`, and then you can create a struct instance without the `confirmed` field.
 
 ```nv
 struct User {
     name: string,
     id: int,
     profile: Profile?,
+    // default value is `false`
+    confirmed: bool = false,
 }
 
 struct Profile {
     bio: string?,
     city: string?,
+    tags: [string] = [string] {},
 }
 ```
 
@@ -918,19 +941,21 @@ We will support [optional] field default value to `nil` in the future.
 :::
 
 ```nv, ignore
-let user = User {
-    name: "Jason Lee",
-    id: 1,
-    profile: Profile {
-        bio: nil,
-        city: "Chengdu",
-    },
-};
-
 test "user" {
+    let user = User {
+        name: "Jason Lee",
+        id: 1,
+        profile: {
+            bio: nil,
+            city: "Chengdu",
+        },
+    };
+
     assert_eq user.name, "Jason Lee";
+    assert_eq user.confirmed, false;
     assert_eq user.profile?.bio, nil;
     assert_eq user.profile?.city, "Chengdu";
+    assert_eq user.tags.len(), 0;
 }
 ```
 
@@ -966,7 +991,7 @@ fn new_user(name: string, id: int): User {
     };
 }
 
-fn main() {
+fn main() throws {
     let user = new_user("Sunli", 1);
     io.println(user.say());
 }
@@ -1038,7 +1063,7 @@ fn read_info(item: Reader) {
     io.println(item.read());
 }
 
-fn main() {
+fn main() throws {
     let user = User {
         name: "Sunli",
     };
@@ -1099,7 +1124,7 @@ fn get_message(n: int): string {
     return message;
 }
 
-fn main() {
+fn main() throws {
     io.println(get_message(1));
     io.println(get_message(2));
     io.println(get_message(3));
@@ -1148,7 +1173,7 @@ Use the `while` keyword to declare a while loop, the condition is an [expression
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let n = 0;
     while (n < 5) {
         io.println(`${n}`);
@@ -1173,7 +1198,7 @@ Use the `break` keyword to exit a while loop.
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let n = 0;
     while (true) {
         io.println(`${n}`);
@@ -1198,7 +1223,7 @@ Use `continue` to jump back to the beginning of the loop.
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let n = 0;
     while (n < 5) {
         n += 1;
@@ -1234,7 +1259,7 @@ The `for (let i in start..end)` statement is used to iterate over a `range`.
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     for (let n in 0..5) {
         if (n % 2 == 0) {
             continue;
@@ -1269,7 +1294,7 @@ The `for (let item in array)` statement is used to iterate over an [array].
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let items = [string] { "foo", "bar", "baz" };
     for (let item in items) {
         io.println(item);
@@ -1318,7 +1343,7 @@ Like most programming languages, Navi has the `if` statement for conditional exe
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     let n = 1;
     if (n == 1) {
         io.println("One");
@@ -1347,7 +1372,7 @@ fn get_a(a: string?) {
     }
 }
 
-fn main() {
+fn main() throws {
     get_a("foo");
     get_a(nil);
 }
@@ -1394,7 +1419,7 @@ impl User {
     }
 }
 
-fn main() {
+fn main() throws {
     io.println(add(1, 2));
     let user = User { name: "Navi" };
     io.println(user.say());
@@ -1435,7 +1460,7 @@ fn add(a: int, b: int?): string {
     return `${a} + ${b} = ${result}`;
 }
 
-fn main() {
+fn main() throws {
     io.println(add(1, 2));
     io.println(add(1, nil));
 }
@@ -1474,7 +1499,7 @@ fn add(a: int, b: int, mode: string = "+", debug: bool = false): string {
     return `${a} ${mode} ${b} = ${result}`;
 }
 
-fn main() {
+fn main() throws {
     io.println(add(1, 2));
     io.println(add(1, 2, mode: "+"));
     io.println(add(1, 2, mode: "-"));
@@ -1527,7 +1552,7 @@ If not, don't use it, the [value || default](#unwrap-or-default) is a better way
 ```nv,should_panic
 use std.io;
 
-fn main() {
+fn main() throws {
     let name: string? = "Navi";
     // This is ok.
     io.println(name!);
@@ -1725,13 +1750,37 @@ The `use` keyword is used to import a module from the standard library or a file
 use std.io;
 use std.url;
 
-fn main() {
+fn main() throws {
     let my_url = url.parse("https://navi-lang.org");
     assert_eq my_url?.host, "navi-lang.org";
 }
 ```
 
 When you import, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url` to `url`, `std.net.http` to `http`.
+
+### Alias
+
+Sometime we may want to use a different name for a module, we can use `as` to import a module with an alias.
+
+```nv
+use std.url as base_url;
+
+let url = try! base_url.parse("https://navi-lang.org");
+assert_eq url.host, "navi-lang.org";
+```
+
+### Use multiple modules
+
+We can use multiple modules by once `use`.
+
+```nv
+use std.{io, url};
+
+fn main() throws {
+    let my_url = try url.parse("https://navi-lang.org");
+    assert_eq my_url.host, "navi-lang.org";
+}
+```
 
 ### Import a Module from local
 
@@ -1773,7 +1822,7 @@ Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` key
 ```nv,no_run
 use std.io;
 
-fn main() {
+fn main() throws {
     spawn {
         io.println("Hello");
     }

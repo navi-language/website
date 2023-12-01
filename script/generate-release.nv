@@ -40,7 +40,7 @@ fn fetch_releases() {
     f.flush();
 }
 
-fn main() {
+fn main() throws {
     fetch_releases();
     io.println("Generate releases success.");
 }

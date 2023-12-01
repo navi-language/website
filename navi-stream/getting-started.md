@@ -57,7 +57,7 @@ impl Candlestick {
     }
 }
 
-fn main() {
+fn main() throws {
     let f = fs.open("data.json");
     let data = json.parse(f.read_to_string());
 
