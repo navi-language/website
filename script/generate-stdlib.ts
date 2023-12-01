@@ -29,7 +29,7 @@ interface Property {
   doc?: string;
 }
 
-interface Function {
+export interface Function {
   kind: 'function' | 'method';
   module: string;
   name: string;
@@ -40,8 +40,13 @@ interface FunctionDesc {
   deprecated: boolean;
   async: boolean;
   args: [Argument];
+  returns?: [string];
+  /**
+   * @deprecated Remove this after 0.9.1
+   */
   return?: [string];
   doc?: string;
+  throws?: [string];
 }
 
 interface Argument {
@@ -308,24 +313,14 @@ const generateFunctionDoc = (
   let { level = 2, anchorPrefix, kind = 'function' } = opts;
 
   let buf = new StringBuffer();
-  let prefix = fn.desc.async ? 'async ' : '';
-  let returns = fn.desc.return ? `: ${fn.desc.return.join(', ')}` : '';
-  let args = kind === 'method' ? fn.desc.args.slice(1) : fn.desc.args;
-  let args_str = args
-    .map((arg) => {
-      let default_value = arg.default_value ? ` = ${arg.default_value}` : '';
-      return `${arg.name}: ${arg.type}${default_value}`;
-    })
-    .join(', ');
+  let fnSign = generateFunction(fn);
 
   let headingPrefix = '#'.repeat(level);
 
   // Write method heading
   buf.write(`${headingPrefix} ${fn.name} {#${anchorPrefix}${fn.name}}\n`);
 
-  buf.write(
-    `\`\`\`nv\n${prefix}fn ${fn.name}(${args_str})${returns}\n\`\`\`\n`
-  );
+  buf.write(`\`\`\`nv\n${fnSign}\n\`\`\`\n`);
 
   links.write(`[${fn.name}]: #${fn.name}`);
 
@@ -338,6 +333,39 @@ const generateFunctionDoc = (
   buf.write('\n');
 
   return buf.toString('\n');
+};
+
+export const generateFunction = (fn: Function): string => {
+  let prefix = fn.desc.async ? 'async ' : '';
+  let returns = '';
+  if (fn.desc.returns) {
+    if (fn.desc.returns.length > 0) {
+      returns = `: ${fn.desc.returns.join(', ')}`;
+    }
+  }
+  if (fn.desc.return) {
+    if (fn.desc.return.length > 0) {
+      returns = `: ${fn.desc.return.join(', ')}`;
+    }
+  }
+  let args = fn.kind === 'method' ? fn.desc.args.slice(1) : fn.desc.args;
+  let args_str = args
+    .map((arg) => {
+      let default_value = arg.default_value ? ` = ${arg.default_value}` : '';
+      return `${arg.name}: ${arg.type}${default_value}`;
+    })
+    .join(', ');
+
+  let throws = '';
+  if (fn.desc.throws) {
+    if (fn.desc.throws.length > 0) {
+      throws = ` throws ${fn.desc.throws.join(', ')}`;
+    } else {
+      throws = ` throws`;
+    }
+  }
+
+  return `${prefix}fn ${fn.name}(${args_str})${returns}${throws}`;
 };
 
 fetchStdlibDocs().then(() => {
