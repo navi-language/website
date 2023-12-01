@@ -1,7 +1,7 @@
 use std.regex;
 use std.io;
 
-let heading_re = regex.parse("(?m)^\\s*([#]+)\\s*");
+let heading_re = try! regex.parse("(?m)^\\s*([#]+)\\s*");
 
 /// Replace all headings in a markdown document with headings of a different level.
 fn replace_headings(body: string?, level: int = 1): string {
