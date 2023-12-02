@@ -1077,7 +1077,7 @@ fn main() throws {
 
 Use `.(type)` to assert an interfacce to a type.
 
-```nv, should_panic
+```nv, compile_fail
 interface ToString {
     fn to_string(): string;
 }
@@ -1112,13 +1112,14 @@ use std.io;
 
 fn get_message(n: int): string {
     let message = "";
+
     switch (n) {
-    case 1:
-        message = "One";
-    case 2:
-        message = "Two";
-    default:
-        message = "Other";
+        case 1:
+            message = "One";
+        case 2:
+            message = "Two";
+        default:
+            message = "Other";
     }
 
     return message;
@@ -1149,15 +1150,12 @@ You can also use `{}` to declare a [block] in case of more complex logic.
 fn get_message(n: int): string {
     let message = "";
     switch (n) {
-        case 1: {
+        case 1:
             message = "One";
-        }
-        case 2: {
+        case 2:
             message = "Two";
-        }
-        default: {
+        default:
             message = "Other";
-        }
     }
 
     return message;
@@ -1659,7 +1657,9 @@ fn hello_with_custom_error(name: string): string throws MyError {
 
 For example:
 
-```nv
+```nv,no_run
+use std.io;
+
 fn hello(name: string): string throws {
     if (name == "Navi") {
         throw "name can't be Navi";
@@ -1669,7 +1669,7 @@ fn hello(name: string): string throws {
 
 fn main() throws {
     let result = try? hello("Navi");
-    io.println(result);
+    io.println(`${result}`);
 }
 ```
 
@@ -1683,7 +1683,9 @@ Use `do ... catch` statement to catch an error.
 
 Every types that implement the `error` method can be used as an `error` interface.
 
-```nv, ignore
+```nv,ignore
+use std.io;
+
 struct MyError {
     message: string
 }
@@ -1693,6 +1695,13 @@ impl MyError {
     fn error(): string {
         return self.message;
     }
+}
+
+fn hello(name: string): string throws {
+    if (name == "Navi") {
+        throw "name can't be Navi";
+    }
+    return `Hello ${name}!`;
 }
 
 do {
@@ -1715,6 +1724,13 @@ do {
 If the function throws an error, the `try` will throw the error.
 
 ```nv, no_run
+fn hello(name: string): string throws {
+    if (name == "Navi") {
+        throw "name can't be Navi";
+    }
+    return `Hello ${name}!`;
+}
+
 fn main() throws {
     let result = try hello("Navi");
     // if error is thrown, the `try` will throw the error.
@@ -1751,8 +1767,8 @@ use std.io;
 use std.url;
 
 fn main() throws {
-    let my_url = url.parse("https://navi-lang.org");
-    assert_eq my_url?.host, "navi-lang.org";
+    let my_url = try url.parse("https://navi-lang.org");
+    assert_eq my_url.host, "navi-lang.org";
 }
 ```
 
