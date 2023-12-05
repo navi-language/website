@@ -966,33 +966,26 @@ Unlike Rust, you don't need to declare `self` as the first parameter.
 
 ```nv, ignore
 impl User {
-    fn say(): string {
+    fn new(name: string): User {
+        return User {
+            name: name,
+            id: 0,
+            profile: nil,
+        };
+    }
+
+    fn say(self): string {
         return `Hello ${self.name}!`;
     }
 }
 ```
 
-::: warning TIP
-In Navi, we can't define a struct function, e.g. `User.new`, `User.create`, `User.delete`, and etc.
-
-There just have struct instance method, `user.say()`, `user.save()`, `user.delete()`, and etc.
-:::
-
-For example:
-
-You can define a `new_user` function in the module level, and use it to create a new struct instance.
+- `new` is a **Static Method**, and it can call by `User.new`.
+- `say` is a **Instance Method**, and it can call by `user.say()`.
 
 ```nv, ignore
-fn new_user(name: string, id: int): User {
-    return User {
-        name: name,
-        id: id,
-        profile: nil,
-    };
-}
-
 fn main() throws {
-    let user = new_user("Sunli", 1);
+    let user = User.new("Sunli", 1);
     io.println(user.say());
 }
 ```
@@ -1007,14 +1000,15 @@ Use the `interface` keyword to declare an interface, and use `.` to access a met
 
 - The interface name must be an [identifier] with `CamelCase` style, e.g.: `ToString`, `Reader`, `Writer`.
 - And the method name must be an [identifier], with `snake_case` style, e.g.: `to_string`, `read`, `write`.
+- The first argument of the method must be `self`, it is a reference to the current struct instance.
 
 ```nv
 interface ToString {
-    fn to_string(): string;
+    fn to_string(self): string;
 }
 
 interface Reader {
-    fn read(): string;
+    fn read(self): string;
 }
 
 fn read_all(reader: Reader): ToString {
@@ -1030,11 +1024,11 @@ If any struct has all methods of an interface, it will implement the interface.
 
 ```nv
 interface ToString {
-    fn to_string(): string;
+    fn to_string(self): string;
 }
 
 interface Reader {
-    fn read(): string;
+    fn read(self): string;
 }
 
 struct User {
@@ -1042,11 +1036,11 @@ struct User {
 }
 
 impl User {
-    fn to_string(): string {
+    fn to_string(self): string {
         return `${self.name}`;
     }
 
-    fn read(): string {
+    fn read(self): string {
         return `Hello ${self.name}!`;
     }
 }
