@@ -37,14 +37,10 @@ export interface Function {
 }
 
 interface FunctionDesc {
-  deprecated: boolean;
+  deprecated?: string;
   async: boolean;
   args: [Argument];
   returns?: [string];
-  /**
-   * @deprecated Remove this after 0.9.1
-   */
-  return?: [string];
   doc?: string;
   throws?: [string];
 }
@@ -325,7 +321,9 @@ const generateFunctionDoc = (
   links.write(`[${fn.name}]: #${fn.name}`);
 
   if (fn.desc.deprecated) {
-    buf.write('::: Deprecated\n\n:::');
+    buf.write('::: warning, Deprecated');
+    buf.write(fn.desc.deprecated);
+    buf.write(':::\n');
     buf.write('\n');
   }
 
