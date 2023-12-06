@@ -1758,24 +1758,24 @@ The `use` keyword is used to import a module from the standard library or a file
 
 ```nv
 use std.io;
-use std.url;
+use std.url.URL;
 
 fn main() throws {
-    let my_url = try url.parse("https://navi-lang.org");
-    assert_eq my_url.host, "navi-lang.org";
+    let url = try URL.parse("https://navi-lang.org");
+    assert_eq url.host, "navi-lang.org";
 }
 ```
 
-When you import, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url` to `url`, `std.net.http` to `http`.
+When you import, the last part of the module name is the name of the module, e.g.: `use std.io` to `io`, `std.url.URL` to `URL`, `std.net.http` to `http`.
 
 ### Alias
 
 Sometime we may want to use a different name for a module, we can use `as` to import a module with an alias.
 
 ```nv
-use std.url as base_url;
+use std.url.URL as BaseURL;
 
-let url = try! base_url.parse("https://navi-lang.org");
+let url = try! BaseURL.parse("https://navi-lang.org");
 assert_eq url.host, "navi-lang.org";
 ```
 
@@ -1784,11 +1784,11 @@ assert_eq url.host, "navi-lang.org";
 We can use multiple modules by once `use`.
 
 ```nv
-use std.{io, url};
+use std.{io, url.URL};
 
 fn main() throws {
-    let my_url = try url.parse("https://navi-lang.org");
-    assert_eq my_url.host, "navi-lang.org";
+    let url = try URL.parse("https://navi-lang.org");
+    assert_eq url.host, "navi-lang.org";
 }
 ```
 
