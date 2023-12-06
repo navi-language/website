@@ -1,0 +1,40 @@
+struct StringBuffer {
+    buffer: [string],
+    length: int
+}
+
+impl StringBuffer {
+    fn new(): StringBuffer {
+        return StringBuffer { buffer: {}, length: 0 };
+    }
+
+    fn write(self, s: any) {
+        if (let s = s.(StringBuffer)) {
+            for (let s1 in s.buffer) {
+                self.buffer.push(s1);
+                self.length += s1.len();
+            }
+        } else {
+            let s = s.(string);
+            self.buffer.push(s);
+            self.length += s.len();
+        }
+    }
+
+    fn to_string(self, divider: string): string {
+        return self.buffer.join(divider);
+    }
+}
+
+test "StringBuffer" {
+    let buf = StringBuffer.new();
+    buf.write("Hello");
+    buf.write("World");
+    assert_eq buf.to_string(" "), "Hello World";
+    assert_eq buf.to_string(", "), "Hello, World";
+
+    let buf1 = StringBuffer.new();
+    buf1.write(buf);
+    buf1.write("!");
+    assert_eq buf1.to_string(" "), "Hello World !";
+}

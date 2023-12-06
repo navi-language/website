@@ -1,36 +1,44 @@
 use std.fs;
 use std.io;
-use std.net.http;
+use std.net.http.{self, Headers};
 use utils;
 
 let target_file = "releases.md";
 let repo = "navi-language/navi";
 let page_size = 200;
 
+struct Release {
+    name: string,
+    tag_name: string,
+    html_url: string,
+    prerelease: bool = false,
+    body: string,
+}
+
 fn fetch_releases() throws {
     let release_url = `https://api.github.com/repos/${repo}/releases?per_page=${page_size}`;
-    let headers = http.new_headers();
+    let headers = Headers.new();
     headers.set("User-Agent", "Navi-Release-Generator");
 
     let res = try http.get(release_url, headers: headers);
-    let data = try res.json();
+    let releases = try res.json::<[Release]>();
 
     let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
     let release_body = frontmatter + "# Releases\n\n";
 
-    for (let release in data.array()!) {
-        let prerelease = release.get("prerelease")?.bool() || false;
+    for (let release in releases) {
+        let prerelease = release.prerelease;
         if (prerelease) {
             // ignore pre-releases
             continue;
         }
 
-        let name = release.get("name")?.string() || "";
+        let name = release.name;
         if (name.is_empty()) {
-            name = release.get("tag_name")?.string()!;
+            name = release.tag_name;
         }
-        let html_url = release.get("html_url")?.string();
-        let body = utils.replace_headings(release.get("body")?.string(), level: 1);
+        let html_url = release.html_url;
+        let body = utils.replace_headings(release.body, level: 1);
         release_body += `## [${name}](${html_url})\n\n`;
         release_body += `${body}\n\n`;
     }
