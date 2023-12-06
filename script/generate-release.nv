@@ -8,20 +8,23 @@ let repo = "navi-language/navi";
 let page_size = 200;
 
 struct Release {
-    name: string,
+    name: string?,
     tag_name: string,
     html_url: string,
     prerelease: bool = false,
-    body: string,
+    body: string?,
 }
 
+type Releases = [Release];
+
 fn fetch_releases() throws {
+    // https://api.github.com/repos/navi-language/navi/releases
     let release_url = `https://api.github.com/repos/${repo}/releases?per_page=${page_size}`;
     let headers = Headers.new();
     headers.set("User-Agent", "Navi-Release-Generator");
 
     let res = try http.get(release_url, headers: headers);
-    let releases = try res.json::<[Release]>();
+    let releases = try res.json::<Releases>();
 
     let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
     let release_body = frontmatter + "# Releases\n\n";
@@ -34,7 +37,7 @@ fn fetch_releases() throws {
         }
 
         let name = release.name;
-        if (name.is_empty()) {
+        if (name == nil) {
             name = release.tag_name;
         }
         let html_url = release.html_url;
