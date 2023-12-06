@@ -1,0 +1,349 @@
+use std.json;
+use std.net.http;
+use std.fs.{self, File};
+use std.io;
+use string_buffer.{StringBuffer};
+use utils.{format_slug, replace_headings};
+use std.path;
+
+let repo = "navi-language/navi";
+let target = "stdlib";
+let INDOC_HEADING_LEVEL = 2;
+
+/// key is the module name
+/// value is the module
+type Stdlib = <string, Module>;
+
+struct Module {
+    name: string = "",
+    functions: [Function] = {},
+    structs: <string, Struct> = {}
+}
+
+struct Struct {
+    name: string = "",
+    properties: <string, Property> = {},
+    methods: <string, Function> = {},
+    doc: string? = nil
+}
+
+struct Property {
+    name: string = "",
+    getter: bool = false,
+    setter: bool = false,
+    doc: string? = nil
+}
+
+struct Function {
+    /// "function" | "method"
+    kind: string = "function",
+    module: string = "",
+    name: string = "",
+    desc: FunctionDesc,
+}
+
+struct FunctionDesc {
+    deprecated: string? = nil,
+    _async: bool = false,
+    args: [Argument] = {},
+    returns: [string]? = nil,
+    doc: string? = nil,
+    _throws: [string]? = nil,
+}
+
+struct Argument {
+    name: string = "",
+    _type: string = "",
+    default_value: string? = nil
+}
+
+fn generate() throws {
+    let stdlib = try json.parse::<Stdlib>(fs.read_to_string("stdlib.json"));
+    let module_names = stdlib.keys();
+
+    io.println("Generating stdlib docs to 'stdlib/'");
+    io.println(`Total modules: ${module_names.len()}`);
+
+    let module_index = build_module_index(stdlib);
+    let index_filename = path.join(target, "index.md");
+    try fs.create_dir_all(path.dir(index_filename));
+    try File.create(index_filename).write_string(module_index);
+
+    for (let fname, module in stdlib) {
+        if (fname == "#prelude") {
+            fname = "prelude";
+        }
+        fname = fname.replace(".", "_");
+        let filename = path.join(target, fname + ".md");
+        try fs.create_dir_all(path.dir(filename));
+
+        io.println(`-> {fname}`);
+        let body = build_body(module);
+        try File.create(filename).write_string(body);
+    }
+
+    io.println("Done");
+}
+
+fn build_module_index(stdlib: Stdlib): string {
+    let buf = StringBuffer.new();
+    for (let k, module in stdlib) {
+        let slug = format_slug(module.name.replace("#", ""));
+        buf.write(`- [${k}](./${slug}.md)`);
+    }
+
+    return buf.to_string("\n");
+}
+
+fn build_body(module: Module): string {
+    let buf = StringBuffer.new();
+    let links = StringBuffer.new();
+
+    // Frontmatter
+    // #prelude is a special module name
+    let title = module.name.replace("#", "");
+    buf.write("---");
+    buf.write(`title: ${title}`);
+    buf.write("editLink: false");
+    buf.write("---\n");
+
+    buf.write(`# ${module.name}\n`);
+
+    buf.write(generate_struct_toc(module, module.structs));
+    buf.write(generate_module_function_toc(module, module.functions));
+
+    for (let func in module.functions) {
+        buf.write(generate_function_doc(func, links));
+    }
+
+    buf.write("------------------------\n");
+    buf.write(generate_structs(module, module.structs, links));
+
+    buf.write("\n");
+    buf.write(links.to_string("\n"));
+
+    return buf.to_string("\n");
+}
+
+fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
+    let buf = StringBuffer.new();
+    for (let struct_name, info in structs) {
+        buf.write(`## ${info.name} {#${module.name}.${info.name}}\n`);
+
+        if (info.doc != nil) {
+            buf.write(`${replace_headings(info.doc, level: INDOC_HEADING_LEVEL)}\n`);
+        } else {
+            buf.write(`No documentation.\n`);
+        }
+
+        if (info.properties.len() > 0) {
+            buf.write("**Properties**\n");
+            for (let name, prop in info.properties) {
+                let prop_suffix: [string] = {};
+                if (prop.getter && !prop.setter) {
+                    prop_suffix.push("readonly");
+                }
+
+                if (prop.setter) {
+                    prop_suffix.push("writable");
+                }
+                let suffix_str = "";
+                if (prop_suffix.len() > 0) {
+                    suffix_str = `(${prop_suffix.join(", ")})`;
+                }
+                let anchor = `{#${info.name}#prop#${name}}`;
+                buf.write("### " + name + " `prop`" + anchor + "\n");
+                buf.write(suffix_str);
+                if (prop.doc != nil) {
+                    buf.write("\n");
+                    buf.write(`    ` + replace_headings(prop.doc, level: INDOC_HEADING_LEVEL) + "\n");
+                }
+            }
+
+            buf.write("\n");
+        }
+
+        if (info.methods.len() > 0) {
+            buf.write("---------------------------\n");
+
+            for (let name, func in info.methods) {
+                buf.write(generate_function_doc(
+                    func,
+                    links,
+                    level: 3,
+                    anchor_prefix: `${info.name}#`,
+                    kind: "method"
+                ));
+            }
+            buf.write("\n");
+        }
+    }
+
+    return buf.to_string("\n");
+}
+
+/// To generate Struct Toc on module top.
+fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
+    if (structs.len() == 0) {
+        return "";
+    }
+
+    let buf = StringBuffer.new();
+
+    buf.write("**Structs**\n\n");
+
+    let struct_names: [string] = {};
+    for (let name, _struct in structs) {
+        struct_names.push(`[${_struct.name}](#${module.name}.${_struct.name})`);
+    }
+
+    buf.write(struct_names.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
+}
+
+/// To generate Function Toc on module top.
+fn generate_module_function_toc(module: Module, functions: [Function]): string {
+    if (functions.len() == 0) {
+        return "";
+    }
+
+    let buf = StringBuffer.new();
+
+    buf.write("**Functions**\n\n");
+
+    let names: [string] = {};
+    for (let _fn in functions) {
+        names.push(_fn.name);
+    }
+    names.sort();
+
+    let fn_names: [string] = {};
+    for (let name in names) {
+        fn_names.push(`[${name}](#${name})`);
+    }
+    buf.write(fn_names.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
+}
+
+/// Generate a Function doc.
+fn generate_function_doc(
+    f: Function,
+    links: StringBuffer,
+    level: int = 2,
+    anchor_prefix: string = "",
+    /// If is method generated doc will skip first argument.
+    kind: string = "function"
+): string {
+    let buf = StringBuffer.new();
+
+    let fn_sign = generate_function(f);
+    let heading_prefix = "#".repeat(level);
+    // Write method heading
+    buf.write(`${heading_prefix} ${f.name} {#${anchor_prefix}${f.name}}\n`);
+
+    buf.write(`\`\`\`nv\n${fn_sign}\n\`\`\`\n`);
+
+    links.write(`[${f.name}]: #${f.name}`);
+
+    if (f.desc.deprecated != nil) {
+        buf.write("::: warning, Deprecated");
+        buf.write(f.desc.deprecated!);
+        buf.write(":::\n");
+        buf.write("\n");
+    }
+
+    if (f.desc.doc != nil) {
+        buf.write(`${replace_headings(f.desc.doc, level: INDOC_HEADING_LEVEL)}`);
+    } else {
+        buf.write("TODO");
+    }
+    buf.write("\n");
+
+    return buf.to_string("\n");
+}
+
+fn generate_function(f: Function): string {
+    let prefix = "";
+    if (f.desc._async) {
+        prefix = "async ";
+    }
+
+    let returns_str = "";
+    if (f.desc.returns != nil) {
+        let _returns = f.desc.returns!;
+
+        if (_returns.len() > 0) {
+            returns_str = `: ${_returns.join(", ")}`;
+        }
+    }
+
+    let args = f.desc.args;
+    if (f.kind == "method") {
+        args = { args[1] };
+    }
+
+    let args_str = StringBuffer.new();
+
+    for (let arg in args) {
+        let default_value = "";
+        if (arg.default_value != nil) {
+            default_value = ` = ${arg.default_value}`;
+        }
+
+        args_str.write(`${arg.name}: ${arg._type}${default_value}`);
+    }
+    let args_str = args_str.to_string(", ");
+
+    let throws_str = "";
+    if (f.desc._throws != nil) {
+        let _throws = f.desc._throws!;
+        if (_throws.len() > 0) {
+            throws_str = ` throws ${_throws.join(", ")}`;
+        } else {
+            throws_str = ` throws`;
+        }
+    }
+
+    return `${prefix}fn ${f.name}(${args_str})${returns_str}${throws_str}`;
+}
+
+fn main() throws {
+    try generate();
+    io.println("Stdlib docs generated.");
+}
+
+test "generate_function" {
+    let func: Function = {
+        kind: "function",
+        name: "say_name",
+        desc: {
+            doc: "Say hello to name.",
+            args: {
+                { name: "name", _type: "string" },
+                {
+                    name: "suffix",
+                    _type: "string",
+                    default_value: `"!"`
+                }
+            },
+            returns: [string] { "string" },
+            deprecated: "Use `say_name2` instead.",
+            _async: true
+        },
+        module: ""
+    };
+
+    assert_eq generate_function(func), `async fn say_name(name: string, suffix: string = "!"): string`;
+
+    func.desc._async = false;
+    func.desc._throws = [string] {};
+    assert_eq generate_function(func), `fn say_name(name: string, suffix: string = "!"): string throws`;
+
+    func.desc._throws = [string] { "Error1", "Error2" };
+    func.desc.returns = [string] {};
+    assert_eq generate_function(func), `fn say_name(name: string, suffix: string = "!") throws Error1, Error2`;
+}

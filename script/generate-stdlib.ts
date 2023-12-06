@@ -341,11 +341,7 @@ export const generateFunction = (fn: Function): string => {
       returns = `: ${fn.desc.returns.join(', ')}`;
     }
   }
-  if (fn.desc.return) {
-    if (fn.desc.return.length > 0) {
-      returns = `: ${fn.desc.return.join(', ')}`;
-    }
-  }
+
   let args = fn.kind === 'method' ? fn.desc.args.slice(1) : fn.desc.args;
   let args_str = args
     .map((arg) => {
