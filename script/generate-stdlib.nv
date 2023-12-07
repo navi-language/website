@@ -1,6 +1,6 @@
 use std.json;
 use std.net.http;
-use std.fs.{self, File};
+use std.fs;
 use std.io;
 use std.time.DateTime;
 use string_buffer.{StringBuffer};
@@ -73,7 +73,7 @@ fn generate() throws {
     let module_index = build_module_index(stdlib);
     let index_filename = path.join(target, "index.md");
     try fs.create_dir_all(path.dir(index_filename));
-    try File.create(index_filename).write_string(module_index);
+    try fs.write_string(index_filename, module_index);
 
     for (let fname, module in stdlib) {
         if (fname == "#prelude") {
@@ -85,7 +85,7 @@ fn generate() throws {
 
         io.println(`-> ${fname}`);
         let body = build_body(module);
-        try File.create(filename).write_string(body);
+        try fs.write_string(filename, body);
     }
 }
 
