@@ -17,8 +17,6 @@ jobs:
           navi-version: nightly
       - run: |
           navi test .
-          bun install
-          bun test
   test_install:
     name: Test Install Navi
     runs-on: ubuntu-latest

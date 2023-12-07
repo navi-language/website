@@ -2,9 +2,11 @@ use std.json;
 use std.net.http;
 use std.fs.{self, File};
 use std.io;
+use std.time.DateTime;
 use string_buffer.{StringBuffer};
 use utils.{format_slug, replace_headings};
 use std.path;
+use std.regex.{Regex, Captures};
 
 let repo = "navi-language/navi";
 let target = "stdlib";
@@ -58,7 +60,15 @@ struct Argument {
 }
 
 fn generate() throws {
-    let stdlib = try json.parse::<Stdlib>(fs.read_to_string("stdlib.json"));
+    let body = try fs.read_to_string("stdlib.json");
+
+    // temp replace keyword field
+    let kw_re = try! Regex.new(`"(throws|async|type)"`);
+    body = kw_re.replace_all_with(body, fn(caps: Captures?): string {
+        return `"_${caps!.get(1)!.text}"`;
+    });
+
+    let stdlib = try json.parse::<Stdlib>(body);
     let module_names = stdlib.keys();
 
     io.println("Generating stdlib docs to 'stdlib/'");
@@ -77,12 +87,10 @@ fn generate() throws {
         let filename = path.join(target, fname + ".md");
         try fs.create_dir_all(path.dir(filename));
 
-        io.println(`-> {fname}`);
+        io.println(`-> ${fname}`);
         let body = build_body(module);
         try File.create(filename).write_string(body);
     }
-
-    io.println("Done");
 }
 
 fn build_module_index(stdlib: Stdlib): string {
@@ -282,9 +290,9 @@ fn generate_function(f: Function): string {
     }
 
     let args = f.desc.args;
-    if (f.kind == "method") {
-        args = { args[1] };
-    }
+    // if (f.kind == "method") {
+    //     args = { args[1] };
+    // }
 
     let args_str = StringBuffer.new();
 
@@ -312,8 +320,10 @@ fn generate_function(f: Function): string {
 }
 
 fn main() throws {
+    let start = DateTime.now();
     try generate();
-    io.println("Stdlib docs generated.");
+    let duration = DateTime.now().sub(start);
+    io.println(`Stdlib docs generated. ${duration}`);
 }
 
 test "generate_function" {
@@ -330,7 +340,7 @@ test "generate_function" {
                     default_value: `"!"`
                 }
             },
-            returns: [string] { "string" },
+            returns: { "string" },
             deprecated: "Use `say_name2` instead.",
             _async: true
         },

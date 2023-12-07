@@ -15,8 +15,6 @@ struct Release {
     body: string?,
 }
 
-type Releases = [Release];
-
 fn fetch_releases() throws {
     // https://api.github.com/repos/navi-language/navi/releases
     let release_url = `https://api.github.com/repos/${repo}/releases?per_page=${page_size}`;
@@ -24,7 +22,7 @@ fn fetch_releases() throws {
     headers.set("User-Agent", "Navi-Release-Generator");
 
     let res = try http.get(release_url, headers: headers);
-    let releases = try res.json::<Releases>();
+    let releases = try res.json::<[Release]>();
 
     let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
     let release_body = frontmatter + "# Releases\n\n";
