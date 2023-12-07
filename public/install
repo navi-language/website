@@ -54,6 +54,7 @@ arch="$(uname -m | sed 's/x86_64/amd64/')"  # x86_64 => amd64
 
 if [ "$platform" = "darwin" ]; then
 	platform="darwin"
+  arch="amd64"
 fi
 
 echo "Downloading $bin_name@$version ..."
