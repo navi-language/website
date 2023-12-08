@@ -363,7 +363,8 @@ export const generateFunction = (fn: Function): string => {
 };
 
 fetchStdlibDocs().then(() => {
+  let start = new Date();
   generateStdlibDocs();
-
-  console.log('Stdlib docs generated.');
+  let duration = ((new Date().getTime() - start.getTime()) / 1000.0) * 1000.0;
+  console.log('Stdlib docs generated.', duration, 'ms');
 });
