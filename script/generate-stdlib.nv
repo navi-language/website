@@ -4,7 +4,7 @@ use std.fs;
 use std.io;
 use std.time.DateTime;
 use string_buffer.{StringBuffer};
-use utils.{format_slug, replace_headings};
+use utils.{format_anchor, format_slug, replace_headings, escape_html};
 use std.path;
 
 let repo = "navi-language/navi";
@@ -132,7 +132,7 @@ fn build_body(module: Module): string {
 fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
     let buf = StringBuffer.new();
     for (let struct_name, info in structs) {
-        buf.write(`## ${info.name} {#${module.name}.${info.name}}\n`);
+        buf.write(`## ${escape_html(info.name)} {#${module.name}.${format_anchor(info.name)}}\n`);
 
         if (info.doc != nil) {
             buf.write(`${replace_headings(info.doc, level: INDOC_HEADING_LEVEL)}\n`);
@@ -161,7 +161,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                 if (prop_suffix.len() > 0) {
                     suffix_str = `${prop_suffix.join(", ")}`;
                 }
-                let anchor = `{#${info.name}#prop#${name}}`;
+                let anchor = `{#${format_anchor(info.name)}#prop#${format_anchor(name)}}`;
                 buf.write("### self." + name + " " + anchor + "\n");
                 buf.write(suffix_str);
                 if (prop.doc != nil) {
@@ -229,7 +229,7 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
 
     let struct_names: [string] = {};
     for (let name, _struct in structs) {
-        struct_names.push(`[${_struct.name}](#${module.name}.${_struct.name})`);
+        struct_names.push(`[${escape_html(_struct.name)}](#${module.name}.${format_anchor(_struct.name)})`);
     }
 
     buf.write(struct_names.join(", "));
@@ -291,7 +291,7 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
 
         let method_links: [string] = {};
         for (let name in methods) {
-            method_links.push(`[${name}](#${struct_name}#${name})`);
+            method_links.push(`[${name}](#${format_anchor(struct_name)}#${name})`);
         }
         buf.write(method_links.join(", "));
         buf.write("\n\n");
@@ -314,7 +314,7 @@ fn generate_function_doc(
     let fn_sign = generate_function(f);
     let heading_prefix = "#".repeat(level);
     // Write method heading
-    buf.write(`${heading_prefix} ${f.name} {#${anchor_prefix}${f.name}}\n`);
+    buf.write(`${heading_prefix} ${f.name} {#${format_anchor(anchor_prefix)}${format_anchor(f.name)}}\n`);
 
     buf.write(`\`\`\`nv\n${fn_sign}\n\`\`\`\n`);
 
@@ -421,4 +421,10 @@ test "generate_function" {
     func.desc._throws = [string] { "Error1", "Error2" };
     func.desc.returns = [string] {};
     assert_eq generate_function(func), `fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
+}
+
+bench "generate" {
+    bench.run(fn() {
+        try! generate();
+    });
 }

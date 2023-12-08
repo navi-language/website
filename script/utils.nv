@@ -19,15 +19,34 @@ fn replace_headings(body: string?, level: int = 1): string {
     return result;
 }
 
-/// Format module name to slug
-///
-/// e.g. `foo.bar.dar` => `foo_bar_dar`
-fn format_slug(name: string?): string {
-    if (name == nil) {
+/// Escape HTML
+fn escape_html(text: string?): string {
+    if (text == nil) {
         return "";
     }
 
-    return name!.replace(".", "_").to_lowercase();
+    return text!.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+}
+
+let SLUGIFY_RE = try! Regex.new(`[^\\w\\-_]`);
+fn format_slug(text: string?): string {
+    if (text == nil) {
+        return "";
+    }
+
+    return SLUGIFY_RE.replace_all(text!, "_");
+}
+
+let INVALID_ANCHOR_RE = try! Regex.new(`[\\[\\]\\s]`);
+/// Replace all non-alphanumeric characters with `-`
+///
+/// e.g. `foo.bar.dar` => `foo-bar-dar`
+fn format_anchor(text: string?): string {
+    if (text == nil) {
+        return "";
+    }
+
+    return INVALID_ANCHOR_RE.replace_all(text!, "-");
 }
 
 test "replace_headings" {
@@ -44,6 +63,21 @@ test "format_slug" {
     assert_eq result, expected;
 }
 
+test "format_anchor" {
+
+    let raw = "foo & bar";
+    let expected = "foo-&-bar";
+    let result = format_anchor(raw);
+    assert_eq result, expected;
+}
+
+test "escape_html" {
+    let raw = "<div>foo & bar</div>";
+    let expected = "&lt;div&gt;foo &amp; bar&lt;/div&gt;";
+    let result = escape_html(raw);
+    assert_eq result, expected;
+}
+
 bench "replace_headings" {
     let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
     let expected = "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
@@ -52,10 +86,10 @@ bench "replace_headings" {
     });
 }
 
-bench "format_slug" {
+bench "format_anchor" {
     let raw = "foo.bar.dar";
     let expected = "foo_bar_dar";
     bench.run(fn() {
-        format_slug(raw);
+        format_anchor(raw);
     });
 }
