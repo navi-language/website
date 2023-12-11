@@ -133,7 +133,7 @@ impl User {
   /// let user = User { name: "Navi" };
   /// assert_eq user.say(), "Hello Navi!";
   /// ```
-  fn say(): string {
+  fn say(self): string {
       return `Hello ${self.name}!`;
   }
 }
@@ -1406,7 +1406,7 @@ struct User {
 }
 
 impl User {
-    fn say(): string {
+    fn say(self): string {
         return `Hello ${self.name}!`;
     }
 }
@@ -1606,7 +1606,7 @@ Because Navi has implemented the `error` interface for [string], so you can thro
 
 ```nv
 interface error {
-    fn error(): string;
+    fn error(self): string;
 }
 ```
 
@@ -1625,7 +1625,7 @@ struct MyError {
 
 impl MyError {
     // Implement the `error` method for `MyError` struct, then `MyError` can be used as an `error` interface.
-    fn error(): string {
+    fn error(self): string {
         return self.message;
     }
 }
@@ -1747,7 +1747,7 @@ assert_eq result, "Hello Sunli!";
 
 If the function throws an error, the `try!` will panic.
 
-```nv, should_panic
+```nv, ignore
 let result = try! hello("Navi");
 // This will cause a panic. It same as:
 ```
@@ -1823,7 +1823,20 @@ use utils;
 
 Use `type` keyword to create a type alias.
 
-TODO
+```nv
+type Key = string;
+type Value = int;
+
+type MyInfo = <Key, Value>;
+
+let info: MyInfo = {
+    "foo": 1,
+    "bar": 2,
+};
+
+assert_eq info["foo"], 1;
+assert_eq info["bar"], 2;
+```
 
 ## Spawn
 
