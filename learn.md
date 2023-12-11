@@ -353,6 +353,30 @@ Hello, ${name}!
 `;
 ```
 
+#### ToString interface
+
+The `ToString` interface is a built-in interface, and it has a `to_string` method, you can use it to convert a value to a string.
+
+If you use any type that implements the `ToString` interface in string interpolation, it will call the `to_string` method to convert the value to a string.
+
+For example:
+
+```nv
+struct User {
+    name: string
+}
+
+impl User {
+    fn to_string(self): string {
+        return self.name;
+    }
+}
+
+let user = User { name: "Navi" };
+let message = `Hello, ${user}!`;
+assert_eq message, "Hello, Navi!";
+```
+
 ### Assignment
 
 Use the `let` keyword to declare a variable to an identifier, the variable is mutable.
