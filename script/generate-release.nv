@@ -34,10 +34,16 @@ fn fetch_releases() throws {
             continue;
         }
 
-        let name = release.name;
-        if (name == nil) {
+        if (release.body == nil || release.body!.is_empty()) {
+            io.println(`Release ${release.tag_name} has no body, skiped.`);
+            continue;
+        }
+
+        let name = release.name || "";
+        if (name.is_empty()) {
             name = release.tag_name;
         }
+
         let html_url = release.html_url;
         let body = utils.replace_headings(release.body, level: 1);
         release_body += `## [${name}](${html_url})\n\n`;
