@@ -37,7 +37,14 @@ fn format_slug(text: string?): string {
     return SLUGIFY_RE.replace_all(text!, "_");
 }
 
-let INVALID_ANCHOR_RE = try! Regex.new(`[\\[\\]\\s]`);
+let ANCHOR_MAPS = <string, string> {
+    "[": "%5B",
+    "]": "%5D",
+    "<": "%3C",
+    ">": "%3E",
+    " ": "-"
+};
+
 /// Replace all non-alphanumeric characters with `-`
 ///
 /// e.g. `foo.bar.dar` => `foo-bar-dar`
@@ -46,7 +53,11 @@ fn format_anchor(text: string?): string {
         return "";
     }
 
-    return INVALID_ANCHOR_RE.replace_all(text!, "-");
+    for (let k, v in ANCHOR_MAPS) {
+        text = text!.replace(k, v);
+    }
+
+    return text!;
 }
 
 test "replace_headings" {

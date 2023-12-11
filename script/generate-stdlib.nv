@@ -132,7 +132,9 @@ fn build_body(module: Module): string {
 fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
     let buf = StringBuffer.new();
     for (let struct_name, info in structs) {
-        buf.write(`## ${escape_html(info.name)} {#${module.name}.${format_anchor(info.name)}}\n`);
+        buf.write(`## ${escape_html(info.name)}`);
+        let anchor = format_anchor(`${module.name}.${info.name}`);
+        buf.write(` {#${anchor}}\n`);
 
         if (info.doc != nil) {
             buf.write(`${replace_headings(info.doc, level: INDOC_HEADING_LEVEL)}\n`);
@@ -161,8 +163,8 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                 if (prop_suffix.len() > 0) {
                     suffix_str = `${prop_suffix.join(", ")}`;
                 }
-                let anchor = `{#${format_anchor(info.name)}#prop#${format_anchor(name)}}`;
-                buf.write("### self." + name + " " + anchor + "\n");
+                let anchor = format_anchor(`${info.name}.${name}`);
+                buf.write(`### self.${name} {#${anchor}}\n`);
                 buf.write(suffix_str);
                 if (prop.doc != nil) {
                     buf.write("\n");
@@ -195,7 +197,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     func,
                     links,
                     level: 3,
-                    anchor_prefix: `${info.name}#`,
+                    anchor_prefix: `${info.name}.`,
                     kind: "static_method"
                 ));
             }
@@ -206,7 +208,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     func,
                     links,
                     level: 3,
-                    anchor_prefix: `${info.name}#`,
+                    anchor_prefix: `${info.name}.`,
                     kind: "method"
                 ));
             }
@@ -229,7 +231,8 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
 
     let struct_names: [string] = {};
     for (let name, _struct in structs) {
-        struct_names.push(`[${escape_html(_struct.name)}](#${module.name}.${format_anchor(_struct.name)})`);
+        let anchor = format_anchor(`${module.name}.${_struct.name}`);
+        struct_names.push(`[${escape_html(_struct.name)}](#${anchor})`);
     }
 
     buf.write(struct_names.join(", "));
@@ -256,7 +259,7 @@ fn generate_module_function_toc(module: Module, functions: [Function]): string {
 
     let fn_names: [string] = {};
     for (let name in names) {
-        fn_names.push(`[${name}](#${name})`);
+        fn_names.push(`[${name}](#${format_anchor(name)})`);
     }
     buf.write(fn_names.join(", "));
     buf.write("\n");
@@ -273,7 +276,8 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
 
         let prop_names: [string] = {};
         for (let name, prop in info.properties) {
-            prop_names.push(`[${name}](#${struct_name}#prop#${name})`);
+            let anchor = format_anchor(`${struct_name}.${name}`);
+            prop_names.push(`[${name}](#${anchor})`);
         }
         buf.write(prop_names.join(", "));
         buf.write("\n\n");
@@ -291,7 +295,8 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
 
         let method_links: [string] = {};
         for (let name in methods) {
-            method_links.push(`[${name}](#${format_anchor(struct_name)}#${name})`);
+            let anchor = format_anchor(`${struct_name}.${name}`);
+            method_links.push(`[${name}](#${anchor})`);
         }
         buf.write(method_links.join(", "));
         buf.write("\n\n");
@@ -314,11 +319,13 @@ fn generate_function_doc(
     let fn_sign = generate_function(f);
     let heading_prefix = "#".repeat(level);
     // Write method heading
-    buf.write(`${heading_prefix} ${f.name} {#${format_anchor(anchor_prefix)}${format_anchor(f.name)}}\n`);
+    let anchor = format_anchor(`${anchor_prefix}${f.name}`);
+    buf.write(`${heading_prefix} ${f.name} {#${anchor}}\n`);
 
     buf.write(`\`\`\`nv\n${fn_sign}\n\`\`\`\n`);
 
-    links.write(`[${f.name}]: #${f.name}`);
+    let link_anchor = format_anchor(`${anchor_prefix}${f.name}`);
+    links.write(`[${f.name}]: #${link_anchor}`);
 
     if (f.desc.deprecated != nil) {
         buf.write("::: warning, Deprecated");
