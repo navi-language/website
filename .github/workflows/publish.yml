@@ -20,6 +20,7 @@ jobs:
       - name: Setup Navi
         run: |
           ./public/install nightly
+          echo "$HOME/.navi" >> $GITHUB_PATH
       - name: Build Website
         run: |
           navi doc --stdlib -o stdlib.json
