@@ -8,10 +8,41 @@ app_name='Navi'
 bin_name='navi'
 tmpdir=.tmp_install
 
+# Reset
+Color_Off=''
+
+# Regular Colors
+Color_Red=''
+Color_Green=''
+Color_Dim='' # White
+
+if [[ -t 1 ]]; then
+    # Reset
+    Color_Off='\033[0m' # Text Reset
+
+    # Regular Colors
+    Color_Red='\033[0;31m'   # Red
+    Color_Green='\033[0;32m' # Green
+    Color_Dim='\033[0;2m'    # White
+fi
+
+error() {
+    echo -e "${Color_Green}$@ ${Color_Off}:" >&2
+    exit 1
+}
+
+info() {
+    echo -e "${Color_Dim}$@ ${Color_Off}"
+}
+
+success() {
+    echo -e "${Color_Green}$@ ${Color_Off}"
+}
+
 # request github api, and check if the response is ok
 fetch_github_api() {
   url="$1"
-  curl --silent --fail "$url" || { echo "Failed to fetch $url"; exit 1; }
+  curl --silent --fail "$url" || { error "Failed to fetch $url"; exit 1; }
 }
 
 get_latest_release() {
@@ -43,7 +74,7 @@ fi
 
 # if version is empty, exit
 if test -z "$version"; then
-  echo "Fetch version failed, please check your network."
+  error "Fetch version failed, please check your network."
   exit 1
 fi
 
@@ -61,35 +92,34 @@ libc=''
 # fi
 
 install() {
-  echo "Downloading $bin_name@$version ..."
+  info "Downloading $bin_name@$version ..."
   download_url=https://github.com/$repo/releases/download/$version/$bin_name-$platform$libc-$arch.tar.gz
-  echo $download_url
 
   mkdir -p $tmpdir && cd $tmpdir
-  if curl --fail -Lo $bin_name.tar.gz $download_url; then
-    echo "Download successfully."
-  else
-    echo "Download failed, please check your network."
+  if ! curl --fail --progress-bar -Lo $bin_name.tar.gz $download_url; then
+    error "${Color_Red}Download failed, please check your network.${Color_Off}"
     exit 1
   fi
 
   mkdir -p $HOME/.navi
   tar zxf $bin_name.tar.gz --directory $HOME/.navi && rm $bin_name.tar.gz
   cd .. && rm -Rf $tmpdir
-  echo "$app_name $version has installed to \`$HOME/.navi\`."
 }
 
 # Check if PATH not contains $HOME/.navi, then add PATH=$HOME/.navi:$PATH
 setup_path() {
   path_info="export PATH=\$HOME/.navi:\$PATH"
   source_file=.bashrc
-  for file in .bash_profile .zshrc .bashrc .profile; do
+  for file in .bash_profile .bashrc .profile; do
     if test -f $HOME/$file; then
       source_file=$file
       # Ignore if the source file already contains $path_info
       if ! grep -q "$path_info" $HOME/$source_file; then
-        echo "Add \`$path_info\` to \`$HOME/$source_file\`"
+        info ""
+        info "Add \`$path_info\` to \`$HOME/$source_file\`"
         echo $path_info >> $HOME/$source_file
+        info "Run \`$path_info\` to take effect." 
+        
         break
       fi
     fi
@@ -101,6 +131,7 @@ setup_path() {
 install
 setup_path
 
-echo "Navi has installed successfully."
-echo "Run \`$bin_name -h\` to get help."
-echo ""
+info ""
+success "$app_name $version was installed successfully to \`$HOME/.navi\`."
+info "Run \`$bin_name -h\` to get help."
+info ""
