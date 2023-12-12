@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -u
 
 repo='navi-language/navi'
 app_name='Navi'
@@ -32,7 +32,7 @@ if [[ -t 1 ]]; then
 fi
 
 error() {
-    echo -e "${Color_Green}$@ ${Color_Off}:" >&2
+    echo -e "${Color_Red}$@ ${Color_Off}" >&2
     exit 1
 }
 
