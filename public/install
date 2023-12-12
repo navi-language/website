@@ -1,10 +1,12 @@
 #!/usr/bin/env sh
-# Install Navi language into `/usr/local/navi/`.
-# And then link `navi`, `navi-lsp-server` to `/usr/local/bin/`.
+# Install Navi language into `$HOME/.navi/`.
 set -u
 type curl > /dev/null || { echo "curl: not found"; exit 1; }
 
 repo='navi-language/navi'
+app_name='Navi'
+bin_name='navi'
+tmpdir=.tmp_install
 
 # request github api, and check if the response is ok
 fetch_github_api() {
@@ -24,10 +26,6 @@ get_last_nightly_release() {
     sed -E 's/.*"([^"]+)".*/\1/' |                                       # Pluck JSON value
     grep "nightly" | head -n 1
 }
-
-app_name='Navi'
-bin_name='navi'
-tmpdir=.tmp_install
 
 # if args has version override it and not eq "latest"
 if test $# -eq 1; then
@@ -57,43 +55,52 @@ if [ "$platform" = "darwin" ]; then
   arch="amd64"
 fi
 
-echo "Downloading $bin_name@$version ..."
-
 libc=''
 # if ldd --version 2>&1 | grep -q 'musl'; then
 #   libc='-musl'
 # fi
 
-download_url=https://github.com/$repo/releases/download/$version/$bin_name-$platform$libc-$arch.tar.gz
-echo $download_url
+install() {
+  echo "Downloading $bin_name@$version ..."
+  download_url=https://github.com/$repo/releases/download/$version/$bin_name-$platform$libc-$arch.tar.gz
+  echo $download_url
 
-mkdir -p $tmpdir && cd $tmpdir
-if curl --fail -Lo $bin_name.tar.gz $download_url; then
-  echo "Download successfully."
-else
-  echo "Download failed, please check your network."
-  exit 1
-fi
+  mkdir -p $tmpdir && cd $tmpdir
+  if curl --fail -Lo $bin_name.tar.gz $download_url; then
+    echo "Download successfully."
+  else
+    echo "Download failed, please check your network."
+    exit 1
+  fi
 
-mkdir -p navi/
-tar zxf $bin_name.tar.gz --directory navi/ && rm $bin_name.tar.gz
+  mkdir -p $HOME/.navi
+  tar zxf $bin_name.tar.gz --directory $HOME/.navi && rm $bin_name.tar.gz
+  cd .. && rm -Rf $tmpdir
+  echo "$app_name $version has installed to \`$HOME/.navi\`."
+}
 
-if test $(id -u) -eq 0; then
-  cp -Rf navi /usr/local/
+# Check if PATH not contains $HOME/.navi, then add PATH=$HOME/.navi:$PATH
+setup_path() {
+  path_info="export PATH=\$HOME/.navi:\$PATH"
+  source_file=.bashrc
+  for file in .bash_profile .zshrc .bashrc .profile; do
+    if test -f $HOME/$file; then
+      source_file=$file
+      # Ignore if the source file already contains $path_info
+      if ! grep -q "$path_info" $HOME/$source_file; then
+        echo "Add \`$path_info\` to \`$HOME/$source_file\`"
+        echo $path_info >> $HOME/$source_file
+        break
+      fi
+    fi
+  done
+  
+  export PATH=$HOME/.navi:$PATH
+}
 
-  test -f /usr/local/navi/navi && ln -sf /usr/local/navi/navi /usr/local/bin/
-  test -f /usr/local/navi/navi-lsp-server && ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/
-else
-  sudo cp -Rf navi /usr/local/
+install
+setup_path
 
-  sudo test -f /usr/local/navi/navi && sudo ln -sf /usr/local/navi/navi /usr/local/bin/
-  sudo test -f /usr/local/navi/navi-lsp-server && sudo ln -sf /usr/local/navi/navi-lsp-server /usr/local/bin/
-fi
-
-cd ..
-rm -Rf $tmpdir
-
-echo "$app_name $version has installed successfully."
-echo ""
-echo "You can use `$bin_name -h` to get help."
+echo "Navi has installed successfully."
+echo "Run \`$bin_name -h\` to get help."
 echo ""
