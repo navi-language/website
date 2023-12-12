@@ -3,7 +3,7 @@ on:
 
 jobs:
   test:
-    name: Publish Website
+    name: Test Script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1843,6 +1843,58 @@ use models.profile;
 use utils;
 ```
 
+## Module System
+
+In Navi a folder in the current directory is a module, and the module name is the folder name.
+
+- The root directory as the `main` module, and use `main.nv` as the entry file by default.
+- The any sub-directory as a sub-module, and `use` the directory name as the module name.
+- The root directory can have multiple entry files, and you can use `navi run filename.nv` to run it in directly.
+
+For example, we have a project like this:
+
+```shell
+$ tree
+main.nv
+utils.nv
+models
+|── user_profile.nv
+|── user_profile
+|   |── profile_a.nv
+|   └── profile_b.nv
+config
+|── config_a.nv
+└── config_b.nv
+```
+
+In this case:
+
+- `main.nv` file is a module named `main` and Navi use `main.nv` as the entry file by default.
+- `utils.nv` file is a module named `utils`, we can use it in `main.nv` by `use utils`.
+- `models` directory is a module named `models`.
+- `models/user_profile.nv` will be compiled to `models` module.
+- `models/user_profile` directory is a module named `models.user_profile`.
+- `modles/user_profile/*.nv` files will be compiled to `models.user_profile` module, they are same like one file.
+- `config` directory is a module named `config`.
+- `config/*.nv` files will be compiled to `config` module, they are same like one file.
+
+::: warning NOTE
+If your project have multiple sub-modules, you need to link them by `use` keyword to let the Navi compiler know the module dependency.
+
+Only the used modules will be compiled, this means `navi test` or other commands will not found the sub-directory modules if you don't use them.
+:::
+
+For example, in `main.nv`:
+
+```nv, ignore
+use utils;
+use models;
+use config;
+
+fn main() throws {
+}
+```
+
 ## Type alias
 
 Use `type` keyword to create a type alias.
