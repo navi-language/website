@@ -1,12 +1,17 @@
-#!/usr/bin/env sh
-# Install Navi language into `$HOME/.navi/`.
-set -u
-type curl > /dev/null || { echo "curl: not found"; exit 1; }
+#!/usr/bin/env bash
+set -euo pipefail
 
 repo='navi-language/navi'
 app_name='Navi'
 bin_name='navi'
 tmpdir=.tmp_install
+
+if [[ ${OS:-} = Windows_NT ]]; then
+    echo 'error: Please install using Windows Subsystem for Linux'
+    exit 1
+fi
+
+type curl > /dev/null || { echo "curl: not found"; exit 1; }
 
 # Reset
 Color_Off=''
@@ -132,6 +137,6 @@ install
 setup_path
 
 info ""
-success "$app_name $version was installed successfully to \`$HOME/.navi\`."
+success "$app_name was installed successfully to \`$HOME/.navi\`."
 info "Run \`$bin_name -h\` to get help."
 info ""
