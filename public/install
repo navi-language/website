@@ -15,11 +15,9 @@ type curl > /dev/null || { echo "curl: not found"; exit 1; }
 
 # Reset
 Color_Off=''
-
-# Regular Colors
 Color_Red=''
 Color_Green=''
-Color_Dim='' # White
+Color_Dim=''
 
 if [[ -t 1 ]]; then
     # Reset
@@ -63,42 +61,73 @@ get_last_nightly_release() {
     grep "nightly" | head -n 1
 }
 
-# if args has version override it and not eq "latest"
-if test $# -eq 1; then
-  if test "$1" = "nightly"; then
-    # curl -sSL https://navi-lang.org/install | bash -s -- nightly
-    version=$(get_last_nightly_release)
-  elif test "$1" != "latest"; then
-    # curl -sSL https://navi-lang.org/install | bash -s -- v0.9.0-nightly
-    version="$1"
+get_version() {
+  # if args has version override it and not eq "latest"
+  if test $# -eq 1; then
+    if test "$1" = "nightly"; then
+      # curl -sSL https://navi-lang.org/install | bash -s -- nightly
+      version=$(get_last_nightly_release)
+    elif test "$1" != "latest"; then
+      # curl -sSL https://navi-lang.org/install | bash -s -- v0.9.0-nightly
+      version="$1"
+    fi
+  else
+    # curl -sSL https://navi-lang.org/install | bash
+    version=$(get_latest_release)
   fi
-else
-  # curl -sSL https://navi-lang.org/install | bash
-  version=$(get_latest_release)
-fi
 
-# if version is empty, exit
-if test -z "$version"; then
-  error "Fetch version failed, please check your network."
-  exit 1
-fi
+  # if version is empty, exit
+  if test -z "$version"; then
+    error "Fetch version failed, please check your network."
+    exit 1
+  fi
+}
 
-platform="$(uname | tr "[A-Z]" "[a-z]")"  # Linux => linux
-arch="$(uname -m | sed 's/x86_64/amd64/')"  # x86_64 => amd64
+get_platform() {
+  platform="$(uname | tr "[A-Z]" "[a-z]")"  # Linux => linux
+  if [ "$platform" = "darwin" ]; then
+    platform="darwin"
+    arch="amd64"
+  fi
+}
 
-if [ "$platform" = "darwin" ]; then
-	platform="darwin"
-  arch="amd64"
-fi
 
-libc=''
-# if ldd --version 2>&1 | grep -q 'musl'; then
-#   libc='-musl'
-# fi
+# Install specific version
+# curl -sSL https://navi-lang.org/install | bash -s -- v0.9.0-nightly arch=arm
+# curl -sSL https://navi-lang.org/install | bash -s -- v0.9.0-nightly arch=x64
+# curl -sSL https://navi-lang.org/install | bash -s -- latest arch=x64
+get_arch() {
+  arch="$(uname -m)"
+
+  # Temporary fix for Apple Silicon default install amd64
+  # TODO: This will remove after we done the arm64 call stack error info.
+  if [ "$platform" = "darwin" ]; then
+    arch="amd64"
+  fi
+
+  # Check if ARM=1 env is set
+  # ARM=1 curl -sSL https://navi-lang.org/install | bash
+  if [ ${ARM:-0} = "1" ]; then
+    arch="arm64"
+  fi
+
+  # x86_64 => amd64
+  if [ "$arch" = "x86_64" ]; then
+    arch="amd64"
+  fi
+}
+
+get_libc() {
+  libc=''
+  # if ldd --version 2>&1 | grep -q 'musl'; then
+  #   libc='-musl'
+  # fi
+}
 
 install() {
-  info "Downloading $bin_name@$version ..."
-  download_url=https://github.com/$repo/releases/download/$version/$bin_name-$platform$libc-$arch.tar.gz
+  name_suffix="$platform$libc-$arch"
+  info "Downloading $bin_name@$version ($name_suffix)..."
+  download_url=https://github.com/$repo/releases/download/$version/$bin_name-$name_suffix.tar.gz
 
   mkdir -p $tmpdir && cd $tmpdir
   if ! curl --fail --progress-bar -Lo $bin_name.tar.gz $download_url; then
@@ -133,8 +162,12 @@ setup_path() {
   export PATH=$HOME/.navi:$PATH
 }
 
-install
-setup_path
+get_version $@
+get_platform $@
+get_arch $@
+get_libc $@
+install $@
+setup_path $@
 
 info ""
 success "$app_name was installed successfully to \`$HOME/.navi\`."
