@@ -433,7 +433,7 @@ test "generate_function" {
 }
 
 bench "generate" {
-    bench.run(fn() {
+    bench.run(|()| {
         try! generate();
     });
 }
