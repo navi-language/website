@@ -1180,6 +1180,38 @@ fn get_message(n: int): string {
 }
 ```
 
+### Type switch
+
+The `switch` can also used to assert the dynamic type of an interface variable. Use `let t = val.(type)` to assert the type of `val` in the switch condition.
+
+```nv
+fn type_name(val: any): string {
+    switch (let t = val.(type)) {
+    case int:
+        return "int";
+    case string:
+        return "string";
+    case float:
+        return "float";
+    case bool:
+        return "bool";
+    case <string, int>:
+        return "map";
+    default:
+        return "unknown";
+    }
+}
+
+test "type_name" {
+    assert_eq type_name(1), "int";
+    assert_eq type_name("hello"), "string";
+    assert_eq type_name(3.14), "float";
+    assert_eq type_name(true), "bool";
+    assert_eq type_name(<string, int> {}), "map";
+    assert_eq type_name([int] {}), "unknown";
+}
+```
+
 ## While
 
 A while loop is used to repeatedly execute an expression until some condition is no longer true.
