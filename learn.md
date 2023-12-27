@@ -1914,6 +1914,35 @@ assert_eq info["foo"], 1;
 assert_eq info["bar"], 2;
 ```
 
+## Defer
+
+The `defer` keyword used to execute a block of code when the current function returns.
+
+This is most like Go's `defer` keyword. It is useful when you want to do some clean up work, e.g.: close a file, close a database connection, etc.
+
+```nv, no_run
+use std.io;
+
+fn main() throws {
+    defer {
+        io.println("defer 1");
+    }
+    defer {
+        io.println("defer 2");
+    }
+    io.println("Hello");
+}
+```
+
+Output:
+
+```shell
+$ navi run
+Hello
+defer 2
+defer 1
+```
+
 ## Spawn
 
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
@@ -1949,51 +1978,49 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 
 | Keyword                     | Description                                                                                |
 | --------------------------- | ------------------------------------------------------------------------------------------ |
-| `let`                       | Declare a variable.                                                                        |
-| `nil`                       | An [optional] value of nil.                                                                |
-| `true`                      | true                                                                                       |
-| `false`                     | false                                                                                      |
-| `for`                       | [for] loop                                                                                 |
-| `in`                        | key use in [for] loop                                                                      |
-| `while`                     | [while] loop                                                                               |
-| `loop`                      | an infinite [loop]                                                                         |
-| `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
-| `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
-| `if`                        | [if] statement                                                                             |
-| `else`                      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
-| `fn`                        | Declare a function.                                                                        |
-| `return`                    | Return a value from a function.                                                            |
-| `use`                       | [use] a module from the standard library or a file.                                        |
 | `as`                        | Convert a value to a type.                                                                 |
-| `switch`                    | [switch] statement                                                                         |
-| `case`                      | `case` for `switch` statement.                                                             |
-| `default`                   | `default` case for `switch` statement.                                                     |
-| `struct`                    | Define a struct.                                                                           |
-| `spawn`                     | [Spawn] a coroutine.                                                                       |
-| `select`                    | Use to select a [channel].                                                                 |
-| `assert`                    | assert                                                                                     |
 | `assert_eq`                 | assert equal                                                                               |
 | `assert_ne`                 | assert not equal                                                                           |
-| `impl`                      | Declare a struct implementation.                                                           |
-| `self`                      | A reference to the current struct instance.                                                |
-| `test`                      | Test function                                                                              |
+| `assert`                    | assert                                                                                     |
 | `bench`                     | Benchmark function                                                                         |
-| `tests`                     | Test group                                                                                 |
 | `benches`                   | Benchmark group                                                                            |
-| `interface`                 | Define a [interface]                                                                       |
-| `throws`                    | Declare a function can throw an [error].                                                   |
-| `throw`                     | Throw an error.                                                                            |
-| `try`<br/>`try?`<br/>`try!` | Use `try` to handle an error.                                                              |
-| `do`                        | Use `do` to handle an error.                                                               |
+| `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
+| `case`                      | `case` for `switch` statement.                                                             |
 | `catch`                     | Use `catch` to catch an error.                                                             |
+| `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
+| `default`                   | `default` case for `switch` statement.                                                     |
+| `defer`                     | Execute a block of code when the current function returns.                                 |
+| `do`                        | Use `do` to handle an error.                                                               |
+| `else`                      | `else` can be used to provide an alternate branch for [if], [switch], [while] expressions. |
+| `enum`                      | Define an enum.                                                                            |
+| `false`                     | false                                                                                      |
 | `finally`                   | Use `finally` to execute a block of code after `try` and `catch` blocks.                   |
+| `fn`                        | Declare a function.                                                                        |
+| `for`                       | [for] loop                                                                                 |
+| `if`                        | [if] statement                                                                             |
+| `impl`                      | Declare a struct implementation.                                                           |
+| `in`                        | key use in [for] loop                                                                      |
+| `interface`                 | Define a [interface]                                                                       |
+| `let`                       | Declare a variable.                                                                        |
+| `loop`                      | an infinite [loop]                                                                         |
+| `nil`                       | An [optional] value of nil.                                                                |
+| `panic`                     | Panic an error.                                                                            |
+| `pub`                       | Mark a function, struct, interface or enum as public.                                      |
+| `return`                    | Return a value from a function.                                                            |
+| `select`                    | Use to select a [channel].                                                                 |
+| `self`                      | A reference to the current struct instance.                                                |
+| `spawn`                     | [Spawn] a coroutine.                                                                       |
+| `struct`                    | Define a struct.                                                                           |
+| `switch`                    | [switch] statement                                                                         |
+| `test`                      | Test function                                                                              |
+| `tests`                     | Test group                                                                                 |
+| `throw`                     | Throw an error.                                                                            |
+| `throws`                    | Declare a function can throw an [error].                                                   |
+| `true`                      | true                                                                                       |
+| `try`<br/>`try?`<br/>`try!` | Use `try` to handle an error.                                                              |
 | `type`                      | Create a type alias.                                                                       |
-| `panic!`                    | Panic an error.                                                                            |
-| ---                         | Reserved for future use                                                                    |
-| `enum`                      | Declare an enum. TODO                                                                      |
-| `pub`                       | TODO                                                                                       |
-| `private`                   | TODO                                                                                       |
-| `mod`                       | TODO                                                                                       |
+| `use`                       | [use] a module from the standard library or a file.                                        |
+| `while`                     | [while] loop                                                                               |
 
 [Primitive Types]: #primitive-types
 [Use]: #use
@@ -2026,3 +2053,4 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [Concurrency is NOT Parallelism]: https://ics.uci.edu/~rickl/courses/ics-h197/2014-fq-h197/talk-Wu-Concurrency-is-NOT-parallelism.pdf
 [Error]: #error
 [Type Alias]: #type-alias
+[Defer]: #defer
