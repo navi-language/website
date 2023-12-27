@@ -9,7 +9,7 @@ fn replace_headings(body: string?, level: int = 1): string {
         return "";
     }
 
-    let result = heading_re.replace_all_with(body!, |(caps: Captures?): string| {
+    let result = heading_re.replace_all_with(body!, |caps| {
         let p0 = caps?.get(0)!.text;
         let p1 = caps?.get(1)!.text;
         let indent_level = p1.len() + level;
@@ -92,7 +92,7 @@ test "escape_html" {
 bench "replace_headings" {
     let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
     let expected = "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
-    bench.run(|()| {
+    bench.run(|| {
         replace_headings(raw, level: 2);
     });
 }
@@ -100,7 +100,7 @@ bench "replace_headings" {
 bench "format_anchor" {
     let raw = "foo.bar.dar";
     let expected = "foo_bar_dar";
-    bench.run(|()| {
+    bench.run(|| {
         format_anchor(raw);
     });
 }
