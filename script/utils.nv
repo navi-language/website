@@ -4,7 +4,7 @@ use std.io;
 let heading_re = try! Regex.new("(?m)^\\s*([#]+)\\s*");
 
 /// Replace all headings in a markdown document with headings of a different level.
-fn replace_headings(body: string?, level: int = 1): string {
+pub fn replace_headings(body: string?, level: int = 1): string {
     if (body == nil) {
         return "";
     }
@@ -20,7 +20,7 @@ fn replace_headings(body: string?, level: int = 1): string {
 }
 
 /// Escape HTML
-fn escape_html(text: string?): string {
+pub fn escape_html(text: string?): string {
     if (text == nil) {
         return "";
     }
@@ -29,7 +29,7 @@ fn escape_html(text: string?): string {
 }
 
 let SLUGIFY_RE = try! Regex.new(`[^\\w\\-_]`);
-fn format_slug(text: string?): string {
+pub fn format_slug(text: string?): string {
     if (text == nil) {
         return "";
     }
@@ -48,7 +48,7 @@ let ANCHOR_MAPS = <string, string> {
 /// Replace all non-alphanumeric characters with `-`
 ///
 /// e.g. `foo.bar.dar` => `foo-bar-dar`
-fn format_anchor(text: string?): string {
+pub fn format_anchor(text: string?): string {
     if (text == nil) {
         return "";
     }

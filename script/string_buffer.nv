@@ -1,14 +1,14 @@
-struct StringBuffer {
+pub struct StringBuffer {
     buffer: [string],
     length: int
 }
 
 impl StringBuffer {
-    fn new(): StringBuffer {
+    pub fn new(): StringBuffer {
         return StringBuffer { buffer: {}, length: 0 };
     }
 
-    fn write(self, s: any) {
+    pub fn write(self, s: any) {
         if (let s = s.(StringBuffer)) {
             for (let s1 in s.buffer) {
                 self.buffer.push(s1);
@@ -21,7 +21,7 @@ impl StringBuffer {
         }
     }
 
-    fn to_string(self, divider: string): string {
+    pub fn to_string(self, divider: string): string {
         return self.buffer.join(divider);
     }
 }
