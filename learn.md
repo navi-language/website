@@ -1882,6 +1882,7 @@ In Navi a folder in the current directory is a module, and the module name is th
 - The root directory as the `main` module, and use `main.nv` as the entry file by default.
 - The any sub-directory as a sub-module, and `use` the directory name as the module name.
 - The root directory can have multiple entry files, and you can use `navi run filename.nv` to run it in directly.
+- The `pub` keyword is used to export a `struct`, `struct field`, `interface`, `function`, `type`, `enum`, `const`, `let`, then the other modules can use it.
 
 For example, we have a project like this:
 
