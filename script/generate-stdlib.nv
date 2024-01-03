@@ -64,7 +64,17 @@ struct Argument {
 fn generate() throws {
     let body = try fs.read_to_string("stdlib.json");
 
-    let stdlib = try json.parse::<Stdlib>(body);
+    let raw_stdlib = try json.parse::<Stdlib>(body);
+
+    // filter modules
+    let stdlib = <string, Module> {};
+    for (let key, module in raw_stdlib) {
+        if (key.starts_with("_std.")) {
+            continue;
+        }
+        stdlib[key] = module;
+    }
+
     let module_names = stdlib.keys();
 
     io.println("Generating stdlib docs to 'stdlib/'");
