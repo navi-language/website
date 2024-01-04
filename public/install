@@ -136,7 +136,9 @@ install() {
   fi
 
   # Remove the old version
-  rm -R $HOME/.navi
+  if test -d $HOME/.navi; then
+    rm -R $HOME/.navi
+  fi
   mkdir -p $HOME/.navi
   tar zxf $bin_name.tar.gz --directory $HOME/.navi && rm $bin_name.tar.gz
   cd .. && rm -Rf $tmpdir
