@@ -23,6 +23,7 @@ jobs:
           echo "$HOME/.navi" >> $GITHUB_PATH
       - name: Build Website
         run: |
+          navi -V
           navi doc --stdlib -o stdlib.json
           navi run script/generate-release.nv
           navi run script/generate-stdlib.nv
