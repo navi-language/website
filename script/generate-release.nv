@@ -1,11 +1,11 @@
 use std.fs;
-use std.io;
+use std.io.{self, StringBuffer};
 use std.net.http.{self, Headers};
 use utils;
 
-let target_file = "releases.md";
-let repo = "navi-language/navi";
-let page_size = 200;
+const target_file = "releases.md";
+const repo = "navi-language/navi";
+const page_size = 200;
 
 struct Release {
     name: string?,
@@ -24,8 +24,12 @@ fn fetch_releases() throws {
     let res = try http.get(release_url, headers: headers);
     let releases = try res.json::<[Release]>();
 
-    let frontmatter = `---\ntitle: Releases\neditLink: false\n---\n\n`;
-    let release_body = frontmatter + "# Releases\n\n";
+    let buf = StringBuffer.new();
+    buf.write("---\n");
+    buf.write("title: Releases\n");
+    buf.write("editLink: false\n");
+    buf.write("---\n");
+    buf.write("# Releases\n\n");
 
     for (let release in releases) {
         let prerelease = release.prerelease;
@@ -46,12 +50,12 @@ fn fetch_releases() throws {
 
         let html_url = release.html_url;
         let body = utils.replace_headings(release.body, level: 1);
-        release_body += `## [${name}](${html_url})\n\n`;
-        release_body += `${body}\n\n`;
+        buf.write(`## [${name}](${html_url})\n\n`);
+        buf.write(`${body}\n\n`);
     }
 
     let f = try fs.create(target_file);
-    try f.write_string(release_body);
+    try f.write_string(buf.to_string());
     try f.flush();
 }
 

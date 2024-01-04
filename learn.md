@@ -445,7 +445,7 @@ let name: string = "";
 
 ### Type Casting
 
-Use `as` to cast a value to a type.
+Use `as` to cast a value to a type, this is **zero-cost** type casting.
 
 You can cast a value from [int] to [float], or from [float] to [int].
 
@@ -664,7 +664,9 @@ The syntax of variable declarations is:
 
 where:
 
-- `declaration_mode` - is the variable mode, we can use `let`.
+- `declaration_mode` - is the variable mode, we can use `let`, `cost`.
+  - `let` - declare a mutable variable.
+  - `const` - declare a immutable variable.
 - `type` - used to declare the variable type, such as `int`, `string`, or a optional type `int?`, `string?`.
 - `identifier` - variable name.
 - `expression` - the value of the variable, can be any expression.
@@ -680,7 +682,7 @@ They must not be a keyword. See [Keywords](#keywords) for a list of reserved key
 The following are valid identifiers:
 
 ```nv
-let name = "World";
+const name = "World";
 let _name = "World";
 let name_ = "World";
 let _name_ = "World";
@@ -703,7 +705,7 @@ Variables are scoped to the block in which they are declared. A block is a colle
 ```nv,no_run
 use std.io;
 
-let name = "Name in global scope";
+const name = "Name in global scope";
 
 fn main() throws {
     let name = "World";
@@ -725,6 +727,14 @@ Hello World!
 Hello Navi!
 Hello World!
 Hello Name in global scope!
+```
+
+### Const
+
+The `const` keyword is used to declare a immutable variable, and it must have a value. When the value is assigned, it can't be changed.
+
+```nv
+const page_size = 200;
 ```
 
 ## Operator
@@ -1013,6 +1023,320 @@ fn main() throws {
     io.println(user.say());
 }
 ```
+
+### Struct Attributes
+
+Use `#[serde(attr = ...)]` to declare a struct serialize and deserialize attributes.
+
+#### `#[serde(rename_all = "...")]`
+
+Rename all the fields (if this is a struct) or variants (if this is an enum) according to the given case convention. The possible values are `"lowercase"`, `"UPPERCASE"`, `"PascalCase"`, `"camelCase"`, `"snake_case"`, `"SCREAMING_SNAKE_CASE"`, `"kebab-case"`, `"SCREAMING-KEBAB-CASE"`.
+
+```nv, ignore
+#[serde(rename_all = "camelCase")]
+struct User {
+    user_name: string,
+    user_group: string,
+}
+```
+
+Output:
+
+```json
+{
+  "userName": "Sunli",
+  "userGroup": "Admin"
+}
+```
+
+#### `#[serde(deny_unknown_fields)]`
+
+Always error during deserialization when encountering unknown fields. When this attribute is not present, by default unknown fields are ignored for self-describing formats like JSON.
+
+::: info NOTE
+This attribute is not supported in combination with `flatten`, neither on the outer struct nor on the flattened field.
+:::
+
+```nv, ignore
+#[serde(deny_unknown_fields)]
+struct User {
+    user_name: string,
+    user_group: string,
+}
+```
+
+If we have a source JSON like this:
+
+```json
+{
+  "user_name": "Sunli",
+  "user_group": "Admin",
+  "unknown_field": "unknown"
+}
+```
+
+In this case, we still can deserialize the JSON to a struct, but the `unknown_field` will be ignored.
+
+```nv, ignore
+use std.json;
+
+let user = json.parse::<User>(`{ "user_name": "Sunli", "user_group": "Admin", "unknown_field": "unknown" }`);
+assert_eq user.user_name, "Sunli";
+```
+
+### Field Attributes
+
+#### `#[serde(rename = "...")]`
+
+Serialize and deserialize this field with the given name instead of its Rust name. This is useful for serializing fields as camelCase or serializing fields with names that are reserved Rust keywords.
+
+```nv, ignore
+struct User {
+    #[serde(rename = "name")]
+    user_name: string,
+    #[serde(rename = "team")]
+    user_group: string,
+}
+```
+
+Output:
+
+```json
+{
+  "name": "Sunli",
+  "team": "Admin"
+}
+```
+
+#### `#[serde(alias = "name")]`
+
+Deserialize this field from the given name or from its Navi name. May be repeated to specify multiple possible names for the same field.
+
+```nv, ignore
+struct User {
+    #[serde(alias = "name")]
+    user_name: string,
+    #[serde(alias = "team")]
+    user_group: string,
+}
+```
+
+So the both JSONs are valid:
+
+```json
+{
+  "name": "Sunli",
+  "team": "Admin"
+}
+```
+
+```json
+{
+  "user_name": "Sunli",
+  "user_group": "Admin"
+}
+```
+
+#### `#[serde(skip)]`
+
+Skip this field: do not serialize or deserialize it. The `skip` field must have default value, otherwise it will cause a compile error.
+
+```nv, ignore
+struct User {
+    name: string,
+    #[serde(skip)]
+    group: string = "Other",
+}
+```
+
+Output:
+
+```json
+{
+  "name": "Sunli"
+}
+```
+
+And also can deserialize the JSON without the `group` field.
+
+```nv, ignore
+use std.json;
+
+let user = json.parse::<User>(`{ "name": "Sunli", "group": "Admin" }`);
+assert_eq user.name, "Sunli";
+// The `group` field is described with `skip`, so it will be ignored, we still get that default value.
+assert_eq user.group, "Other";
+```
+
+#### `#[serde(flatten)]`
+
+Flatten the contents of this field into the container it is defined in.
+
+This removes one level of structure between the serialized representation and the Rust data structure representation. It can be used for factoring common keys into a shared structure, or for capturing remaining fields into a map with arbitrary string keys.
+
+::: info NOTE
+This attribute is not supported in combination with structs that use `deny_unknown_fields`. Neither the outer nor inner flattened struct should use that attribute.
+:::
+
+##### Flatten a struct fields
+
+In some cases, we want to flatten a struct fields to the parent struct. So we can use `#[serde(flatten)]` to do that.
+
+```nv, ignore
+struct User {
+    name: string,
+    #[serde(flatten)]
+    profile: Profile,
+}
+
+struct Profile {
+    bio: string,
+    city: string,
+}
+```
+
+Now all fields in the `Profile` struct will be flattened to the `User` struct after serialization.
+
+```json
+{
+  "name": "Sunli",
+  "bio": "Hello, World!",
+  "city": "Wuhan"
+}
+```
+
+##### Capture additional fields
+
+A field of map type can be flattened to hold additional data that is not captured by any other fields of the struct.
+
+```nv, ignore
+struct User {
+    name: string,
+    #[serde(flatten)]
+    extra: <string, any>,
+}
+```
+
+For example we have a lot of unknown fields in the JSON, the all unknown fields will be captured to the `extra` field.
+
+```json
+{
+  "name": "Sunli",
+  "bio": "Hello, World!",
+  "city": "Wuhan"
+}
+```
+
+```nv, ignore
+use std.json;
+
+let user = json.parse::<User>(`{ "name": "Sunli", "bio": "Hello, World!", "city": "Wuhan" }`);
+assert_eq user.name, "Sunli";
+assert_eq user.extra["bio"], "Hello, World!";
+assert_eq user.extra["city"], "Wuhan";
+```
+
+## Enum
+
+The Navi `enum` is a collection of variants, and it is a [value] type.
+
+### Declare an Enum
+
+Use `enum` keyword to declare an enum, and use `.` to access a variant.
+
+```nv
+enum UserRole {
+    Admin,
+    User,
+    Guest,
+}
+```
+
+Enum can be define with a type, and it can be used as a type.
+
+If you have not give a type to an enum, it will be a `int` type, and the first variant will be `0`, the second variant will be `1`, and so on in order.
+
+```nv
+enum UserRole {
+    Admin = 100,
+    User = 101,
+    Guest = 103,
+}
+
+enum UserStatus {
+    Active = "active",
+    Inactive = "inactive",
+}
+```
+
+### Convert to a value
+
+Use `as` to convert an enum to a value, this is zero-cost.
+
+```nv, ignore
+let a = UserRole.Admin as int;
+assert_eq a, 100;
+
+let b = UserStatus.Active as string;
+assert_eq b, "active";
+```
+
+### Enum Annotations
+
+Like the struct, `enum` also have annotations for declaring serialize and deserialize attributes.
+
+#### Enum Attributes
+
+##### `#[serde(int)]`
+
+Serialize and deserialize this enum as an integer.
+
+```nv, ignore
+#[serde(int)]
+enum UserRole {
+    Admin,
+    User,
+    Guest,
+}
+
+struct User {
+    role: UserRole,
+}
+```
+
+If present, the serialized representation of the enum will be an integer.
+
+```json
+{
+  "role": 100
+}
+```
+
+Otherwice will use the enum field name as the serialized representation.
+
+```json
+{
+  "role": "Admin"
+}
+```
+
+##### `#[serde(rename_all = "...")]`
+
+This is the same as the struct `#[serde(rename_all = "...")]`. See [Struct Attributes](#struct-attributes).
+
+Please note that the `rename_all` attribute is not supported in combination with `#[serde(int)]`.
+
+#### Enum Item Attributes
+
+The enum item also have annotations for declaring serialize and deserialize attributes.
+
+##### `#[serde(rename = "...")]`
+
+This is the same as the struct `#[serde(rename = "...")]`. See [Struct Attributes](#struct-attributes).
+
+##### `#[serde(alias = "...")]`
+
+This is the same as the struct `#[serde(alias = "...")]`. See [Struct Attributes](#struct-attributes).
 
 ## Interface
 
@@ -1569,6 +1893,41 @@ a: 1, b: 2, mode: +
 a: 1, b: 2, mode: +
 ```
 
+### Function to a Variable
+
+In Navi, the Function is the first-class citizen, it can be assigned to a variable, and it can be passed as an argument to another function.
+
+```nv,no_run
+use std.io;
+
+fn add(a: int, b: int): string {
+	return `${a + b}`;
+}
+
+struct User {
+    name: string,
+}
+
+impl User {
+    fn say(self): string {
+        return `Hello ${self.name}!`;
+    }
+}
+
+fn main() throws {
+	let add_fn = add;
+	io.println(add_fn(1, 2));
+
+    let user = User { name: "Navi" };
+    let say_fn = user.say;
+    io.println(say_fn());
+}
+```
+
+## Closure
+
+TODO
+
 ## Optional
 
 Navi provides a modern optional type, which is similar to Rust's `Option` type, to give us a safe way to handle `nil` value, we can avoid the `null pointer exception` in runtime.
@@ -1902,8 +2261,7 @@ config
 
 In this case:
 
-- `main.nv` file is a module named `main` and Navi use `main.nv` as the entry file by default.
-- `utils.nv` file is a module named `utils`, we can use it in `main.nv` by `use utils`.
+- `main.nv`, `utils.nv` files are in the `main` module, the can access and share members with each other.
 - `models` directory is a module named `models`.
 - `models/user_profile.nv` will be compiled to `models` module.
 - `models/user_profile` directory is a module named `models.user_profile`.
@@ -1920,7 +2278,6 @@ Only the used modules will be compiled, this means `navi test` or other commands
 For example, in `main.nv`:
 
 ```nv, ignore
-use utils;
 use models;
 use config;
 
@@ -1946,6 +2303,30 @@ let info: MyInfo = {
 assert_eq info["foo"], 1;
 assert_eq info["bar"], 2;
 ```
+
+### Type Implemention
+
+You can use `impl` to implement some method to a type alias.
+
+::: warning NOTE
+The type alias is not a new type, it is just an alias of the original type, so when you implemention a that type, the original type will also be changed.
+
+````
+
+```nv
+struct User {
+    name: string,
+}
+
+type NewUser = User;
+
+impl NewUser {
+    fn new_method(self) {
+    }
+}
+````
+
+After this implemention, the `User` type will also have the `new_method` method.
 
 ## Defer
 
@@ -2003,7 +2384,28 @@ See also:
 
 ## Channel
 
-TODO
+The `channel` is a communication mechanism that allows one goroutine to send values to another goroutine.
+
+Use `channel` to create a channel, and use `send` to send a value to the channel, and use `recv` to receive a value from the channel.
+
+```nv,no_run
+let ch: channel = channel::<int>();
+
+spawn {
+    let i = 1;
+    while (i <= 10) {
+        ch.send(i);
+        i += 1;
+    }
+}
+
+let i = 1;
+while (i <= 10) {
+    let value = ch.recv();
+    assert value == i;
+    i += 1;
+}
+```
 
 ## Keywords
 
@@ -2020,6 +2422,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
 | `case`                      | `case` for `switch` statement.                                                             |
 | `catch`                     | Use `catch` to catch an error.                                                             |
+| `const`                     | Declare a constant.                                                                        |
 | `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
 | `default`                   | `default` case for `switch` statement.                                                     |
 | `defer`                     | Execute a block of code when the current function returns.                                 |
