@@ -11,15 +11,15 @@ let repo = "navi-language/navi";
 let target = "stdlib";
 let INDOC_HEADING_LEVEL = 2;
 
-/// key is the module name
-/// value is the module
-type Stdlib = <string, Module>;
-
 struct Module {
     name: string = "",
     functions: [Function] = {},
     structs: <string, Struct> = {}
 }
+
+/// key is the module name
+/// value is the module
+type Stdlib = <string, Module>;
 
 struct Struct {
     name: string = "",
