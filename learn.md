@@ -243,11 +243,18 @@ There is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
 
 In Navi, the `int` type is a signed integer type, and it is 64-bit on all platforms. This means it can hold values from `-9223372036854775808` to `9223372036854775807`.
 
-We don't have `uint` type or other integer types.
+We don't have uint type or other integer types.
 
 ```nv
 let n = 246;
 let n1 = -100;
+```
+
+You can use `_` to separate digits in a number (`int`, `float`), it will be **ignored** by the compiler. This is useful for large numbers.
+
+```nv
+let amount = 1_000_000;
+let price = 123_456_789.123_456;
 ```
 
 ### Float {#float}
