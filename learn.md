@@ -2317,8 +2317,7 @@ You can use `impl` to implement some method to a type alias.
 
 ::: warning NOTE
 The type alias is not a new type, it is just an alias of the original type, so when you implemention a that type, the original type will also be changed.
-
-````
+:::
 
 ```nv
 struct User {
@@ -2331,7 +2330,7 @@ impl NewUser {
     fn new_method(self) {
     }
 }
-````
+```
 
 After this implemention, the `User` type will also have the `new_method` method.
 
