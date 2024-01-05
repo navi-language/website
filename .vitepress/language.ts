@@ -5,10 +5,8 @@ const naviLanguageGrammar = JSON.parse(
 );
 
 const naviLanguage: any = {
-  id: 'navi',
-  scopeName: 'source.navi',
-  grammar: naviLanguageGrammar,
   aliases: ['navi', 'nv'],
+  ...naviLanguageGrammar,
 };
 
 const naviStreamLanguageGrammar = JSON.parse(
@@ -16,10 +14,8 @@ const naviStreamLanguageGrammar = JSON.parse(
 );
 
 const naviStreamLanguage: any = {
-  id: 'navi-stream',
-  scopeName: 'source.navi-stream',
-  grammar: naviStreamLanguageGrammar,
   aliases: ['nvs'],
+  ...naviStreamLanguageGrammar,
 };
 
 export { naviLanguage, naviStreamLanguage };

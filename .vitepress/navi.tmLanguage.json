@@ -197,6 +197,36 @@
           }
         },
         {
+          "comment": "hex integer constants",
+          "name": "constant.numeric.hex.navi",
+          "match": "(?x)\n  (?<![\\w\\.])\n    (0[xX]) (_?[0-9a-fA-F])+\n  \\b\n",
+          "captures": {
+            "1": {
+              "name": "storage.type.number.navi"
+            }
+          }
+        },
+        {
+          "comment": "octal integer constants",
+          "name": "constant.numeric.oct.navi",
+          "match": "(?x)\n  (?<![\\w\\.])\n    (0[oO]) (_?[0-7])+\n  \\b\n",
+          "captures": {
+            "1": {
+              "name": "storage.type.number.navi"
+            }
+          }
+        },
+        {
+          "comment": "binary integer constants",
+          "name": "constant.numeric.bin.navi",
+          "match": "(?x)\n  (?<![\\w\\.])\n    (0[bB]) (_?[01])+\n  \\b\n",
+          "captures": {
+            "1": {
+              "name": "storage.type.number.navi"
+            }
+          }
+        },
+        {
           "comment": "Language constants",
           "match": "\\b(true|false|nil)\\b",
           "name": "constant.language.navi"
@@ -462,67 +492,17 @@
         {
           "comment": "control flow keywords",
           "name": "keyword.control.navi",
-          "match": "\\b(break|case|continue|default|else|for|in|while|if|return|switch|match|try|catch|throws|throw|finally|panic)\\b"
-        },
-        {
-          "comment": "storage keywords",
-          "name": "keyword.other.navi storage.type.navi",
-          "match": "\\b(fn|use|let|int|number|string|bool|tests|test|bench|impl|interface)\\b"
+          "match": "\\b(break|case|catch|continue|default|default|defer|do|else|finally|for|if|in|loop|match|return|select|switch|try|while)\\b"
         },
         {
           "comment": "Built-in functions",
-          "match": "\\b(print|println|assert|assert_eq|assert_ne|trace|error)\\b",
+          "match": "\\b(assert|assert_eq|assert_ne|error|panic|print|println|throw|throws|trace)\\b",
           "name": "support.function.core.navi"
         },
         {
-          "comment": "const keyword",
-          "name": "storage.modifier.navi",
-          "match": "\\b(const)\\b"
-        },
-        {
-          "comment": "type keyword",
-          "name": "keyword.declaration.type.navi storage.type.navi",
-          "match": "\\b(type)\\b"
-        },
-        {
-          "comment": "enum keyword",
-          "name": "keyword.declaration.enum.navi storage.type.navi",
-          "match": "\\b(enum)\\b"
-        },
-        {
-          "comment": "interface keyword",
-          "name": "keyword.declaration.interface.navi storage.type.navi",
-          "match": "\\b(interface)\\b"
-        },
-        {
-          "comment": "struct keyword",
-          "name": "keyword.declaration.struct.navi storage.type.navi",
-          "match": "\\b(struct)\\b"
-        },
-        {
-          "comment": "storage modifiers",
-          "name": "storage.modifier.navi",
-          "match": "\\b(abstract|static)\\b"
-        },
-        {
-          "comment": "other keywords",
+          "comment": "storage keywords",
           "name": "keyword.other.navi",
-          "match": "\\b(as|async|become|box|dyn|move|final|impl|in|override|priv|pub|ref|typeof|union|unsafe|unsized|use|virtual|where|panic|operator|throw|throws)\\b"
-        },
-        {
-          "comment": "fn",
-          "name": "keyword.other.fn.navi",
-          "match": "\\bfn\\b"
-        },
-        {
-          "comment": "test",
-          "name": "keyword.other.test.navi",
-          "match": "\\btest\\b"
-        },
-        {
-          "comment": "bench",
-          "name": "keyword.other.bench.navi",
-          "match": "\\bbench\\b"
+          "match": "\\b(bench|bool|const|enum|fn|impl|int|interface|let|number|pub|spawn|string|struct|test|type|use)\\b"
         },
         {
           "comment": "logical operators",
