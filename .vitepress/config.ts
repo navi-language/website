@@ -97,19 +97,6 @@ export default withMermaid(
           media: '(prefers-color-scheme: dark)',
         },
       ],
-      [
-        'script',
-        {
-          src: 'https://cdn.lr-intake.com/LogRocket.min.js',
-          crossorigin: 'anonymous',
-        },
-        '',
-      ],
-      [
-        'script',
-        {},
-        `window.LogRocket && window.LogRocket.init('navi-language/website');`,
-      ],
     ],
   })
 );
