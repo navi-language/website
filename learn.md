@@ -1353,8 +1353,9 @@ The Navi interface is a collection of methods, and it is a [value] type, it's li
 
 Use the `interface` keyword to declare an interface, and use `.` to access a method.
 
-- The interface name must be an [identifier] with `CamelCase` style, e.g.: `ToString`, `Reader`, `Writer`.
+- The interface name must be an [identifier] with `CamelCase` style, we recommend named interface use verb, e.g.: `ToString`, `Read`, `Write`.
 - And the method name must be an [identifier], with `snake_case` style, e.g.: `to_string`, `read`, `write`.
+- We can write a default implementation for a method, and it will be used if the struct does not implement the method.
 - The first argument of the method must be `self`, it is a reference to the current struct instance.
 
 ```nv
@@ -1362,11 +1363,16 @@ interface ToString {
     fn to_string(self): string;
 }
 
-interface Reader {
+interface Read {
     fn read(self): string;
+
+    fn read_all(self): string {
+        // This is default implementation, if the struct does not implement this method, it will be used.
+        return "";
+    }
 }
 
-fn read_all(reader: Reader): ToString {
+fn read_all(reader: Read): ToString {
     let s = reader.read();
     // Navi's string has a `to_string` method.
     return s;
@@ -1401,7 +1407,7 @@ impl User {
 }
 ```
 
-Now we can use a `User` type as a `ToString` or a `Reader` interface.
+Now we can use a `User` type as a `ToString` or a `Read` interface.
 
 ```nv, ignore
 fn foo(item: ToString) {
