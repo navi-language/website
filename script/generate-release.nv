@@ -25,11 +25,11 @@ fn fetch_releases() throws {
     let releases = try res.json::<[Release]>();
 
     let buf = StringBuffer.new();
-    buf.write("---\n");
-    buf.write("title: Releases\n");
-    buf.write("editLink: false\n");
-    buf.write("---\n");
-    buf.write("# Releases\n\n");
+    buf.push("---\n");
+    buf.push("title: Releases\n");
+    buf.push("editLink: false\n");
+    buf.push("---\n");
+    buf.push("# Releases\n\n");
 
     for (let release in releases) {
         let prerelease = release.prerelease;
@@ -50,8 +50,8 @@ fn fetch_releases() throws {
 
         let html_url = release.html_url;
         let body = utils.replace_headings(release.body, level: 1);
-        buf.write(`## [${name}](${html_url})\n\n`);
-        buf.write(`${body}\n\n`);
+        buf.push(`## [${name}](${html_url})\n\n`);
+        buf.push(`${body}\n\n`);
     }
 
     let f = try fs.create(target_file);
