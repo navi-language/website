@@ -89,7 +89,7 @@ fn generate() throws {
         if (fname == "#prelude") {
             fname = "prelude";
         }
-        fname = fname.replace(".", "_");
+        fname = fname.replace(".", "/");
         let filename = path.join(target, fname + ".md");
         try fs.create_dir_all(path.dir(filename));
 
