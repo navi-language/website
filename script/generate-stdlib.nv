@@ -89,7 +89,6 @@ fn generate() throws {
         if (fname == "#prelude") {
             fname = "prelude";
         }
-        fname = fname.replace(".", "/");
         let filename = path.join(target, fname + ".md");
         try fs.create_dir_all(path.dir(filename));
 
@@ -101,9 +100,9 @@ fn generate() throws {
 
 fn build_module_index(stdlib: Stdlib): string {
     let buf = StringBuffer.new();
-    for (let k, module in stdlib) {
-        let slug = format_slug(module.name.replace("#", ""));
-        buf.write(`- [${k}](./${slug}.md)`);
+    for (let fname, module in stdlib) {
+        let slug = fname;
+        buf.write(`- [${fname}](./${fname}.md)`);
     }
 
     return buf.to_string("\n");

@@ -23,7 +23,7 @@ const stdlibItems = Object.keys(stdlib)
       return { text: 'Preludo', link: '/stdlib/prelude' };
     }
 
-    return { text: module, link: `/stdlib/${module.replace(/\./g, '_')}` };
+    return { text: module, link: `/stdlib/${module}` };
   });
 
 // https://vitepress.dev/reference/site-config
