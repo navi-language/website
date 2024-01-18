@@ -374,7 +374,7 @@ struct User {
 }
 
 impl User {
-    fn to_string(self): string {
+    pub fn to_string(self): string {
         return self.name;
     }
 }
@@ -975,6 +975,14 @@ struct Profile {
 
 To create a struct instance, use `StructName { field: value }` syntax.
 
+If the variable name is the same as the field name, you can assign it in short syntax, e.g.: `name` is the same as `name: name`.
+
+```nv, ignore
+let name = "Jason Lee";
+let id = 100;
+let user = User { id, name }; // This is same like `User { id: id, name: name }`
+```
+
 ::: info
 In the current version, you must assign `nil` to an [optional] field if you don't want to set a [value].
 
@@ -1249,7 +1257,7 @@ The Navi `enum` is a collection of variants, and it is a [value] type.
 
 ### Declare an Enum
 
-Use `enum` keyword to declare an enum, and use `.` to access a variant.
+Use `enum` keyword to declare an enum, and use `.` to access a variant. Enum only be a [int] type.
 
 ```nv
 enum UserRole {
@@ -1259,20 +1267,13 @@ enum UserRole {
 }
 ```
 
-Enum can be define with a type, and it can be used as a type.
-
-If you have not give a type to an enum, it will be a `int` type, and the first variant will be `0`, the second variant will be `1`, and so on in order.
+The first variant will be `0`, the second variant will be `1`, and so on in order.
 
 ```nv
 enum UserRole {
     Admin = 100,
     User = 101,
     Guest = 103,
-}
-
-enum UserStatus {
-    Active = "active",
-    Inactive = "inactive",
 }
 ```
 
@@ -1283,9 +1284,6 @@ Use `as` to convert an enum to a value, this is zero-cost.
 ```nv, ignore
 let a = UserRole.Admin as int;
 assert_eq a, 100;
-
-let b = UserStatus.Active as string;
-assert_eq b, "active";
 ```
 
 ### Enum Annotations
@@ -1360,7 +1358,7 @@ Use the `interface` keyword to declare an interface, and use `.` to access a met
 
 ```nv
 interface ToString {
-    fn to_string(self): string;
+    pub fn to_string(self): string;
 }
 
 interface Read {
@@ -2190,7 +2188,7 @@ use std.url.URL;
 
 fn main() throws {
     let url = try URL.parse("https://navi-lang.org");
-    assert_eq url.host, "navi-lang.org";
+    assert_eq url.host(), "navi-lang.org";
 }
 ```
 
@@ -2204,7 +2202,7 @@ Sometime we may want to use a different name for a module, we can use `as` to im
 use std.url.URL as BaseURL;
 
 let url = try! BaseURL.parse("https://navi-lang.org");
-assert_eq url.host, "navi-lang.org";
+assert_eq url.host(), "navi-lang.org";
 ```
 
 ### Use multiple modules
@@ -2216,7 +2214,7 @@ use std.{io, url.URL};
 
 fn main() throws {
     let url = try URL.parse("https://navi-lang.org");
-    assert_eq url.host, "navi-lang.org";
+    assert_eq url.host(), "navi-lang.org";
 }
 ```
 
@@ -2340,6 +2338,50 @@ impl NewUser {
 
 After this implemention, the `User` type will also have the `new_method` method.
 
+## Union Type
+
+The union type is allows us to combine two or more types into one type.
+
+```nv
+fn to_string(val: int | string | float): string {
+    switch (let val = val.(type)) {
+        case int:
+            return `int: ${val}`;
+        case float:
+            return `float: ${val}`;
+        case string:
+            return `string: ${val}`;
+    }
+}
+
+assert_eq to_string(1), "int: 1";
+assert_eq to_string(3.14), "float: 3.14";
+assert_eq to_string("hello"), "string: hello";
+```
+
+It also can be used as a struct field type.
+
+```nv
+struct User {
+    stuff_number: int | string,
+}
+
+let user = User {
+    stuff_number: 1,
+};
+let user = User {
+    stuff_number: "one",
+};
+```
+
+Or with return type.
+
+```nv
+fn get_stuff_number(): (int | string) {
+    return 1;
+}
+```
+
 ## Defer
 
 The `defer` keyword used to execute a block of code when the current function returns.
@@ -2401,7 +2443,7 @@ The `channel` is a communication mechanism that allows one goroutine to send val
 Use `channel` to create a channel, and use `send` to send a value to the channel, and use `recv` to receive a value from the channel.
 
 ```nv,no_run
-let ch: channel = channel::<int>();
+let ch = channel::<int>();
 
 spawn {
     let i = 1;
