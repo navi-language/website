@@ -45,7 +45,7 @@ let a = 100 + 2 - 10 * 5 / 2 % 3;
 
 We can use `quote.close[n]` to reference the data of the previous.
 
-For example we have data of K line (1m):
+For example, we have data of K line (1m):
 
 | idx | time  | close |
 | --- | ----- | ----- |
