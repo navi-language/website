@@ -36,6 +36,11 @@
   --vp-c-brand-3: #2463dd;
   --vp-c-brand-soft: #85a8ec;
   --vp-c-gutter: #2e2f31;
+
+  --vp-c-tip-1: var(--vp-c-brand-3);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-1);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
 }
 
 /**
@@ -89,10 +94,17 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --vp-custom-block-tip-border: transparent;
+  --vp-custom-block-tip-border: var(--vp-c-default-3);
   --vp-custom-block-tip-text: var(--vp-c-text-1);
-  --vp-custom-block-tip-bg: var(--vp-c-brand-soft);
-  --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
+  --vp-custom-block-tip-bg: transparent;
+  --vp-custom-block-tip-code-bg: var(--vp-c-default-soft);
+}
+
+.dark {
+  --vp-custom-block-tip-border: var(--vp-c-default-3);
+  --vp-custom-block-tip-text: var(--vp-c-text-1);
+  --vp-custom-block-tip-bg: transparent;
+  --vp-custom-block-tip-code-bg: var(--vp-c-default-soft);
 }
 
 /**
