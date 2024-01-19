@@ -73,7 +73,7 @@ $ navi run
 Hello World!
 ```
 
-> NOTE: If the file name is `main.nv` and it have `main` function. The `navi run` will use it as the program entry.
+> NOTE: If the file name is `main.nv` and it has the `main` function. The `navi run` will use it as the program entry.
 > You also can execute with `navi run main.nv`.
 
 This code sample demonstrates the basic syntax of Navi.
@@ -81,8 +81,8 @@ This code sample demonstrates the basic syntax of Navi.
 - The `use` keyword is used to import the `io` module from the standard library.
 - The `//` is used to comment a line.
 - The `fn` keyword is used to define a function.
-- The `main` function is the entry point of the program, the `main` function must have `throws` keyword, and it can throw an error.
-- The `throws` keyword is used to declare a function can throw an error.
+- The `main` function is the entry point of the program, the `main` function must have the `throws` keyword, and it can throw an error.
+- The `throws` keyword is used to declare a function that can throw an error.
 - The `let` keyword is used to declare a variable.
 - The `name` variable is a string type, or you can use `let name: string = "World";` to declare it.
 - The `message` variable is defined by a string interpolation (Like JavaScript) by using "``", and the `${name}` is a variable reference.
@@ -107,7 +107,7 @@ fn say(name: string): string {
 }
 ```
 
-There is no multi-line comment in Navi. If you want write a multi-line comment, just use `//` for each line.
+There is no multi-line comment in Navi. If you want to write a multi-line comment, just use `//` for each line.
 
 ## Doc Comments
 
@@ -141,7 +141,7 @@ impl User {
 
 ### Doctest
 
-You can write Markdown Code Block in your doc comment, use `navi test --doc` to run the doc tests.
+You can write Markdown Code Block in your doc comment, and use `navi test --doc` to run the doc tests.
 
 Like regular tests, doc tests use the `assert`, `assert_eq`, and `assert_ne` keywords for assertion.
 
@@ -170,7 +170,7 @@ thread 'main' at 'assertion failed: s == "Hello"', main:9
   right: Hello
 ```
 
-This will parse the Codeblock in the doc comment and run it.
+This will parse the code block in the doc comment and run it.
 
 ### Annotation for doctest
 
@@ -178,7 +178,7 @@ Code blocks can be annotated with attributes that help `navi test` do the right 
 
 - `ignore`: Ignore doc test (No compile and run).
 - `should_panic`: This code should panic or assert failed.
-- `no_run`: This code should passed compile but not run.
+- `no_run`: This code should pass compile but not run.
 - `compile_fail`: This code block should fail to compile.
 
 #### For example:
@@ -199,7 +199,7 @@ Expect to **panic** or **assert failed**
 /// ```
 ````
 
-Expect to **passed compile** but **not run**
+Expect to **pass compile** but **not run**
 
 ````nv
 /// ```nv,no_run
@@ -227,7 +227,7 @@ Expect to **compile failed**
 | [string] | str             | A immutable UTF-8 string | `"Hello, 世界"`       |
 
 ::: info
-💡 Navi only have [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
+💡 Navi only has [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
 
 There is no int8, uint8, int16, uint16, int32, uint32, float32, and etc.
 :::
@@ -444,7 +444,7 @@ Output:
   │                     ^ unrecognized token: ;, expected tokens: ",", "=", "?"
 ```
 
-If we changed to give a default value, then it will be ok.
+If we change to give a default value, then it will be ok.
 
 ```nv, no_run
 let name: string = "";
@@ -477,7 +477,7 @@ test "cast" {
 }
 ```
 
-There follow are invalid type casting:
+The following are invalid type casting:
 
 ```nv,compile_fail
 let n = 300 as string; // unable cast type `int` to `string`
@@ -490,9 +490,9 @@ let n = true as float; // unable cast type `bool` to `float`
 
 ### Type Conversion
 
-Use `parse_int`, `parse_float` to convert a `string` to a `int` or `float`, the return value is a optional type. If the string value is invalid, it will return `nil`.
+Use `parse_int`, and `parse_float` to convert an `string` to a `int` or `float`, the return value is an optional type. If the string value is invalid, it will return `nil`.
 
-And use `to_string` to convert all [Primitive Types] to a `string`, this always success.
+Use `to_string` to convert all [Primitive Types] to a `string`, this is always successful.
 
 ```nv
 test "parse_int" {
@@ -673,7 +673,7 @@ where:
 
 - `declaration_mode` - is the variable mode, we can use `let`, `cost`.
   - `let` - declare a mutable variable.
-  - `const` - declare a immutable variable.
+  - `const` - declare an immutable variable.
 - `type` - used to declare the variable type, such as `int`, `string`, or a optional type `int?`, `string?`.
 - `identifier` - variable name.
 - `expression` - the value of the variable, can be any expression.
@@ -738,7 +738,7 @@ Hello Name in global scope!
 
 ### Const
 
-The `const` keyword is used to declare a immutable variable, and it must have a value. When the value is assigned, it can't be changed.
+The `const` keyword is used to declare an immutable variable, and it must have a value. When the value is assigned, it can't be changed.
 
 ```nv
 const page_size = 200;
@@ -859,7 +859,7 @@ test "array" {
 }
 ```
 
-If you decalre the array type, then you can assigment a array without the type prefix.
+If you declare the array type, then you can assign an array without the type prefix.
 
 ```nv
 let items: [string] = { "Rust", "Navi" };
@@ -1029,8 +1029,8 @@ impl User {
 }
 ```
 
-- `new` is a **Static Method**, and it can call by `User.new`.
-- `say` is a **Instance Method**, and it can call by `user.say()`.
+- `new` is a **Static Method**, and it can be called by `User.new`.
+- `say` is an **Instance Method**, and it can be called by `user.say()`.
 
 ```nv, ignore
 fn main() throws {
@@ -1136,7 +1136,7 @@ struct User {
 }
 ```
 
-So the both JSONs are valid:
+So both JSONs are valid:
 
 ```json
 {
@@ -1154,7 +1154,7 @@ So the both JSONs are valid:
 
 #### `#[serde(skip)]`
 
-Skip this field: do not serialize or deserialize it. The `skip` field must have default value, otherwise it will cause a compile error.
+Skip this field: do not serialize or deserialize it. The `skip` field must have a default value, otherwise, it will cause a compile error.
 
 ```nv, ignore
 struct User {
@@ -1195,7 +1195,7 @@ This attribute is not supported in combination with structs that use `deny_unkno
 
 ##### Flatten a struct fields
 
-In some cases, we want to flatten a struct fields to the parent struct. So we can use `#[serde(flatten)]` to do that.
+In some cases, we want to flatten a struct field to the parent struct. So we can use `#[serde(flatten)]` to do that.
 
 ```nv, ignore
 struct User {
@@ -1232,7 +1232,7 @@ struct User {
 }
 ```
 
-For example we have a lot of unknown fields in the JSON, the all unknown fields will be captured to the `extra` field.
+For example, we have a lot of unknown fields in the JSON, the all unknown fields will be captured to the `extra` field.
 
 ```json
 {
@@ -1257,7 +1257,7 @@ The Navi `enum` is a collection of variants, and it is a [value] type.
 
 ### Declare an Enum
 
-Use `enum` keyword to declare an enum, and use `.` to access a variant. Enum only be a [int] type.
+Use `enum` keyword to declare an enum, and use `.` to access a variant. Enum only be an [int] type.
 
 ```nv
 enum UserRole {
@@ -1288,7 +1288,7 @@ assert_eq a, 100;
 
 ### Enum Annotations
 
-Like the struct, `enum` also have annotations for declaring serialize and deserialize attributes.
+Like the struct, `enum` also has annotations for declaring serialize and deserialize attributes.
 
 #### Enum Attributes
 
@@ -1317,7 +1317,7 @@ If present, the serialized representation of the enum will be an integer.
 }
 ```
 
-Otherwice will use the enum field name as the serialized representation.
+Otherwise will use the enum field name as the serialized representation.
 
 ```json
 {
@@ -1333,7 +1333,7 @@ Please note that the `rename_all` attribute is not supported in combination with
 
 #### Enum Item Attributes
 
-The enum item also have annotations for declaring serialize and deserialize attributes.
+The enum item also has annotations for declaring serialize and deserialize attributes.
 
 ##### `#[serde(rename = "...")]`
 
@@ -1351,7 +1351,7 @@ The Navi interface is a collection of methods, and it is a [value] type, it's li
 
 Use the `interface` keyword to declare an interface, and use `.` to access a method.
 
-- The interface name must be an [identifier] with `CamelCase` style, we recommend named interface use verb, e.g.: `ToString`, `Read`, `Write`.
+- The interface name must be an [identifier] with `CamelCase` style, we recommend named interface use a verb, e.g.: `ToString`, `Read`, `Write`.
 - And the method name must be an [identifier], with `snake_case` style, e.g.: `to_string`, `read`, `write`.
 - We can write a default implementation for a method, and it will be used if the struct does not implement the method.
 - The first argument of the method must be `self`, it is a reference to the current struct instance.
@@ -1365,7 +1365,7 @@ interface Read {
     fn read(self): string;
 
     fn read_all(self): string {
-        // This is default implementation, if the struct does not implement this method, it will be used.
+        // This is the default implementation, if the struct does not implement this method, it will be used.
         return "";
     }
 }
@@ -1428,7 +1428,7 @@ fn main() throws {
 
 ### Type Assertion
 
-Use `.(type)` to assert an interfacce to a type.
+Use `.(type)` to assert an interface to a type.
 
 ```nv, compile_fail
 interface ToString {
@@ -1453,7 +1453,7 @@ let user: ToString = User {};
 // Cast user from interface to User.
 let user = user.(User);
 // now use is `User`.
-let user = user.(string); // panic: User can't cast to string.
+let user = user.(string); // panic: User can't cast to a string.
 ```
 
 ## Switch
@@ -1660,7 +1660,7 @@ n: 1
 n: 3
 ```
 
-Use `step` method to crate a new range with a step.
+Use the `step` method to create a new range with a step.
 
 ```nv
 let items = [int] {};
@@ -1779,7 +1779,7 @@ Navi recommends using `snake_case` for the function name, e.g.: `send_message`, 
 And the argument name also uses `snake_case`, e.g.: `title`, `user_id`.
 :::
 
-You can define a function in the module level, or in a struct `impl` block.
+You can define a function at the module level, or in a struct `impl` block.
 
 - The function name must be an [identifier].
 - The arguments can be [normal arguments] or [keyword arguments].
@@ -1904,7 +1904,7 @@ a: 1, b: 2, mode: +
 a: 1, b: 2, mode: +
 ```
 
-### Function to a Variable
+### Function Assigned to a Variable
 
 In Navi, the Function is the first-class citizen, it can be assigned to a variable, and it can be passed as an argument to another function.
 
@@ -1985,7 +1985,7 @@ fn main() throws {
 
 The `||` operator is used to unwrap an [optional] value, if the value is `nil`, it will return the default value.
 
-Right side of `||` can be a [value] or an [expression] that returns a [value], if the left side is not nill, the right side will not be evaluated.
+The right side of `||` can be a [value] or an [expression] that returns a [value], if the left side is not nill, the right side will not be evaluated.
 
 ```nv
 use std.io;
@@ -2008,7 +2008,7 @@ test "unwrap or default" {
 The `throws` keyword on a function to describe that the function can be thrown an error.
 
 ::: warning NOTE
-All function that signature is `throws` must use `try`, `try?` or `try!` keyword before it when you call it.
+All functions whose signature is `throws` must use `try`, `try?` or `try!` keyword before it when you call it.
 :::
 
 | Keyword   | Description                                                  |
@@ -2024,10 +2024,10 @@ All function that signature is `throws` must use `try`, `try?` or `try!` keyword
 
 ### Error Type
 
-By default, `throw` can throw with a [string] or a custom error type that implement the `error` interface.
+By default, `throw` can throw with a [string] or a custom error type that implements the `error` interface.
 
 ::: info TIP
-Because Navi has implemented the `error` interface for [string], so you can throw a [string] directly.
+Because Navi has implemented the `error` interface for [string], you can throw a [string] directly.
 :::
 
 ```nv
@@ -2057,7 +2057,7 @@ impl MyError {
 }
 ```
 
-We can use `throws` to declare an error type, or keep it empty to use default error.
+We can use `throws` to declare an error type or keep it empty to use default error.
 
 ```nv, ignore
 fn hello(name: string): string throws {
@@ -2097,11 +2097,11 @@ fn main() throws {
 
 Use `do ... catch` statement to catch an error.
 
-- The `do` block, you must use `try` keyword before the all functions that can throw an error.
-- The `catch` block use to match an error interface, it can have multiple `catch` blocks to match different error types.
+- In the `do` block, you must use `try` keyword before all functions that can throw an error.
+- The `catch` block is used to match an error interface, it can have multiple `catch` blocks to match different error types.
 - And the `finally` block is optional, it will always be executed.
 
-Every types that implement the `error` method can be used as an `error` interface.
+Every type that implements the `error` method can be used as an `error` interface.
 
 ```nv,ignore
 use std.io;
@@ -2175,7 +2175,7 @@ If the function throws an error, the `try!` will panic.
 
 ```nv, ignore
 let result = try! hello("Navi");
-// This will cause a panic. It same as:
+// This will cause a panic
 ```
 
 ## Use
@@ -2196,7 +2196,7 @@ When you import, the last part of the module name is the name of the module, e.g
 
 ### Alias
 
-Sometime we may want to use a different name for a module, we can use `as` to import a module with an alias.
+Sometimes we may want to use a different name for a module, we can use `as` to import a module with an alias.
 
 ```nv
 use std.url.URL as BaseURL;
@@ -2207,7 +2207,7 @@ assert_eq url.host(), "navi-lang.org";
 
 ### Use multiple modules
 
-We can use multiple modules by once `use`.
+We can use multiple modules by one `use`.
 
 ```nv
 use std.{io, url.URL};
@@ -2220,7 +2220,7 @@ fn main() throws {
 
 ### Import a Module from local
 
-In Navi a folder in the current directory is a module, and the module name is the folder name.
+In Navi, a folder in the current directory is a module, and the module name is the folder name.
 
 For example, we have a struct:
 
@@ -2249,9 +2249,9 @@ use utils;
 
 In Navi a folder in the current directory is a module, and the module name is the folder name.
 
-- The root directory as the `main` module, and use `main.nv` as the entry file by default.
+- The root directory is the `main` module, and uses `main.nv` as the entry file by default.
 - The any sub-directory as a sub-module, and `use` the directory name as the module name.
-- The root directory can have multiple entry files, and you can use `navi run filename.nv` to run it in directly.
+- The root directory can have multiple entry files, and you can use `navi run filename.nv` to run it directly.
 - The `pub` keyword is used to export a `struct`, `struct field`, `interface`, `function`, `type`, `enum`, `const`, `let`, then the other modules can use it.
 
 For example, we have a project like this:
@@ -2272,18 +2272,18 @@ config
 
 In this case:
 
-- `main.nv`, `utils.nv` files are in the `main` module, the can access and share members with each other.
+- `main.nv`, `utils.nv` files are in the `main` module, they can access and share members with each other.
 - `models` directory is a module named `models`.
-- `models/user_profile.nv` will be compiled to `models` module.
+- `models/user_profile.nv` will be compiled into `models` module.
 - `models/user_profile` directory is a module named `models.user_profile`.
-- `modles/user_profile/*.nv` files will be compiled to `models.user_profile` module, they are same like one file.
+- `modles/user_profile/*.nv` files will be compiled into `models.user_profile` module, they are same like one file.
 - `config` directory is a module named `config`.
-- `config/*.nv` files will be compiled to `config` module, they are same like one file.
+- `config/*.nv` files will be compiled to the `config` module, they are the same as one file.
 
 ::: warning NOTE
-If your project have multiple sub-modules, you need to link them by `use` keyword to let the Navi compiler know the module dependency.
+If your project has multiple sub-modules, you need to link them by `use` keyword to let the Navi compiler know the module dependency.
 
-Only the used modules will be compiled, this means `navi test` or other commands will not found the sub-directory modules if you don't use them.
+Only the used modules will be compiled, this means `navi test` or other commands will not find the sub-directory modules if you don't use them.
 :::
 
 For example, in `main.nv`:
@@ -2315,12 +2315,12 @@ assert_eq info["foo"], 1;
 assert_eq info["bar"], 2;
 ```
 
-### Type Implemention
+### Type Implementation
 
 You can use `impl` to implement some method to a type alias.
 
 ::: warning NOTE
-The type alias is not a new type, it is just an alias of the original type, so when you implemention a that type, the original type will also be changed.
+The type alias is not a new type, it is just an alias of the original type, so when you implement that type, the original type will also be changed.
 :::
 
 ```nv
@@ -2336,11 +2336,11 @@ impl NewUser {
 }
 ```
 
-After this implemention, the `User` type will also have the `new_method` method.
+After this implementation, the `User` type will also have the `new_method` method.
 
 ## Union Type
 
-The union type is allows us to combine two or more types into one type.
+The union type allows us to combine two or more types into one type.
 
 ```nv
 fn to_string(val: int | string | float): string {
@@ -2384,9 +2384,9 @@ fn get_stuff_number(): (int | string) {
 
 ## Defer
 
-The `defer` keyword used to execute a block of code when the current function returns.
+The `defer` keyword is used to execute a block of code when the current function returns.
 
-This is most like Go's `defer` keyword. It is useful when you want to do some clean up work, e.g.: close a file, close a database connection, etc.
+This is most like Go's `defer` keyword. It is useful when you want to do some cleanup work, e.g.: close a file, close a database connection, etc.
 
 ```nv, no_run
 use std.io;
@@ -2474,7 +2474,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | `bench`                     | Benchmark function                                                                         |
 | `benches`                   | Benchmark group                                                                            |
 | `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
-| `case`                      | `case` for `switch` statement.                                                             |
+| `case`                      | `case` for the `switch` statement.                                                             |
 | `catch`                     | Use `catch` to catch an error.                                                             |
 | `const`                     | Declare a constant.                                                                        |
 | `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
