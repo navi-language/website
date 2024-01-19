@@ -297,8 +297,8 @@
     "functions": {
       "patterns": [
         {
-          "comment": "pub as a function",
-          "match": "\\b(pub)(\\()",
+          "comment": "keyword as a function",
+          "match": "\\b(pub|switch|while|catch|for|if)(\\()",
           "captures": {
             "1": {
               "name": "keyword.other.navi"
