@@ -21,8 +21,11 @@ fn fetch_releases() throws {
     let headers = Headers.new();
     headers.set("User-Agent", "Navi-Release-Generator");
 
-    let res = try http.get(release_url, headers: headers);
-    let releases = try res.json::<[Release]>();
+    let res = try http.get(release_url, headers:);
+    if (res.status() != 200) {
+        throw `Fetch releases failed: ${res.status()} ${res.headers()}`;
+    }
+    let releases = try! res.json::<[Release]>();
 
     let buf = StringBuffer.new();
     buf.push("---\n");

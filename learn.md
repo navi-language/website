@@ -1817,11 +1817,11 @@ a + b = 3
 Hello Navi!
 ```
 
-### Normal Arguments
+### Positional Arguments
 
-Normal arguments are arguments that are passed by position.
+Positional arguments are arguments that are passed by position.
 
-Use `name: type` to declare a normal argument, you can put a normal argument after the keyword argument.
+Use `name: type` to declare a positional argument, you can put a positional argument after the keyword argument.
 
 ```nv
 fn add(a: int, b: int, mode: string = "+"): string {
@@ -1859,9 +1859,9 @@ $ navi run
 
 ### Keyword Arguments
 
-Keyword arguments are arguments that are passed by name. They are useful when a function has many arguments or default arguments.
+Keyword arguments (Kw Args) are arguments that are passed by name. They are useful when a function has many arguments or default arguments.
 
-Use `name: value = default` to declare a keyword argument, the keyword argument must be after normal arguments.
+Use `name: value = default` to declare a keyword argument, the keyword argument must be after positional arguments.
 
 ```nv,no_run
 use std.io;
@@ -1904,7 +1904,29 @@ a: 1, b: 2, mode: +
 a: 1, b: 2, mode: +
 ```
 
-### Function Assigned to a Variable
+### Arbitrary Arguments
+
+Use `..type` to declare an arbitrary argument, the arbitrary argument must be the **last** argument (Except Keyword Arguments).
+
+This is means you can pass any number of arguments to the function. And this argument will be as an array in the function body.
+
+```nv
+fn add(one: int, others: ..int): int {
+    // The `others` is `[int]` type.
+    let result = one;
+    for (let n in others) {
+        result += n;
+    }
+    return result;
+}
+
+assert_eq add(1, 2, 3, 4, 5), 15;
+
+let others = [int] { 2, 3, 4, 5 };
+assert_eq add(1, ..others), 15;
+```
+
+### Function to a Variable
 
 In Navi, the Function is the first-class citizen, it can be assigned to a variable, and it can be passed as an argument to another function.
 
@@ -1967,7 +1989,7 @@ To keep your code safe, when you use `!`, you must be sure it is not `nil`.
 If not, don't use it, the [value || default](#unwrap-or-default) is a better way to get a [value] from an [optional] value.
 :::
 
-```nv,should_panic
+```nv,no_run
 use std.io;
 
 fn main() throws {
@@ -2474,7 +2496,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 | `bench`                     | Benchmark function                                                                         |
 | `benches`                   | Benchmark group                                                                            |
 | `break`                     | `break` is used to exit a loop before iteration completes naturally.                       |
-| `case`                      | `case` for the `switch` statement.                                                             |
+| `case`                      | `case` for the `switch` statement.                                                         |
 | `catch`                     | Use `catch` to catch an error.                                                             |
 | `const`                     | Declare a constant.                                                                        |
 | `continue`                  | `continue` can be used in a loop to jump back to the beginning of the loop.                |
@@ -2528,9 +2550,10 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [value]: #value
 [block]: #block
 [expression]: #expression
-[normal arguments]: #normal-arguments
+[Positional Arguments arguments]: #positional-arguments
 [Keyword Arguments]: #keyword-arguments
 [Kw Argument]: #keyword-arguments
+[Arbitrary Arguments]: #arbitrary-arguments
 [while]: #while
 [loop]: #loop
 [for]: #for

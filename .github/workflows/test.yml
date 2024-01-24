@@ -16,8 +16,7 @@ jobs:
         with:
           navi-version: nightly
       - run: |
-          navi test --doc learn.md
-          navi test --all-dirs
+          bun run test
   test_install:
     name: Test Install Navi
     runs-on: ubuntu-latest
