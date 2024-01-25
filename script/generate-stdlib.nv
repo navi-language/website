@@ -177,7 +177,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     suffix_str = `${prop_suffix.join(", ")}`;
                 }
                 let anchor = format_anchor(`${info.name}#${name}`);
-                buf.write(`### self.${name}: ${prop._type} {#${anchor}}\n`);
+                buf.write(`### self.${name} {#${anchor}}\n`);
                 let type_pre = "```nv\n " + prop.name + ": " + prop._type + "\n```";
                 buf.write(type_pre);
 
