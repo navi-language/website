@@ -2111,7 +2111,7 @@ fn hello(name: string): string throws {
 
 fn main() throws {
     let result = try? hello("Navi");
-    io.println(`${result}`);
+    io.println(`${result || ""}`);
 }
 ```
 

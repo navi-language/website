@@ -1,11 +1,12 @@
-use std.json;
-use std.net.http;
 use std.fs;
 use std.io;
-use std.time.DateTime;
-use string_buffer.{StringBuffer};
-use utils.{format_anchor, format_slug, replace_headings, escape_html};
+use std.json;
+use std.net.http;
 use std.path;
+use std.time.DateTime;
+
+use string_buffer.{StringBuffer};
+use utils.{escape_html, format_anchor, format_slug, replace_headings};
 
 let repo = "navi-language/navi";
 let target = "stdlib";
@@ -146,7 +147,8 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.write(` {#${anchor}}\n`);
 
         if (info.doc != nil) {
-            buf.write(`${replace_headings(info.doc, level: INDOC_HEADING_LEVEL)}\n`);
+            let heading = replace_headings(info.doc, level: INDOC_HEADING_LEVEL);
+            buf.write(`${heading}\n`);
         } else {
             buf.write(`No documentation.\n`);
         }
@@ -346,7 +348,8 @@ fn generate_function_doc(
     }
 
     if (f.desc.doc != nil) {
-        buf.write(`${replace_headings(f.desc.doc, level: INDOC_HEADING_LEVEL)}`);
+        let heading = replace_headings(f.desc.doc, level: INDOC_HEADING_LEVEL);
+        buf.write(heading);
     } else {
         buf.write("TODO");
     }
@@ -377,7 +380,7 @@ fn generate_function(f: Function): string {
     for (let arg in args) {
         let default_value = "";
         if (arg.default_value != nil) {
-            default_value = ` = ${arg.default_value}`;
+            default_value = ` = ${arg.default_value || ""}`;
         }
 
         if (arg._type == "self") {
