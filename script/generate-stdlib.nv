@@ -26,14 +26,16 @@ struct Struct {
     name: string = "",
     properties: <string, Property> = {},
     methods: <string, Function> = {},
-    doc: string? = nil
+    doc: string? = nil,
 }
 
 struct Property {
     name: string = "",
     getter: bool = false,
     setter: bool = false,
-    doc: string? = nil
+    doc: string? = nil,
+    #[serde(rename = "type")]
+    _type: string = ""
 }
 
 struct Function {
@@ -163,20 +165,22 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                 let prop = info.properties[name];
 
                 let prop_suffix: [string] = {};
-                if (prop.getter && !prop.setter) {
-                    prop_suffix.push("`readonly`");
+                if (prop.getter) {
+                    prop_suffix.push("get");
                 }
 
                 if (prop.setter) {
-                    prop_suffix.push("`writable`");
+                    prop_suffix.push("set");
                 }
                 let suffix_str = "";
                 if (prop_suffix.len() > 0) {
                     suffix_str = `${prop_suffix.join(", ")}`;
                 }
-                let anchor = format_anchor(`${info.name}@${name}`);
-                buf.write(`### self.${name} {#${anchor}}\n`);
-                buf.write(suffix_str);
+                let anchor = format_anchor(`${info.name}#${name}`);
+                buf.write(`### self.${name}: ${prop._type} {#${anchor}}\n`);
+                let type_pre = "```nv\n " + prop.name + ": " + prop._type + "\n```";
+                buf.write(type_pre);
+
                 if (prop.doc != nil) {
                     buf.write("\n");
                     buf.write(`    ` + replace_headings(prop.doc, level: INDOC_HEADING_LEVEL) + "\n");
@@ -208,7 +212,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     func,
                     links,
                     level: 3,
-                    anchor_prefix: `${info.name}#`,
+                    anchor_prefix: `${info.name}.`,
                     kind: "static_method"
                 ));
             }
@@ -219,7 +223,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     func,
                     links,
                     level: 3,
-                    anchor_prefix: `${info.name}.`,
+                    anchor_prefix: `${info.name}#`,
                     kind: "method"
                 ));
             }
@@ -287,7 +291,7 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
 
         let prop_names: [string] = {};
         for (let name, prop in info.properties) {
-            let anchor = format_anchor(`${struct_name}@${name}`);
+            let anchor = format_anchor(`${struct_name}#${name}`);
             prop_names.push(`[${name}](#${anchor})`);
         }
         buf.write(prop_names.join(", "));
@@ -307,9 +311,9 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
         let method_links: [string] = {};
         for (let name in methods) {
             let func = info.methods[name];
-            let anchor = format_anchor(`${struct_name}#${name}`);
+            let anchor = format_anchor(`${struct_name}.${name}`);
             if (func.kind == "method") {
-                anchor = format_anchor(`${struct_name}.${name}`);
+                anchor = format_anchor(`${struct_name}#${name}`);
             }
             method_links.push(`[${name}](#${anchor})`);
         }
