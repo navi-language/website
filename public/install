@@ -45,7 +45,13 @@ success() {
 # request github api, and check if the response is ok
 fetch_github_api() {
   url="$1"
-  curl --silent --fail "$url" || { error "Failed to fetch $url"; exit 1; }
+  body=$(curl "$url")
+  # Show API Rate limit error if body contains "API rate limit exceeded"
+  if echo "$body" | grep -q "API rate limit exceeded"; then
+    error "$url\nGitHub API rate limit exceeded.\n----------------------------------\n$body\n"
+    exit 1
+  fi
+  echo "$body"
 }
 
 get_latest_release() {
@@ -156,13 +162,13 @@ setup_path() {
         info ""
         info "Add \`$path_info\` to \`$HOME/$source_file\`"
         echo $path_info >> $HOME/$source_file
-        info "Run \`$path_info\` to take effect." 
-        
+        info "Run \`$path_info\` to take effect."
+
         break
       fi
     fi
   done
-  
+
   export PATH=$HOME/.navi:$PATH
 }
 
