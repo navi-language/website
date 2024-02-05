@@ -30,7 +30,6 @@ You can install a specific version by passing the version number to the script.
 ::: code-group
 
 ```bash [Latest Nightly]
-# This script will install the latest nightly version.
 curl -sSL https://navi-lang.org/install | bash -s -- nightly
 ```
 
