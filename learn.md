@@ -1021,6 +1021,8 @@ test "user" {
 Use `impl` to declare a struct method. The `self` is a keyword, it is a reference to the current struct instance.
 Unlike Rust, you don't need to declare `self` as the first parameter.
 
+Use `impl .. for` to implement a interface for a struct. This is a optional way for let us write a clearly code, if the struct have a method can matched the interface, it same as the `impl .. for` implementation.
+
 ```nv, ignore
 impl User {
     fn new(name: string): User {
@@ -1033,6 +1035,12 @@ impl User {
 
     fn say(self): string {
         return `Hello ${self.name}!`;
+    }
+}
+
+impl ToString for User {
+    fn to_string(self): string {
+        return self.name;
     }
 }
 ```
