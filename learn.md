@@ -398,8 +398,6 @@ let c1: char = '🎉';
 
 Use the `let` keyword to declare a variable to an identifier, the variable is mutable.
 
-> TODO: We will have a `const` keyword for immutable in the future.
-
 ```nv,no_run
 // main.nv
 use std.io;
