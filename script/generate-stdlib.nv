@@ -61,6 +61,7 @@ struct Argument {
     name: string = "",
     #[serde(rename = "type")]
     _type: string = "",
+    kind: string,
     default_value: string? = nil
 }
 
@@ -390,8 +391,15 @@ fn generate_function(f: Function): string {
         if (arg._type == "self") {
             args_str.write("self");
         } else {
-            args_str.write(`${arg.name}: ${arg._type}${default_value}`);
+            switch (arg.kind) {
+                case "arbitrary":
+                    args_str.write(`${arg.name}: ..${arg._type}${default_value}`);
+                default:
+                    args_str.write(`${arg.name}: ${arg._type}${default_value}`);
+            }
         }
+
+
     }
     let args_str = args_str.to_string(", ");
 
