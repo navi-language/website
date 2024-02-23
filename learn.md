@@ -225,6 +225,7 @@ Expect to **compile failed**
 | [bool]   | bool            | A boolean type.          | `true`, `false`       |
 | [float]  | f64             | A floating point type    | `1.0`, `-29.0`, `0.0` |
 | [string] | str             | A immutable UTF-8 string | `"Hello, 世界"`       |
+| [char]   | char            | A single character       | `'a'`, `'b'`, `'c'`   |
 
 ::: info
 💡 Navi only has [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
@@ -382,6 +383,15 @@ impl User {
 let user = User { name: "Navi" };
 let message = `Hello, ${user}!`;
 assert_eq message, "Hello, Navi!";
+```
+
+### Char
+
+Navi has a `char` type, and it represents a single Unicode scalar value.
+
+```nv
+let c = 'a';
+let c1: char = '🎉';
 ```
 
 ### Assignment

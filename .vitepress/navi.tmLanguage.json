@@ -824,6 +824,11 @@
               "include": "#interpolations"
             }
           ]
+        },
+        {
+          "comment": "Char",
+          "name": "string.quoted.single.navi",
+          "match": "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'"
         }
       ]
     },
