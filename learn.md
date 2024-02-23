@@ -1792,12 +1792,12 @@ And the argument name also uses `snake_case`, e.g.: `title`, `user_id`.
 You can define a function at the module level, or in a struct `impl` block.
 
 - The function name must be an [identifier].
-- The arguments can be [normal arguments] or [keyword arguments].
+- The arguments can be [normal arguments], [keyword arguments] or [arbitrary arguments].
 
 ```nv,no_run
 use std.io;
 
-fn add(a: int, b: int, mode: string = "+"): string {
+fn add(a: int, b: int, args: ..string, mode: string = "+"): string {
     let result = a + b;
     return `${a} + ${b} = ${result}`;
 }
@@ -1867,6 +1867,28 @@ $ navi run
 1 + 0 = 1
 ```
 
+### Arbitrary Arguments
+
+Use `..type` to declare an arbitrary argument, the arbitrary argument must be the **last** argument (Except Keyword Arguments).
+
+This is means you can pass any number of arguments to the function. And this argument will be as an array in the function body.
+
+```nv
+fn add(one: int, others: ..int): int {
+    // The `others` is `[int]` type.
+    let result = one;
+    for (let n in others) {
+        result += n;
+    }
+    return result;
+}
+
+assert_eq add(1, 2, 3, 4, 5), 15;
+
+let others = [int] { 2, 3, 4, 5 };
+assert_eq add(1, ..others), 15;
+```
+
 ### Keyword Arguments
 
 Keyword arguments (Kw Args) are arguments that are passed by name. They are useful when a function has many arguments or default arguments.
@@ -1914,28 +1936,6 @@ a: 1, b: 2, mode: +
 a: 1, b: 2, mode: +
 ```
 
-### Arbitrary Arguments
-
-Use `..type` to declare an arbitrary argument, the arbitrary argument must be the **last** argument (Except Keyword Arguments).
-
-This is means you can pass any number of arguments to the function. And this argument will be as an array in the function body.
-
-```nv
-fn add(one: int, others: ..int): int {
-    // The `others` is `[int]` type.
-    let result = one;
-    for (let n in others) {
-        result += n;
-    }
-    return result;
-}
-
-assert_eq add(1, 2, 3, 4, 5), 15;
-
-let others = [int] { 2, 3, 4, 5 };
-assert_eq add(1, ..others), 15;
-```
-
 ### Function to a Variable
 
 In Navi, the Function is the first-class citizen, it can be assigned to a variable, and it can be passed as an argument to another function.
@@ -1969,7 +1969,38 @@ fn main() throws {
 
 ## Closure
 
-TODO
+A closure is a function that captures the environment in which it was created. It can capture variables from the surrounding scope.
+
+- The closure type just use `|(type, type): return_type|`.
+- If there is no parameter, use `|(): return_type|`.
+- If no return type, use `|(type, type)|`.
+- If no parameter and return type, use `|()|`.
+
+```nv
+fn call_add(f: |(int, int): int|): int {
+  return f(2, 3);
+}
+let add: |(int, int): int| = |a, b| {
+  return a + b;
+};
+assert_eq add(1, 2), 3;
+assert_eq call_add(add), 5;
+
+fn call_add1(f: |(): int|): int {
+  return f() + 2;
+}
+assert_eq call_add1(|| {
+    return 3;
+}), 5;
+
+fn call_add2(f: |()|): int {
+    f();
+    return  2;
+}
+assert_eq call_add2(|| {
+    // do something without return
+}), 2;
+```
 
 ## Optional
 
