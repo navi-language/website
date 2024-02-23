@@ -219,13 +219,13 @@ Expect to **compile failed**
 
 ### Primitive Types
 
-| Type     | Rust Equivalent | Description              | Example               |
-| -------- | --------------- | ------------------------ | --------------------- |
-| [int]    | i64             | A signed integer type    | `1`, `-29`, `0`       |
-| [bool]   | bool            | A boolean type.          | `true`, `false`       |
-| [float]  | f64             | A floating point type    | `1.0`, `-29.0`, `0.0` |
-| [string] | str             | A immutable UTF-8 string | `"Hello, 世界"`       |
-| [char]   | char            | A single character       | `'a'`, `'b'`, `'c'`   |
+| Type     | Rust Equivalent | Description              | Example                                   |
+| -------- | --------------- | ------------------------ | ----------------------------------------- |
+| [int]    | i64             | A signed integer type    | `1`, `-29`, `0`                           |
+| [bool]   | bool            | A boolean type.          | `true`, `false`                           |
+| [float]  | f64             | A floating point type    | `1.0`, `-29.0`, `0.0`                     |
+| [string] | str             | A immutable UTF-8 string | `"Hello, 世界"`<br>`` `Hello ${1 + 2}` `` |
+| [char]   | char            | A single character       | `'a'`, `'b'`, `'c'`                       |
 
 ::: info
 💡 Navi only has [int] and [float] types, all `int` are stored as _int64_, and all `float` are stored as _float64_ in internal.
@@ -2588,6 +2588,7 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [string]: #string
 [Floats]: #float
 [float]: #float
+[char]: #chars
 [optional]: #optional
 [bool]: #bool
 [String interpolation]: #string-interpolation
