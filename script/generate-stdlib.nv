@@ -158,7 +158,13 @@ fn build_body(module: Module): string {
 
 fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
     let buf = StringBuffer.new();
-    for (let struct_name, info in structs) {
+
+    let struct_names = structs.keys();
+    struct_names.sort();
+
+    for (let struct_name in struct_names) {
+        const info = structs[struct_name];
+
         buf.write(`## ${escape_html(info.name)}`);
         let anchor = format_anchor(`${module.name}.${info.name}`);
         buf.write(` {#${anchor}}\n`);
@@ -255,17 +261,21 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
         return "";
     }
 
+    let struct_names = structs.keys();
+    struct_names.sort();
+
     let buf = StringBuffer.new();
 
     buf.write("**Structs**\n\n");
 
-    let struct_names: [string] = {};
-    for (let name, _struct in structs) {
+    let result: [string] = {};
+    for (let name in struct_names) {
+        let _struct = structs[name];
         let anchor = format_anchor(`${module.name}.${_struct.name}`);
-        struct_names.push(`[${escape_html(_struct.name)}](#${anchor})`);
+        result.push(`[${escape_html(_struct.name)}](#${anchor})`);
     }
 
-    buf.write(struct_names.join(", "));
+    buf.write(result.join(", "));
     buf.write("\n");
 
     return buf.to_string("");

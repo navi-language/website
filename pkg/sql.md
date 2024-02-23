@@ -7,135 +7,10 @@ editLink: false
 
 **Structs**
 
-[Rows](#sql.Rows), [Transaction](#sql.Transaction), [Connection](#sql.Connection), [QueryResult](#sql.QueryResult), [Row](#sql.Row), [Statement](#sql.Statement)
+[Connection](#sql.Connection), [QueryResult](#sql.QueryResult), [Row](#sql.Row), [Rows](#sql.Rows), [Statement](#sql.Statement), [Transaction](#sql.Transaction)
 
 
 ------------------------
-
-## Rows
- {#sql.Rows}
-
-No documentation.
-
-**Methods**
-
-[next](#Rows#next), [scan](#Rows#scan)
-
-
----------------------------
-
-### next {#Rows#next}
-
-```nv
-fn next(self): Row? throws
-```
-
-Return the next row of this result set.
-Returns `nil` if there are no more rows.
-
-
-### scan {#Rows#scan}
-
-```nv
-fn scan(self): [T] throws
-```
-
-Scan all rows and deserialize them into a `[T]`.
-This is a convenience method for `rows.next().scan::<T>()`.
-It will consume all rows in the result set.
-
-```nv, no_run
-use sql.Connection;
-
-struct User {
-    name: string,
-    city: string,
-    ###[serde(rename = "id")]
-    stuff_no: int,
-}
-
-let conn = try Connection.connect("sqlite::memory:");
-let users = try conn.query("SELECT * FROM users").scan::<User>();
-// Now `users` is [User]
-assert_eq users[0].name, "Jason Lee";
-assert_eq users[0].city, "Chengdu";
-assert_eq users[0].stuff_no, 100;
-```
-
-
-
-
-## Transaction
- {#sql.Transaction}
-
-An in-progress database transaction or savepoint.
-
-A transaction should end with a call to `commit` or `rollback`.
-
-You must call `commit` or `rollback`, unless that the transaction will leak (The transaction will be rolled back on GC).
-
-A savepoint is a special mark inside a transaction that allows all commands that are executed after it was established
-to be rolled back, restoring the transaction state to what it was at the time of the savepoint.
-
-**Methods**
-
-[commit](#Transaction#commit), [execute](#Transaction#execute), [query](#Transaction#query), [query_one](#Transaction#query_one), [rollback](#Transaction#rollback)
-
-
----------------------------
-
-### commit {#Transaction#commit}
-
-```nv
-fn commit(self) throws
-```
-
-Commits this transaction or savepoint.
-
-
-### execute {#Transaction#execute}
-
-```nv
-fn execute(self, query: string, values: ..BindValue?): QueryResult throws
-```
-
-Execute the query and return the total number of rows affected.
-See: `sql.Connection.execute`
-
-
-### query {#Transaction#query}
-
-```nv
-fn query(self, query: string, values: ..BindValue?): Rows throws
-```
-
-Query and return a steam of rows.
-Returns a `sql.Rows` for iterating the rows.
-
-See: `sql.Connection.query`
-
-
-### query_one {#Transaction#query_one}
-
-```nv
-fn query_one(self, query: string, values: ..BindValue?): Row? throws
-```
-
-Query and return the first row.
-
-See: `sql.Connection.query_one`
-
-
-### rollback {#Transaction#rollback}
-
-```nv
-fn rollback(self) throws
-```
-
-Aborts this transaction or savepoint.
-
-
-
 
 ## Connection
  {#sql.Connection}
@@ -514,6 +389,59 @@ assert_eq user.stuff_no, 1001;
 
 
 
+## Rows
+ {#sql.Rows}
+
+No documentation.
+
+**Methods**
+
+[next](#Rows#next), [scan](#Rows#scan)
+
+
+---------------------------
+
+### next {#Rows#next}
+
+```nv
+fn next(self): Row? throws
+```
+
+Return the next row of this result set.
+Returns `nil` if there are no more rows.
+
+
+### scan {#Rows#scan}
+
+```nv
+fn scan(self): [T] throws
+```
+
+Scan all rows and deserialize them into a `[T]`.
+This is a convenience method for `rows.next().scan::<T>()`.
+It will consume all rows in the result set.
+
+```nv, no_run
+use sql.Connection;
+
+struct User {
+    name: string,
+    city: string,
+    ###[serde(rename = "id")]
+    stuff_no: int,
+}
+
+let conn = try Connection.connect("sqlite::memory:");
+let users = try conn.query("SELECT * FROM users").scan::<User>();
+// Now `users` is [User]
+assert_eq users[0].name, "Jason Lee";
+assert_eq users[0].city, "Chengdu";
+assert_eq users[0].stuff_no, 100;
+```
+
+
+
+
 ## Statement
  {#sql.Statement}
 
@@ -589,15 +517,80 @@ The SQL of the statement.
 
 
 
+## Transaction
+ {#sql.Transaction}
+
+An in-progress database transaction or savepoint.
+
+A transaction should end with a call to `commit` or `rollback`.
+
+You must call `commit` or `rollback`, unless that the transaction will leak (The transaction will be rolled back on GC).
+
+A savepoint is a special mark inside a transaction that allows all commands that are executed after it was established
+to be rolled back, restoring the transaction state to what it was at the time of the savepoint.
+
+**Methods**
+
+[commit](#Transaction#commit), [execute](#Transaction#execute), [query](#Transaction#query), [query_one](#Transaction#query_one), [rollback](#Transaction#rollback)
 
 
-[next]: #Rows#next
-[scan]: #Rows#scan
-[commit]: #Transaction#commit
-[execute]: #Transaction#execute
-[query]: #Transaction#query
-[query_one]: #Transaction#query_one
-[rollback]: #Transaction#rollback
+---------------------------
+
+### commit {#Transaction#commit}
+
+```nv
+fn commit(self) throws
+```
+
+Commits this transaction or savepoint.
+
+
+### execute {#Transaction#execute}
+
+```nv
+fn execute(self, query: string, values: ..BindValue?): QueryResult throws
+```
+
+Execute the query and return the total number of rows affected.
+See: `sql.Connection.execute`
+
+
+### query {#Transaction#query}
+
+```nv
+fn query(self, query: string, values: ..BindValue?): Rows throws
+```
+
+Query and return a steam of rows.
+Returns a `sql.Rows` for iterating the rows.
+
+See: `sql.Connection.query`
+
+
+### query_one {#Transaction#query_one}
+
+```nv
+fn query_one(self, query: string, values: ..BindValue?): Row? throws
+```
+
+Query and return the first row.
+
+See: `sql.Connection.query_one`
+
+
+### rollback {#Transaction#rollback}
+
+```nv
+fn rollback(self) throws
+```
+
+Aborts this transaction or savepoint.
+
+
+
+
+
+
 [connect]: #Connection.connect
 [begin]: #Connection#begin
 [close]: #Connection#close
@@ -616,7 +609,14 @@ The SQL of the statement.
 [get]: #Row#get
 [len]: #Row#len
 [scan]: #Row#scan
+[next]: #Rows#next
+[scan]: #Rows#scan
 [execute]: #Statement#execute
 [query]: #Statement#query
 [query_one]: #Statement#query_one
 [sql]: #Statement#sql
+[commit]: #Transaction#commit
+[execute]: #Transaction#execute
+[query]: #Transaction#query
+[query_one]: #Transaction#query_one
+[rollback]: #Transaction#rollback
