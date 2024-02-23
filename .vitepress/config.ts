@@ -1,41 +1,49 @@
-import { defineConfig } from 'vitepress';
-import { withMermaid } from 'vitepress-plugin-mermaid';
-import { generateSidebar } from 'vitepress-sidebar';
+import { defineConfig } from "vitepress";
+import { withMermaid } from "vitepress-plugin-mermaid";
+import { generateSidebar } from "vitepress-sidebar";
 
-import stdlib from '../stdlib.json';
-import { naviLanguage, naviStreamLanguage } from './language';
+import stdlib from "../stdlib.json";
+import { naviLanguage, naviStreamLanguage } from "./language";
 
+const stdlibAllItems = Object.keys(stdlib).sort();
 /**
  * https://github.com/jooy2/vitepress-sidebar
  */
 const naviStreamSidebar = generateSidebar({
-  scanStartPath: 'navi-stream',
-  resolvePath: '/navi-stream/',
+  scanStartPath: "navi-stream",
+  resolvePath: "/navi-stream/",
   useTitleFromFileHeading: true,
   sortMenusByFrontmatterOrder: true,
   includeRootIndexFile: true,
 });
 
-const stdlibItems = Object.keys(stdlib)
-  .sort()
-  .map((module: string) => {
-    if (module == '#prelude') {
-      return { text: 'Preludo', link: '/stdlib/prelude' };
-    }
+const isStdlib = (module: string) => {
+  return module == "lang" || module == "std" || module.startsWith("std.");
+};
 
-    return { text: module, link: `/stdlib/${module}` };
+const stdlibItems = stdlibAllItems.filter(isStdlib).map((module: string) => {
+  if (module == "#prelude") {
+    return { module, text: "Preludo", link: "/stdlib/prelude" };
+  }
+
+  return { module, text: module, link: `/stdlib/${module}` };
+});
+const pkgItems = stdlibAllItems
+  .filter((item) => !isStdlib(item))
+  .map((module: string) => {
+    return { module, text: module, link: `/pkg/${module}` };
   });
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
   defineConfig({
-    lang: 'en-US',
-    title: 'Navi Language',
-    description: 'Navi is a high-performance programming language.',
+    lang: "en-US",
+    title: "Navi Language",
+    description: "Navi is a high-performance programming language.",
     cleanUrls: true,
     markdown: {
       languages: [naviLanguage, naviStreamLanguage],
-      defaultHighlightLang: 'navi',
+      defaultHighlightLang: "navi",
       toc: {
         level: [2, 3],
       },
@@ -43,60 +51,62 @@ export default withMermaid(
     ignoreDeadLinks: true,
     themeConfig: {
       editLink: {
-        pattern: 'https://github.com/navi-language/website/edit/main/:path',
+        pattern: "https://github.com/navi-language/website/edit/main/:path",
       },
       logo: {
-        light: '/logo.svg',
-        dark: '/logo-dark.svg',
+        light: "/logo.svg",
+        dark: "/logo-dark.svg",
       },
       outline: [2, 3],
       // https://vitepress.dev/reference/default-theme-config
       nav: [
         {
-          text: 'Install',
-          link: '/installation',
+          text: "Install",
+          link: "/installation",
         },
-        { text: 'Learn', link: '/learn' },
-        { text: 'Stdlib', link: '/stdlib/' },
-        { text: 'Navi Stream', link: '/navi-stream/' },
-        { text: 'Tools', link: '/tools' },
+        { text: "Learn", link: "/learn" },
+        { text: "Stdlib", link: "/stdlib/" },
+        { text: "Pkg", link: "/pkg/" },
+        { text: "Navi Stream", link: "/navi-stream/" },
+        { text: "Tools", link: "/tools" },
         {
-          text: 'Releases',
-          link: '/releases',
+          text: "Releases",
+          link: "/releases",
         },
       ],
 
       sidebar: {
-        '/stdlib/': stdlibItems,
-        '/navi-stream/': [
+        "/stdlib/": stdlibItems,
+        "/pkg/": pkgItems,
+        "/navi-stream/": [
           {
-            base: '/navi-stream/',
+            base: "/navi-stream/",
             items: naviStreamSidebar as any,
           },
         ],
       },
 
       socialLinks: [
-        { icon: 'github', link: 'https://github.com/navi-language' },
+        { icon: "github", link: "https://github.com/navi-language" },
       ],
     },
     head: [
       [
-        'link',
+        "link",
         {
-          rel: 'icon',
-          href: '/logo.svg',
-          media: '(prefers-color-scheme: light)',
+          rel: "icon",
+          href: "/logo.svg",
+          media: "(prefers-color-scheme: light)",
         },
       ],
       [
-        'link',
+        "link",
         {
-          rel: 'icon',
-          href: '/logo-dark.svg',
-          media: '(prefers-color-scheme: dark)',
+          rel: "icon",
+          href: "/logo-dark.svg",
+          media: "(prefers-color-scheme: dark)",
         },
       ],
     ],
-  })
+  }),
 );

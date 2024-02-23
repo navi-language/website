@@ -9,7 +9,8 @@ use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_slug, replace_headings};
 
 let repo = "navi-language/navi";
-let target = "stdlib";
+let stdlib_target = "stdlib";
+let pkg_target = "pkg";
 let INDOC_HEADING_LEVEL = 2;
 
 struct Module {
@@ -65,31 +66,44 @@ struct Argument {
     default_value: string? = nil
 }
 
-fn generate() throws {
-    let body = try fs.read_to_string("stdlib.json");
+fn is_stdlib(key: string): bool {
+    return key == "lang" || key == "std" || key.starts_with("std.");
+}
 
-    let raw_stdlib = try json.parse::<Stdlib>(body);
+fn generate() throws {
+    let raw_stdlib = try json.parse::<Stdlib>(fs.open("stdlib.json"));
 
     // filter modules
     let stdlib = <string, Module> {};
+    let pkg = <string, Module> {};
     for (let key, module in raw_stdlib) {
         if (key.starts_with("_std.")) {
             continue;
         }
-        stdlib[key] = module;
+
+        if (is_stdlib(key)) {
+            stdlib[key] = module;
+        } else {
+            pkg[key] = module;
+        }
     }
 
-    let module_names = stdlib.keys();
+    try generate_modules(stdlib_target, stdlib);
+    io.println("");
+    try generate_modules(pkg_target, pkg);
+}
 
-    io.println("Generating stdlib docs to 'stdlib/'");
+fn generate_modules(target: string, modules: <string, Module>) throws {
+    let module_names = modules.keys();
+    io.println(`Generating stdlib docs to '${target}/'...`);
     io.println(`Total modules: ${module_names.len()}`);
 
-    let module_index = build_module_index(stdlib);
+    let module_index = build_module_index(modules);
     let index_filename = path.join(target, "index.md");
     try fs.create_dir_all(path.dir(index_filename));
     try fs.write_string(index_filename, module_index);
 
-    for (let fname, module in stdlib) {
+    for (let fname, module in modules) {
         if (fname == "#prelude") {
             fname = "prelude";
         }
