@@ -80,17 +80,25 @@ Options:
   -h, --help         Print help information
 ```
 
-## VS Code
+## Editor Support
+
+### VS Code
 
 Navi has an VS Code extension, which can help you to write Navi code.
 
 https://marketplace.visualstudio.com/items?itemName=huacnlee.navi
 
-### Demo
-
 ![](https://assets.lbkrs.com/uploads/a74d5351-ad70-4816-bad2-23819c30f881/20230328-114253.gif)
 
-## Navi LSP Server {#lsp}
+### Zed
+
+https://github.com/navi-language/zed-navi
+
+We have a [Zed extension for Navi](https://github.com/navi-language/zed-navi), just open you Zed Extensions and search `navi`, you will find it.
+
+![](https://github.com/navi-language/zed-navi/assets/5518/5fda451e-e930-4da2-b4d7-ee8bd873d9ad)
+
+### Navi LSP Server {#lsp}
 
 Navi LSP Server is a [Language Server Protocol] for Navi and Navi Stream, it can be used in any IDEs that support LSP.
 
@@ -100,6 +108,20 @@ The `navi-lsp-server` bin is included in the release package: when you [install]
 $ navi-lsp-server &
 Starting Navi LSP server
 ```
+
+### Tree Sitter
+
+We have [tree-sitter](https://tree-sitter.github.io/) support for Navi and Navi Stream, you can use it in any editor that supports tree-sitter.
+
+- [tree-sitter-navi](https://github.com/navi-language/tree-sitter-navi)
+- [tree-sitter-navi-stream](https://github.com/navi-language/tree-sitter-navi-stream)
+
+### tmLanguage
+
+There have a `tmLanguage` file of Navi and Navi Stream for syntax highlight.
+
+- [navi.tmLanguage](https://github.com/navi-language/website/blob/main/.vitepress/navi.tmLanguage.json)
+- [navi-stream.tmLanguage](https://github.com/navi-language/website/blob/main/.vitepress/navi-stream.tmLanguage.json)
 
 ## GitHub Actions
 
