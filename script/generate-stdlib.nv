@@ -62,7 +62,7 @@ struct Argument {
     name: string = "",
     #[serde(rename = "type")]
     _type: string = "",
-    kind: string,
+    kind: string = "positional",
     default_value: string? = nil
 }
 
