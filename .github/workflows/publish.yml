@@ -19,7 +19,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - name: Setup Navi
         run: |
-          ./public/install nightly
+          ./public/install
           echo "$HOME/.navi" >> $GITHUB_PATH
       - name: Build Website
         run: |
@@ -33,7 +33,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: '.vitepress/dist'
+          path: ".vitepress/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
