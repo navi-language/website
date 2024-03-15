@@ -22,7 +22,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - name: Setup Navi
         run: |
-          ./public/install
+          ./public/install nightly
           echo "$HOME/.navi" >> $GITHUB_PATH
       - name: Build Website
         run: |
