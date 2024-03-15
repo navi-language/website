@@ -1,0 +1,29 @@
+name: OpenAI Translation
+
+on:
+  push:
+    branches:
+      - main
+      - translation
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: yunwei37/OpenAI-Continuous-Translator@master
+        with:
+          git_repo_url: https://github.com/yunwei37/GIS-image-vis
+          api_key: ${{ secrets.OPENAI_API_KEY }}
+          source_language: en
+          target_language: zh
+          file_path_filter: **/*.md
+          i18n_suffix: .zh-CN
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.1
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
