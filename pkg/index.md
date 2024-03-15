@@ -1,2 +1,0 @@
-- [sql](./sql.md)
-- [markdown](./markdown.md)

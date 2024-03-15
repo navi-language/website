@@ -19,7 +19,7 @@
     "build": "vitepress build",
     "preview": "vitepress preview",
     "test": "navi test --all-dirs && navi test --doc learn.md",
-    "generate": "bun script/generate-stdlib.ts"
+    "generate": "navi script/generate-stdlib.nv"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.9",

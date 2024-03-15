@@ -1,5 +1,5 @@
 use std.regex.{Regex, Captures};
-use std.io;
+use std.io.{self, StringBuffer};
 
 let heading_re = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
 
@@ -42,6 +42,7 @@ let ANCHOR_MAPS = <string, string> {
     "]": "%5D",
     "<": "%3C",
     ">": "%3E",
+    "%": "%25",
     " ": "-"
 };
 
@@ -53,11 +54,16 @@ pub fn format_anchor(text: string?): string {
         return "";
     }
 
-    for (let k, v in ANCHOR_MAPS) {
-        text = text!.replace(k, v);
+    let buf = StringBuffer.new();
+    for (let s in text!.split("")) {
+        if (let new_str = ANCHOR_MAPS.get(s)) {
+            buf.write_string(new_str);
+        } else {
+            buf.write_string(s);
+        }
     }
 
-    return text!;
+    return buf.to_string();
 }
 
 test "replace_headings" {
@@ -75,11 +81,13 @@ test "format_slug" {
 }
 
 test "format_anchor" {
-
-    let raw = "foo & bar";
-    let expected = "foo-&-bar";
-    let result = format_anchor(raw);
-    assert_eq result, expected;
+    assert_eq format_anchor("foo & bar"), "foo-&-bar";
+    assert_eq format_anchor("foo % bar"), "foo-%25-bar";
+    assert_eq format_anchor("foo < bar"), "foo-%3C-bar";
+    assert_eq format_anchor("foo > bar"), "foo-%3E-bar";
+    assert_eq format_anchor("foo [ bar"), "foo-%5B-bar";
+    assert_eq format_anchor("foo ] bar"), "foo-%5D-bar";
+    assert_eq format_anchor("foo   bar"), "foo---bar";
 }
 
 test "escape_html" {

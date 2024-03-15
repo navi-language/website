@@ -175,5 +175,6 @@ dist
 .DS_Store
 /.vitepress/cache
 /stdlib/
+/pkg/
 /stdlib.json
 /releases.md
