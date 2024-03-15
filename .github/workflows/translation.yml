@@ -21,7 +21,7 @@ jobs:
           api_key: ${{ secrets.OPENAI_API_KEY }}
           source_language: en
           target_language: zh
-          file_path_filter: **/*.md
+          file_path_filter: "**/*.md"
           i18n_suffix: .zh-CN
       - name: Add & Commit
         uses: EndBug/add-and-commit@v9.1.1
