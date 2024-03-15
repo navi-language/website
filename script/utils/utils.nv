@@ -4,15 +4,28 @@ use std.io.{self, StringBuffer};
 let heading_re = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
 
 /// Replace all headings in a markdown document with headings of a different level.
+///
+/// `level` - The parent level.
 pub fn replace_headings(body: string?, level: int = 1): string {
     if (body == nil) {
         return "";
     }
 
+    // Get the root heading level in the body
+    let all_headings = heading_re.find_all(body!);
+    let root_level = 0;
+    for (let m in all_headings) {
+        let indent_level = m.text.len();
+        if (indent_level < root_level || root_level == 0) {
+            root_level = indent_level;
+        }
+    }
+    let offset_level = level + 1 - root_level;
+
     let result = heading_re.replace_all_with(body!, |caps| {
         let p0 = caps?.get(0)!.text;
         let p1 = caps?.get(1)!.text;
-        let indent_level = p1.len() + level;
+        let indent_level = p1.len() + offset_level + 1;
         return p0.replace(p1, "#".repeat(indent_level));
     });
 
@@ -68,9 +81,12 @@ pub fn format_anchor(text: string?): string {
 
 test "replace_headings" {
     let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
-    let expected = "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
-    let result = replace_headings(raw, level: 2);
-    assert_eq result, expected;
+    assert_eq replace_headings(raw, level: 2), "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
+    assert_eq replace_headings(raw, level: 3), "#### heading 1\n\n##### heading 2\n\n##### heading 2.1\n\n###### heading 3";
+
+    let raw = "## heading 2\n\n### heading 2.1\n\n#### heading 3";
+    assert_eq replace_headings(raw, level: 1), "## heading 2\n\n### heading 2.1\n\n#### heading 3";
+    assert_eq replace_headings(raw, level: 3), "#### heading 2\n\n##### heading 2.1\n\n###### heading 3";
 }
 
 test "format_slug" {

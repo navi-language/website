@@ -118,8 +118,12 @@ fn generate_modules(target: string, modules: <string, Module>) throws {
 
 fn build_module_index(stdlib: Stdlib): string {
     let buf = StringBuffer.new();
+    let names = [string] {};
     for (let fname, module in stdlib) {
-        let slug = fname;
+        names.push(fname);
+    }
+    names.sort();
+    for (let fname in names) {
         buf.write(`- [${fname}](./${fname}.md)`);
     }
 
@@ -170,7 +174,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.write(` {#${anchor}}\n`);
 
         if (info.doc != nil) {
-            let heading = replace_headings(info.doc, level: INDOC_HEADING_LEVEL);
+            let heading = replace_headings(info.doc, level: 2);
             buf.write(`${heading}\n`);
         } else {
             buf.write(`No documentation.\n`);
@@ -204,7 +208,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
 
                 if (prop.doc != nil) {
                     buf.write("\n");
-                    buf.write(`    ` + replace_headings(prop.doc, level: INDOC_HEADING_LEVEL) + "\n");
+                    buf.write(`    ` + replace_headings(prop.doc, level: 3) + "\n");
                 }
             }
 
@@ -377,7 +381,7 @@ fn generate_function_doc(
     }
 
     if (f.desc.doc != nil) {
-        let heading = replace_headings(f.desc.doc, level: INDOC_HEADING_LEVEL);
+        let heading = replace_headings(f.desc.doc, level: level + 1);
         buf.write(heading);
     } else {
         buf.write("TODO");
