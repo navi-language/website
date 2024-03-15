@@ -43,7 +43,7 @@ export default withMermaid(
     cleanUrls: true,
     markdown: {
       languages: [naviLanguage, naviStreamLanguage],
-      defaultHighlightLang: "navi",
+      defaultHighlightLang: "nv",
       toc: {
         level: [2, 3],
       },
@@ -52,6 +52,9 @@ export default withMermaid(
     themeConfig: {
       editLink: {
         pattern: "https://github.com/navi-language/website/edit/main/:path",
+      },
+      search: {
+        provider: "local",
       },
       logo: {
         light: "/logo.svg",

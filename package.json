@@ -1,28 +1,25 @@
 {
   "name": "navi-website",
-  "module": "index.ts",
   "type": "module",
   "devDependencies": {
     "@types/node": "^20.9.0",
-    "bun-types": "latest",
+    "@types/bun": "latest",
+    "@types/node-fetch": "^2.6.9",
     "mermaid": "^10.6.1",
     "sass": "^1.69.5",
-    "vitepress": "^1.0.0-rc.25",
+    "vitepress": "^1.0.0-rc.45",
     "vitepress-plugin-mermaid": "^2.0.15",
     "vitepress-sidebar": "^1.18.0"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
+    "build": "NODE_ENV=production vitepress build",
     "preview": "vitepress preview",
     "test": "navi test --all-dirs && navi test --doc learn.md",
     "generate": "navi script/generate-stdlib.nv"
   },
   "dependencies": {
-    "@types/node-fetch": "^2.6.9",
+    "highlight.js": "^11.9.0",
     "node-fetch": "^3.3.2"
   }
 }
