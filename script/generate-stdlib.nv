@@ -174,7 +174,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.write(` {#${anchor}}\n`);
 
         if (info.doc != nil) {
-            let heading = replace_headings(info.doc, level: 2);
+            let heading = replace_headings(info.doc, level: 4);
             buf.write(`${heading}\n`);
         } else {
             buf.write(`No documentation.\n`);
@@ -311,7 +311,7 @@ fn generate_module_function_toc(module: Module, functions: [Function]): string {
     return buf.to_string("");
 }
 
-// Generate the struct properties and methods toc.
+/// Generate the struct properties and methods toc.
 fn generate_struct_member_toc(struct_name: string, info: Struct): string {
     let buf = StringBuffer.new();
 
