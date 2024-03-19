@@ -16,18 +16,29 @@ let INDOC_HEADING_LEVEL = 2;
 struct Module {
     name: string = "",
     functions: [Function] = {},
-    structs: <string, Struct> = {}
+    structs: <string, Struct> = {},
+    interfaces: <string, Interface> = {},
+    enums: <string, Enum> = {},
+    types: <string, Type> = {},
 }
 
 /// key is the module name
 /// value is the module
 type Stdlib = <string, Module>;
 
+struct Type {
+    name: string = "",
+    doc: string? = nil,
+    source_type: string = "",
+    source: string = "",
+}
+
 struct Struct {
     name: string = "",
     properties: <string, Property> = {},
     methods: <string, Function> = {},
     doc: string? = nil,
+    source: string = "",
 }
 
 struct Property {
@@ -45,6 +56,7 @@ struct Function {
     module: string = "",
     name: string = "",
     desc: FunctionDesc,
+    source: string = "",
 }
 
 struct FunctionDesc {
@@ -64,6 +76,27 @@ struct Argument {
     _type: string = "",
     kind: string = "positional",
     default_value: string? = nil
+}
+
+struct Enum {
+    name: string = "",
+    doc: string? = nil,
+    items: [EnumItem] = {},
+    source: string = "",
+}
+
+struct EnumItem {
+    name: string,
+    doc: string? = nil,
+    value: string? = nil,
+}
+
+struct Interface {
+    name: string,
+    doc: string? = nil,
+    inherits: [string]? = nil,
+    methods: <string, Function> = {},
+    source: string = "",
 }
 
 fn is_stdlib(key: string): bool {
@@ -144,6 +177,9 @@ fn build_body(module: Module): string {
 
     buf.write(`# ${module.name}\n`);
 
+    buf.write(generate_type_toc(module, module.types));
+    buf.write(generate_enum_toc(module, module.enums));
+    buf.write(generate_interface_toc(module, module.interfaces));
     buf.write(generate_struct_toc(module, module.structs));
     buf.write(generate_module_function_toc(module, module.functions));
 
@@ -152,12 +188,178 @@ fn build_body(module: Module): string {
     }
 
     buf.write("------------------------\n");
+
+    buf.write(generate_types(module, module.types, links));
+    buf.write(generate_enums(module, module.enums, links));
+    buf.write(generate_interfaces(module, module.interfaces, links));
     buf.write(generate_structs(module, module.structs, links));
 
     buf.write("\n");
     buf.write(links.to_string("\n"));
 
     return buf.to_string("\n");
+}
+
+/// Generate the Type
+fn generate_types(module: Module, types: <string, Type>, links: StringBuffer): string {
+    if (types.len() == 0) {
+        return "";
+    }
+
+    let type_names = types.keys();
+    type_names.sort();
+
+    let buf = StringBuffer.new();
+    for (let name in type_names) {
+        let _type = types[name];
+        buf.write(`## type ${escape_html(name)}`);
+        let anchor = format_anchor(`${module.name}.${name}`);
+        buf.write(` {#${anchor}}\n`);
+        buf.write(codeblock(_type.source));
+
+        if (_type.doc != nil) {
+            buf.write(`${_type.doc!}\n`);
+        } else {
+            buf.write("No documentation available.\n");
+        }
+        buf.write("\n");
+    }
+
+    return buf.to_string("");
+}
+
+/// To generate Types Toc.
+fn generate_type_toc(module: Module, types: <string, Type>): string {
+    if (types.len() == 0) {
+        return "";
+    }
+
+    let type_names = types.keys();
+    type_names.sort();
+
+    let buf = StringBuffer.new();
+
+    buf.write("**Types**\n\n");
+
+    let result: [string] = {};
+    for (let name in type_names) {
+        let _type = types[name];
+        let anchor = format_anchor(`${module.name}.${_type.name}`);
+        result.push(`[${escape_html(_type.name)}](#${anchor})`);
+    }
+
+    buf.write(result.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
+}
+
+fn generate_enums(module: Module, enums: <string, Enum>, links: StringBuffer): string {
+    let buf = StringBuffer.new();
+
+    let enum_names = enums.keys();
+    enum_names.sort();
+
+    for (let enum_name in enum_names) {
+        const info = enums[enum_name];
+
+        buf.write(`## ${escape_html(enum_name)}`);
+        let anchor = format_anchor(`${module.name}.${enum_name}`);
+        buf.write(` {#${anchor}}\n`);
+        buf.write(codeblock(info.source));
+
+        if (let doc = info.doc) {
+            let heading = replace_headings(doc, level: 3);
+            buf.write(`${heading}\n`);
+        } else {
+            buf.write(`No documentation.\n`);
+        }
+    }
+
+    return buf.to_string("");
+}
+
+fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
+    if (enums.len() == 0) {
+        return "";
+    }
+
+    let enum_names = enums.keys();
+    enum_names.sort();
+
+    let buf = StringBuffer.new();
+
+    buf.write("**Enums**\n\n");
+
+    let result: [string] = {};
+    for (let name in enum_names) {
+        let _enum = enums[name];
+        let anchor = format_anchor(`${module.name}.${name}`);
+        result.push(`[${escape_html(name)}](#${anchor})`);
+    }
+
+    buf.write(result.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
+}
+
+fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: StringBuffer): string {
+    let buf = StringBuffer.new();
+
+    let interface_names = interfaces.keys();
+    interface_names.sort();
+
+    for (let interface_name in interface_names) {
+        const info = interfaces[interface_name];
+
+        buf.write(`## interface ${escape_html(interface_name)}`);
+        let anchor = format_anchor(`${module.name}.${interface_name}`);
+        buf.write(` {#${anchor}}\n`);
+        buf.write(codeblock(info.source));
+
+        if (info.doc != nil) {
+            let heading = replace_headings(info.doc, level: 3);
+            buf.write(`${heading}\n`);
+        } else {
+            buf.write(`No documentation.\n`);
+        }
+
+        let method_names = info.methods.keys();
+        method_names.sort();
+
+        for (let name in method_names) {
+            let method = info.methods[name];
+            buf.write(generate_function_doc(method, links, level: 3));
+        }
+    }
+
+    return buf.to_string("");
+}
+
+fn generate_interface_toc(module: Module, interfaces: <string, Interface>): string {
+    if (interfaces.len() == 0) {
+        return "";
+    }
+
+    let names = interfaces.keys();
+    names.sort();
+
+    let buf = StringBuffer.new();
+
+    buf.write("**Interfaces**\n\n");
+
+    let result: [string] = {};
+    for (let name in names) {
+        let _interface = interfaces[name];
+        let anchor = format_anchor(`${module.name}.${name}`);
+        result.push(`[${escape_html(name)}](#${anchor})`);
+    }
+
+    buf.write(result.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
 }
 
 fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
@@ -172,6 +374,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.write(`## ${escape_html(info.name)}`);
         let anchor = format_anchor(`${module.name}.${info.name}`);
         buf.write(` {#${anchor}}\n`);
+        buf.write(codeblock(info.source));
 
         if (info.doc != nil) {
             let heading = replace_headings(info.doc, level: 4);
@@ -363,14 +566,12 @@ fn generate_function_doc(
     kind: string = "function"
 ): string {
     let buf = StringBuffer.new();
-
-    let fn_sign = generate_function(f);
     let heading_prefix = "#".repeat(level);
 
     // Write method heading
     let anchor = format_anchor(`${anchor_prefix}${f.name}`);
     buf.write(`${heading_prefix} ${f.name} {#${anchor}}\n`);
-    buf.write(`\`\`\`nv\n${fn_sign}\n\`\`\`\n`);
+    buf.write(codeblock(f.source));
     links.write(`[${f.name}]: #${anchor}`);
 
     if (f.desc.deprecated != nil) {
@@ -442,6 +643,19 @@ fn generate_function(f: Function): string {
     }
 
     return `${prefix}fn ${f.name}(${args_str})${returns_str}${throws_str}`;
+}
+
+fn codeblock(source: string, details: bool = true): string {
+    if (source.len() == 0) {
+        return "";
+    }
+
+    let md = `\`\`\`nv, no_run\n${source}\n\`\`\`\n`;
+    if (details) {
+        return `::: details Source Code\n${md}:::\n`;
+    }
+
+    return md;
 }
 
 fn main() throws {

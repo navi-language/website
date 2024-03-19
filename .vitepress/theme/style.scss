@@ -129,6 +129,18 @@
       font-weight: normal;
     }
   }
+
+  .custom-block.details {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    summary {
+      outline: none;
+      font-size: 0.9em;
+      font-weight: normal;
+      margin: 0;
+    }
+  }
 }
 
 .VPSidebar {
