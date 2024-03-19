@@ -571,7 +571,14 @@ fn generate_function_doc(
     // Write method heading
     let anchor = format_anchor(`${anchor_prefix}${f.name}`);
     buf.write(`${heading_prefix} ${f.name} {#${anchor}}\n`);
-    buf.write(codeblock(f.source));
+
+    if (f.source.len() > 0) {
+        buf.write(codeblock(f.source));
+    } else {
+        let source = generate_function(f);
+        buf.write(codeblock(source));
+    }
+
     links.write(`[${f.name}]: #${anchor}`);
 
     if (f.desc.deprecated != nil) {
@@ -650,7 +657,7 @@ fn codeblock(source: string, details: bool = true): string {
         return "";
     }
 
-    let md = `\`\`\`nv, no_run\n${source}\n\`\`\`\n`;
+    let md = `\`\`\`nv\n${source}\n\`\`\`\n`;
     if (details) {
         return `::: details Source Code\n${md}:::\n`;
     }
