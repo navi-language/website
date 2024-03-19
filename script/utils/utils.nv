@@ -70,9 +70,9 @@ pub fn format_anchor(text: string?): string {
     let buf = StringBuffer.new();
     for (let s in text!.split("")) {
         if (let new_str = ANCHOR_MAPS.get(s)) {
-            try! buf.write_string(new_str);
+            buf.write_string(new_str);
         } else {
-            try! buf.write_string(s);
+            buf.write_string(s);
         }
     }
 
