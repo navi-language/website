@@ -304,7 +304,9 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
     return buf.to_string("");
 }
 
-fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: StringBuffer): string {
+fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: StringBuffer):
+    string
+{
     let buf = StringBuffer.new();
 
     let interface_names = interfaces.keys();
@@ -628,13 +630,12 @@ fn generate_function(f: Function): string {
             args_str.write("self");
         } else {
             switch (arg.kind) {
-                case "arbitrary":
-                    args_str.write(`${arg.name}: ..${arg._type}${default_value}`);
-                default:
-                    args_str.write(`${arg.name}: ${arg._type}${default_value}`);
+            case "arbitrary":
+                args_str.write(`${arg.name}: ..${arg._type}${default_value}`);
+            default:
+                args_str.write(`${arg.name}: ${arg._type}${default_value}`);
             }
         }
-
 
     }
     let args_str = args_str.to_string(", ");

@@ -1,5 +1,5 @@
-use std.regex.{Regex, Captures};
 use std.io.{self, StringBuffer};
+use std.regex.{Captures, Regex};
 
 let heading_re = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
 
