@@ -7,7 +7,7 @@
     "@types/node-fetch": "^2.6.9",
     "mermaid": "^10.6.1",
     "sass": "^1.69.5",
-    "vitepress": "^1.0.0-rc.45",
+    "vitepress": "^1.0.0",
     "vitepress-plugin-mermaid": "^2.0.15",
     "vitepress-sidebar": "^1.18.0"
   },

@@ -71,7 +71,29 @@ export default withMermaid(
         { text: "Stdlib", link: "/stdlib/" },
         { text: "Pkg", link: "/pkg/" },
         { text: "Navi Stream", link: "/navi-stream/" },
-        { text: "Tools", link: "/tools" },
+        {
+          text: "Tools",
+          items: [
+            { text: "Overview", link: "/tools" },
+            {
+              text: "Editor Plugins",
+              items: [
+                {
+                  text: "VS Code",
+                  link: "https://marketplace.visualstudio.com/items?itemName=huacnlee.navi",
+                },
+                {
+                  text: "Zed",
+                  link: "https://github.com/navi-language/zed-navi",
+                },
+                {
+                  text: "tree-sitter-navi",
+                  link: "https://github.com/navi-language/tree-sitter-navi",
+                },
+              ],
+            },
+          ],
+        },
         {
           text: "Releases",
           link: "/releases",
