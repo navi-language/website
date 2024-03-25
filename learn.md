@@ -2091,16 +2091,16 @@ All functions whose signature is `throws` must use `try`, `try?` or `try!` keywo
 | `catch`   | The `catch` block is used to match an error interface.       |
 | `finally` | The `finally` block is optional, it will always be executed. |
 
-### Error Type
+### Error Interface
 
-By default, `throw` can throw with a [string] or a custom error type that implements the `error` interface.
+By default, `throw` can throw with a [string] or a custom error type that implements the `Error` interface.
 
 ::: info TIP
-Because Navi has implemented the `error` interface for [string], you can throw a [string] directly.
+Because Navi has implemented the `Error` interface for [string], you can throw a [string] directly.
 :::
 
 ```nv
-interface error {
+pub interface Error {
     fn error(self): string;
 }
 ```
@@ -2111,16 +2111,16 @@ So you can just throw [string]:
 throw "error message";
 ```
 
-Or implement the `error` interface for a custom error type:
+Or implement the `Error` interface for a custom error type:
 
 ```nv, ignore
 struct MyError {
     message: string
 }
 
-impl MyError {
-    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an `error` interface.
-    fn error(self): string {
+impl Error for MyError {
+    // Implement the `error` method for `MyError` struct, then `MyError` can be used as an `Error` interface.
+    pub fn error(self): string {
         return self.message;
     }
 }
@@ -2170,7 +2170,7 @@ Use `do ... catch` statement to catch an error.
 - The `catch` block is used to match an error interface, it can have multiple `catch` blocks to match different error types.
 - And the `finally` block is optional, it will always be executed.
 
-Every type that implements the `error` method can be used as an `error` interface.
+Every type that implements the `error` method can be used as an `Error` interface.
 
 ```nv,ignore
 use std.io;
@@ -2179,9 +2179,9 @@ struct MyError {
     message: string
 }
 
-impl MyError {
+impl Error for MyError {
     // Implement the `error` method for `MyError` struct, then `MyError` can be used as an error interface.
-    fn error(): string {
+    pub fn error(): string {
         return self.message;
     }
 }
