@@ -2090,6 +2090,7 @@ All functions whose signature is `throws` must use `try`, `try?` or `try!` keywo
 | `do`      | The `do` block is used to handle an error.                   |
 | `catch`   | The `catch` block is used to match an error interface.       |
 | `finally` | The `finally` block is optional, it will always be executed. |
+| `panic`   | The `panic` function is used to panic the program.           |
 
 ### Error Interface
 
@@ -2246,6 +2247,21 @@ If the function throws an error, the `try!` will panic.
 let result = try! hello("Navi");
 // This will cause a panic
 ```
+
+### Panic
+
+The `panic` keyword is used to panic the program.
+
+```nv, ignore
+fn hello(name: string): string {
+    if (name == "Navi") {
+        panic "name can't be Navi";
+    }
+    return `Hello ${name}!`;
+}
+```
+
+When `panic` is called, the program will stop running and print the error message.
 
 ## Use
 
