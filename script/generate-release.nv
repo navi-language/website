@@ -53,7 +53,7 @@ fn fetch_releases() throws {
         }
 
         let html_url = release.html_url;
-        let body = utils.replace_headings(release.body, level: 1);
+        let body = utils.replace_headings(release.body, level: 2);
         buf.push(`## [${name}](${html_url})\n\n`);
         buf.push(`${body}\n\n`);
     }

@@ -100,7 +100,7 @@ struct Interface {
 }
 
 fn is_stdlib(key: string): bool {
-    return key == "lang" || key == "std" || key.starts_with("std.");
+    return key == "lang" || key == "std" || key.starts_with("std.") || key.starts_with("lang.");
 }
 
 fn generate() throws {

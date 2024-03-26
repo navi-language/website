@@ -18,7 +18,12 @@ const naviStreamSidebar = generateSidebar({
 });
 
 const isStdlib = (module: string) => {
-  return module == "lang" || module == "std" || module.startsWith("std.");
+  return (
+    module == "lang" ||
+    module == "std" ||
+    module.startsWith("std.") ||
+    module.startsWith("lang.")
+  );
 };
 
 const stdlibItems = stdlibAllItems.filter(isStdlib).map((module: string) => {
