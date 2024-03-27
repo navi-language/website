@@ -1,10 +1,13 @@
-use std.fs;
+use std.fs.{self, File};
 use std.io;
 use std.json;
+use std.log.{self, Level, Logger};
 use std.net.http;
 use std.path;
-use std.time.DateTime;
+use std.time.{self, DateTime};
 
+use markdown.{callout, codeblock, frontmatter, heading};
+use navi.{Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
 use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_slug, replace_headings};
 
@@ -13,123 +16,26 @@ let stdlib_target = "stdlib";
 let pkg_target = "pkg";
 let INDOC_HEADING_LEVEL = 2;
 
-struct Module {
-    name: string = "",
-    functions: [Function] = {},
-    structs: <string, Struct> = {},
-    interfaces: <string, Interface> = {},
-    enums: <string, Enum> = {},
-    types: <string, Type> = {},
-}
+const log = Logger.new(io.stdout(), max_level: Level.Trace);
 
-/// key is the module name
-/// value is the module
-type Stdlib = <string, Module>;
+fn main() throws {
+    log.info("Generating stdlib docs...");
+    let start = DateTime.now();
 
-struct Type {
-    name: string = "",
-    doc: string? = nil,
-    source_type: string = "",
-    source: string = "",
-}
+    let parsed = try parse_stdlib("/Users/jason/github/navi-website/stdlib.json");
+    try generate_modules(stdlib_target, parsed.stdlib);
+    log.info("");
+    try generate_modules(pkg_target, parsed.pkg);
 
-struct Struct {
-    name: string = "",
-    properties: <string, Property> = {},
-    methods: <string, Function> = {},
-    doc: string? = nil,
-    source: string = "",
-}
-
-struct Property {
-    name: string = "",
-    getter: bool = false,
-    setter: bool = false,
-    doc: string? = nil,
-    #[serde(rename = "type")]
-    _type: string = ""
-}
-
-struct Function {
-    /// "function" | "method"
-    kind: string = "function",
-    module: string = "",
-    name: string = "",
-    desc: FunctionDesc,
-    source: string = "",
-}
-
-struct FunctionDesc {
-    deprecated: string? = nil,
-    #[serde(rename = "async")]
-    _async: bool = false,
-    args: [Argument] = {},
-    returns: [string]? = nil,
-    doc: string? = nil,
-    #[serde(rename = "throws")]
-    _throws: [string]? = nil,
-}
-
-struct Argument {
-    name: string = "",
-    #[serde(rename = "type")]
-    _type: string = "",
-    kind: string = "positional",
-    default_value: string? = nil
-}
-
-struct Enum {
-    name: string = "",
-    doc: string? = nil,
-    items: [EnumItem] = {},
-    source: string = "",
-}
-
-struct EnumItem {
-    name: string,
-    doc: string? = nil,
-    value: string? = nil,
-}
-
-struct Interface {
-    name: string,
-    doc: string? = nil,
-    inherits: [string]? = nil,
-    methods: <string, Function> = {},
-    source: string = "",
-}
-
-fn is_stdlib(key: string): bool {
-    return key == "lang" || key == "std" || key.starts_with("std.") || key.starts_with("lang.");
-}
-
-fn generate() throws {
-    let raw_stdlib = try json.parse::<Stdlib>(fs.open("stdlib.json"));
-
-    // filter modules
-    let stdlib = <string, Module> {};
-    let pkg = <string, Module> {};
-    for (let key, module in raw_stdlib) {
-        if (key.starts_with("_std.")) {
-            continue;
-        }
-
-        if (is_stdlib(key)) {
-            stdlib[key] = module;
-        } else {
-            pkg[key] = module;
-        }
-    }
-
-    try generate_modules(stdlib_target, stdlib);
-    io.println("");
-    try generate_modules(pkg_target, pkg);
+    let duration = DateTime.now().sub(start);
+    log.info(`Stdlib docs generated. ${duration}`);
+    time.sleep(5.seconds());
 }
 
 fn generate_modules(target: string, modules: <string, Module>) throws {
     let module_names = modules.keys();
-    io.println(`Generating stdlib docs to '${target}/'...`);
-    io.println(`Total modules: ${module_names.len()}`);
+    log.info(`Generating stdlib docs to '${target}/'...`);
+    log.info(`Total modules: ${module_names.len()}`);
 
     let module_index = build_module_index(modules);
     let index_filename = path.join(target, "index.md");
@@ -143,7 +49,7 @@ fn generate_modules(target: string, modules: <string, Module>) throws {
         let filename = path.join(target, fname + ".md");
         try fs.create_dir_all(path.dir(filename));
 
-        io.println(`-> ${fname}`);
+        log.info(`-> ${fname}`);
         let body = build_body(module);
         try fs.write_string(filename, body);
     }
@@ -170,12 +76,12 @@ fn build_body(module: Module): string {
     // Frontmatter
     // #prelude is a special module name
     let title = module.name.replace("#", "");
-    buf.write("---");
-    buf.write(`title: ${title}`);
-    buf.write("editLink: false");
-    buf.write("---\n");
+    buf.write(frontmatter({ "title": title, "editLink": false }));
 
-    buf.write(`# ${module.name}\n`);
+    // Import Component
+    buf.write(`<script setup>\nimport FunctionTitle from '../components/FunctionTitle.vue\n</script>\n`);
+
+    buf.write(heading(module.name, level: 1));
 
     buf.write(generate_type_toc(module, module.types));
     buf.write(generate_enum_toc(module, module.enums));
@@ -186,8 +92,6 @@ fn build_body(module: Module): string {
     for (let func in module.functions) {
         buf.write(generate_function_doc(func, links));
     }
-
-    buf.write("------------------------\n");
 
     buf.write(generate_types(module, module.types, links));
     buf.write(generate_enums(module, module.enums, links));
@@ -315,9 +219,7 @@ fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: S
     for (let interface_name in interface_names) {
         const info = interfaces[interface_name];
 
-        buf.write(`## interface ${escape_html(interface_name)}`);
-        let anchor = format_anchor(`${module.name}.${interface_name}`);
-        buf.write(` {#${anchor}}\n`);
+        buf.write(heading(interface_name, level: 2, anchor: `${module.name}.${interface_name}`));
         buf.write(codeblock(info.source));
 
         if (info.doc != nil) {
@@ -421,8 +323,6 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         }
 
         if (info.methods.len() > 0) {
-            buf.write("---------------------------\n");
-
             let static_methods = [string] {};
             let instance_methods = [string] {};
 
@@ -568,33 +468,26 @@ fn generate_function_doc(
     kind: string = "function"
 ): string {
     let buf = StringBuffer.new();
-    let heading_prefix = "#".repeat(level);
 
     // Write method heading
-    let anchor = format_anchor(`${anchor_prefix}${f.name}`);
-    buf.write(`${heading_prefix} ${f.name} {#${anchor}}\n`);
-
-    if (f.source.len() > 0) {
-        buf.write(codeblock(f.source));
-    } else {
-        let source = generate_function(f);
-        buf.write(codeblock(source));
-    }
+    let anchor = `${anchor_prefix}${f.name}`;
+    buf.write(`<FunctionTitle title="${f.name}" level="${level}" anchor="${format_anchor(anchor)}">\n`);
+    let source = generate_function(f);
+    buf.write(heading(f.name, level:, anchor:));
+    buf.write(codeblock(source));
+    buf.write("</FunctionTitle>\n");
 
     links.write(`[${f.name}]: #${anchor}`);
 
     if (f.desc.deprecated != nil) {
-        buf.write("::: warning, Deprecated");
-        buf.write(f.desc.deprecated!);
-        buf.write(":::\n");
-        buf.write("\n");
+        buf.write(callout(f.desc.deprecated!, kind: "warning", title: "Deprecated"));
     }
 
     if (f.desc.doc != nil) {
         let heading = replace_headings(f.desc.doc, level: level + 1);
         buf.write(heading);
     } else {
-        buf.write("TODO");
+        buf.write("_No documentation._");
     }
     buf.write("\n");
 
@@ -650,27 +543,7 @@ fn generate_function(f: Function): string {
         }
     }
 
-    return `${prefix}fn ${f.name}(${args_str})${returns_str}${throws_str}`;
-}
-
-fn codeblock(source: string, details: bool = true): string {
-    if (source.len() == 0) {
-        return "";
-    }
-
-    let md = `\`\`\`nv\n${source}\n\`\`\`\n`;
-    if (details) {
-        return `::: details Source Code\n${md}:::\n`;
-    }
-
-    return md;
-}
-
-fn main() throws {
-    let start = DateTime.now();
-    try generate();
-    let duration = DateTime.now().sub(start);
-    io.println(`Stdlib docs generated. ${duration}`);
+    return `pub ${prefix}fn ${f.name}(${args_str})${returns_str}${throws_str}`;
 }
 
 test "generate_function" {
@@ -695,15 +568,15 @@ test "generate_function" {
         module: ""
     };
 
-    assert_eq generate_function(func), `async fn say_name(self, name: string, suffix: string = "!"): string`;
+    assert_eq generate_function(func), `pub async fn say_name(self, name: string, suffix: string = "!"): string`;
 
     func.desc._async = false;
     func.desc._throws = [string] {};
-    assert_eq generate_function(func), `fn say_name(self, name: string, suffix: string = "!"): string throws`;
+    assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!"): string throws`;
 
     func.desc._throws = [string] { "Error1", "Error2" };
     func.desc.returns = [string] {};
-    assert_eq generate_function(func), `fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
+    assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
 }
 
 bench "generate" {

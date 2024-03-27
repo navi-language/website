@@ -1,0 +1,73 @@
+use string_buffer.{StringBuffer};
+use utils.{escape_html, format_anchor};
+
+/// Render a Markdown heading.
+///
+/// ```md
+/// # Heading
+/// ```
+pub fn heading(title: string, level: int = 1, anchor: string? = nil): string {
+    let heading_prefix = "#".repeat(level);
+    let anchor_str = "";
+    if (let anchor = anchor) {
+        anchor_str = ` {#${format_anchor(anchor)}}`;
+    }
+    return `${heading_prefix} ${escape_html(title)}${anchor_str}\n`;
+}
+
+/// Render a Markdown code block.
+pub fn codeblock(source: string?, language: string = "nv"): string {
+    if (source?.len() == 0) {
+        return "";
+    }
+
+    return `\`\`\`${language}\n${source || ""}\n\`\`\`\n`;
+}
+
+/// Render a Markdown callout.
+///
+/// ```md
+/// ::: info, Title
+/// This is a callout.
+/// :::
+/// ```
+pub fn callout(content: string?, kind: string = "info", title: string? = nil): string {
+    let title_str = "";
+    if (let title = title) {
+        title_str = `, ${title}`;
+    }
+    return `::: ${kind}${title_str}\n${content || ""}\n:::\n`;
+}
+
+/// Render a Markdown frontmatter.
+///
+/// ```md
+/// ---
+/// key: value
+/// ---
+/// ```
+pub fn frontmatter(metadata: <string, ToString>): string {
+    let buf = StringBuffer.new();
+    buf.write("---\n");
+    for (let key, value in metadata) {
+        buf.write(`${key}: ${value:?}\n`);
+    }
+    buf.write("---\n");
+    return buf.to_string("");
+}
+
+test "heading" {
+    assert_eq heading("Hello > world", level: 1), "# Hello &gt; world\n";
+    assert_eq heading("Hello > world", level: 2, anchor: "hello-world"), "## Hello &gt; world {#hello-world}\n";
+}
+
+test "codeblock" {
+    assert_eq codeblock("hello"), "```nv\nhello\n```\n";
+    assert_eq codeblock("hello", language: "rust"), "```rust\nhello\n```\n";
+}
+
+test "callout" {
+    assert_eq callout("hello"), "::: info\nhello\n:::\n";
+    assert_eq callout("hello", kind: "warning"), "::: warning\nhello\n:::\n";
+    assert_eq callout("hello", kind: "warning", title: "Title"), "::: warning, Title\nhello\n:::\n";
+}

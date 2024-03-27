@@ -1,0 +1,118 @@
+use std.fs;
+use std.json;
+
+pub struct Module {
+    pub name: string = "",
+    pub functions: [Function] = {},
+    pub structs: <string, Struct> = {},
+    pub interfaces: <string, Interface> = {},
+    pub enums: <string, Enum> = {},
+    pub types: <string, Type> = {},
+}
+
+/// key is the module name
+/// value is the module
+pub type Stdlib = <string, Module>;
+
+pub struct Type {
+    pub name: string = "",
+    pub doc: string? = nil,
+    pub source_type: string = "",
+    pub source: string = "",
+}
+
+pub struct Struct {
+    pub name: string = "",
+    pub properties: <string, Property> = {},
+    pub methods: <string, Function> = {},
+    pub doc: string? = nil,
+    pub source: string = "",
+}
+
+pub struct Property {
+    pub name: string = "",
+    pub getter: bool = false,
+    pub setter: bool = false,
+    pub doc: string? = nil,
+    #[serde(rename = "type")]
+    pub _type: string = ""
+}
+
+pub struct Function {
+    /// "function" | "method"
+    pub kind: string = "function",
+    pub module: string = "",
+    pub name: string = "",
+    pub desc: FunctionDesc,
+    pub source: string = "",
+}
+
+pub struct FunctionDesc {
+    pub deprecated: string? = nil,
+    #[serde(rename = "async")]
+    pub _async: bool = false,
+    pub args: [Argument] = {},
+    pub returns: [string]? = nil,
+    pub doc: string? = nil,
+    #[serde(rename = "throws")]
+    pub _throws: [string]? = nil,
+}
+
+pub struct Argument {
+    pub name: string = "",
+    #[serde(rename = "type")]
+    pub _type: string = "",
+    pub kind: string = "positional",
+    pub default_value: string? = nil
+}
+
+pub struct Enum {
+    pub name: string = "",
+    pub doc: string? = nil,
+    pub items: [EnumItem] = {},
+    pub source: string = "",
+}
+
+pub struct EnumItem {
+    pub name: string,
+    pub doc: string? = nil,
+    pub value: string? = nil,
+}
+
+pub struct Interface {
+    pub name: string,
+    pub doc: string? = nil,
+    pub inherits: [string]? = nil,
+    pub methods: <string, Function> = {},
+    pub source: string = "",
+}
+
+pub struct Parsed {
+    pub stdlib: <string, Module> = {},
+    pub pkg: <string, Module> = {},
+}
+
+fn is_stdlib(key: string): bool {
+    return key == "lang" || key == "std" || key.starts_with("std.") || key.starts_with("lang.");
+}
+
+/// Parse stdlib.json into
+pub fn parse_stdlib(path: string): Parsed throws {
+    let raw_stdlib = try json.parse::<Stdlib>(fs.open("stdlib.json"));
+
+    // filter modules
+    let parsed = Parsed {};
+
+    for (let key, module in raw_stdlib) {
+        if (key.starts_with("_std.")) {
+            continue;
+        }
+
+        if (is_stdlib(key)) {
+            parsed.stdlib[key] = module;
+        } else {
+            parsed.pkg[key] = module;
+        }
+    }
+    return parsed;
+}
