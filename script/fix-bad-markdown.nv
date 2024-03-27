@@ -1,0 +1,7 @@
+use std.fs;
+
+fn main() throws {
+    let body = try fs.read_to_string("stdlib/lang.array.md");
+    let body = body.replace("// now items []\n\n", "// now items []\n```\n\n");
+    try fs.write_string("stdlib/lang.array.md", body);
+}
