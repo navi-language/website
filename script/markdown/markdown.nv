@@ -3,6 +3,8 @@ use utils.{escape_html, format_anchor};
 
 /// Render a Markdown heading.
 ///
+/// The heading text will be escaped.
+///
 /// ```md
 /// # Heading
 /// ```
@@ -50,10 +52,40 @@ pub fn frontmatter(metadata: <string, ToString>): string {
     let buf = StringBuffer.new();
     buf.write("---\n");
     for (let key, value in metadata) {
-        buf.write(`${key}: ${value:?}\n`);
+        buf.write(`${key}: ${value.to_string()}\n`);
     }
     buf.write("---\n");
     return buf.to_string("");
+}
+
+/// Render a Markdown link.
+pub fn link(text: string, url: string): string {
+    return `[${escape_html(text)}](${url})`;
+}
+
+/// Render a Markdown bullet list.
+pub fn bulleted_list(items: [string]): string {
+    let buf = StringBuffer.new();
+    for (let item in items) {
+        buf.writeln(`- ${item}`);
+    }
+    return buf.to_string("");
+}
+
+/// Render a Markdown ordered list.
+pub fn ordered_list(items: [string]): string {
+    let buf = StringBuffer.new();
+    let idx = 1;
+    for (let item in items) {
+        buf.writeln(`${idx}. ${item}`);
+        idx += 1;
+    }
+    return buf.to_string("");
+}
+
+/// Render a Markdown bold text.
+pub fn bold(text: string): string {
+    return `**${text}**`;
 }
 
 test "heading" {
@@ -70,4 +102,24 @@ test "callout" {
     assert_eq callout("hello"), "::: info\nhello\n:::\n";
     assert_eq callout("hello", kind: "warning"), "::: warning\nhello\n:::\n";
     assert_eq callout("hello", kind: "warning", title: "Title"), "::: warning, Title\nhello\n:::\n";
+}
+
+test "frontmatter" {
+    assert_eq frontmatter({ "key": "value" }), "---\nkey: value\n---\n";
+}
+
+test "link" {
+    assert_eq link("hello", "https://example.com"), "[hello](https://example.com)";
+}
+
+test "bulleted_list" {
+    assert_eq bulleted_list({ "hello", "world" }), "- hello\n- world\n";
+}
+
+test "ordered_list" {
+    assert_eq ordered_list({ "hello", "world" }), "1. hello\n2. world\n";
+}
+
+test "bold" {
+    assert_eq bold("hello"), "**hello**";
 }

@@ -6,7 +6,7 @@ use std.net.http;
 use std.path;
 use std.time.{self, DateTime};
 
-use markdown.{callout, codeblock, frontmatter, heading};
+use markdown.{bold, bulleted_list, callout, codeblock, frontmatter, heading, link, ordered_list};
 use navi.{Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
 use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_slug, replace_headings};
@@ -62,11 +62,11 @@ fn build_module_index(stdlib: Stdlib): string {
         names.push(fname);
     }
     names.sort();
-    for (let fname in names) {
-        buf.write(`- [${fname}](./${fname}.md)`);
-    }
-
-    return buf.to_string("\n");
+    let items = names.map::<string, string>(|name| {
+        return `[${name}](./${name}.md)`;
+    });
+    buf.writeln(bulleted_list(items));
+    return buf.to_string("");
 }
 
 fn build_body(module: Module): string {
@@ -76,7 +76,7 @@ fn build_body(module: Module): string {
     // Frontmatter
     // #prelude is a special module name
     let title = module.name.replace("#", "");
-    buf.write(frontmatter({ "title": title, "editLink": false }));
+    buf.writeln(frontmatter({ "title": title, "editLink": false }));
 
     // Import Component
     buf.write(`<script setup>\nimport FunctionTitle from '../components/FunctionTitle.vue'\n</script>\n`);
@@ -98,7 +98,7 @@ fn build_body(module: Module): string {
     buf.write(generate_interfaces(module, module.interfaces, links));
     buf.write(generate_structs(module, module.structs, links));
 
-    buf.write("\n");
+    buf.writeln("");
     buf.write(links.to_string("\n"));
 
     return buf.to_string("\n");
@@ -116,17 +116,10 @@ fn generate_types(module: Module, types: <string, Type>, links: StringBuffer): s
     let buf = StringBuffer.new();
     for (let name in type_names) {
         let _type = types[name];
-        buf.write(`## type ${escape_html(name)}`);
-        let anchor = format_anchor(`${module.name}.${name}`);
-        buf.write(` {#${anchor}}\n`);
-        buf.write(codeblock(_type.source));
-
-        if (_type.doc != nil) {
-            buf.write(`${_type.doc!}\n`);
-        } else {
-            buf.write("No documentation available.\n");
-        }
-        buf.write("\n");
+        buf.writeln(heading(`type ${name}`, level: 2, anchor: `${module.name}.${name}`));
+        buf.writeln(codeblock(_type.source));
+        buf.writeln(_type.doc.unwrap_or("No documentation available."));
+        buf.writeln("");
     }
 
     return buf.to_string("");
@@ -143,13 +136,14 @@ fn generate_type_toc(module: Module, types: <string, Type>): string {
 
     let buf = StringBuffer.new();
 
-    buf.write("**Types**\n\n");
+    buf.writeln(bold("Types"));
+    buf.writeln("");
 
     let result: [string] = {};
     for (let name in type_names) {
         let _type = types[name];
         let anchor = format_anchor(`${module.name}.${_type.name}`);
-        result.push(`[${escape_html(_type.name)}](#${anchor})`);
+        result.push(link(_type.name, `#${anchor}`));
     }
 
     buf.write(result.join(", "));
@@ -167,16 +161,13 @@ fn generate_enums(module: Module, enums: <string, Enum>, links: StringBuffer): s
     for (let enum_name in enum_names) {
         const info = enums[enum_name];
 
-        buf.write(`## ${escape_html(enum_name)}`);
-        let anchor = format_anchor(`${module.name}.${enum_name}`);
-        buf.write(` {#${anchor}}\n`);
-        buf.write(codeblock(info.source));
+        buf.writeln(heading(enum_name, level: 2, anchor: `${module.name}.${enum_name}`));
+        buf.writeln(codeblock(info.source));
 
         if (let doc = info.doc) {
-            let heading = replace_headings(doc, level: 3);
-            buf.write(`${heading}\n`);
+            buf.writeln(replace_headings(doc, level: 3));
         } else {
-            buf.write(`No documentation.\n`);
+            buf.writeln(`No documentation.`);
         }
     }
 
@@ -192,14 +183,14 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
     enum_names.sort();
 
     let buf = StringBuffer.new();
-
-    buf.write("**Enums**\n\n");
+    buf.writeln(bold("Enums"));
+    buf.writeln("");
 
     let result: [string] = {};
     for (let name in enum_names) {
         let _enum = enums[name];
         let anchor = format_anchor(`${module.name}.${name}`);
-        result.push(`[${escape_html(name)}](#${anchor})`);
+        result.push(link(name, `#${anchor}`));
     }
 
     buf.write(result.join(", "));
@@ -222,11 +213,10 @@ fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: S
         buf.write(heading(interface_name, level: 2, anchor: `${module.name}.${interface_name}`));
         buf.write(codeblock(info.source));
 
-        if (info.doc != nil) {
-            let heading = replace_headings(info.doc, level: 3);
-            buf.write(`${heading}\n`);
+        if (let doc = info.doc) {
+            buf.writeln(replace_headings(doc, level: 3));
         } else {
-            buf.write(`No documentation.\n`);
+            buf.writeln(`No documentation.`);
         }
 
         let method_names = info.methods.keys();
@@ -250,14 +240,14 @@ fn generate_interface_toc(module: Module, interfaces: <string, Interface>): stri
     names.sort();
 
     let buf = StringBuffer.new();
-
-    buf.write("**Interfaces**\n\n");
+    buf.writeln(bold("Interfaces"));
+    buf.writeln("");
 
     let result: [string] = {};
     for (let name in names) {
         let _interface = interfaces[name];
         let anchor = format_anchor(`${module.name}.${name}`);
-        result.push(`[${escape_html(name)}](#${anchor})`);
+        result.push(link(name, `#${anchor}`));
     }
 
     buf.write(result.join(", "));
@@ -275,16 +265,13 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
     for (let struct_name in struct_names) {
         const info = structs[struct_name];
 
-        buf.write(`## ${escape_html(info.name)}`);
-        let anchor = format_anchor(`${module.name}.${info.name}`);
-        buf.write(` {#${anchor}}\n`);
-        buf.write(codeblock(info.source));
+        buf.writeln(heading(info.name, level: 2, anchor: `${module.name}.${info.name}`));
+        buf.writeln(codeblock(info.source));
 
-        if (info.doc != nil) {
-            let heading = replace_headings(info.doc, level: 4);
-            buf.write(`${heading}\n`);
+        if (let doc = info.doc) {
+            buf.writeln(replace_headings(doc, level: 4));
         } else {
-            buf.write(`No documentation.\n`);
+            buf.writeln(`No documentation.`);
         }
 
         buf.write(generate_struct_member_toc(info.name, info));
@@ -308,14 +295,12 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                 if (prop_suffix.len() > 0) {
                     suffix_str = `${prop_suffix.join(", ")}`;
                 }
-                let anchor = format_anchor(`${info.name}#${name}`);
-                buf.write(`### self.${name} {#${anchor}}\n`);
-                let type_pre = "```nv\n " + prop.name + ": " + prop._type + "\n```";
-                buf.write(type_pre);
+                buf.writeln(heading(`self.${name}`, level: 3, anchor: `${info.name}#${name}`));
+                buf.writeln(codeblock(`${prop.name} : ${prop._type}`));
 
                 if (prop.doc != nil) {
-                    buf.write("\n");
-                    buf.write(`    ` + replace_headings(prop.doc, level: 3) + "\n");
+                    buf.writeln("");
+                    buf.writeln(`    ` + replace_headings(prop.doc, level: 3));
                 }
             }
 
@@ -357,7 +342,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
                     kind: "method"
                 ));
             }
-            buf.write("\n");
+            buf.writeln("");
         }
     }
 
@@ -375,18 +360,17 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
 
     let buf = StringBuffer.new();
 
-    buf.write("**Structs**\n\n");
+    buf.writeln(bold("Structs"));
+    buf.writeln("");
 
     let result: [string] = {};
     for (let name in struct_names) {
         let _struct = structs[name];
         let anchor = format_anchor(`${module.name}.${_struct.name}`);
-        result.push(`[${escape_html(_struct.name)}](#${anchor})`);
+        result.push(link(_struct.name, `#${anchor}`));
     }
 
-    buf.write(result.join(", "));
-    buf.write("\n");
-
+    buf.writeln(result.join(", "));
     return buf.to_string("");
 }
 
@@ -398,7 +382,8 @@ fn generate_module_function_toc(module: Module, functions: [Function]): string {
 
     let buf = StringBuffer.new();
 
-    buf.write("**Module Functions**\n\n");
+    buf.writeln(bold("Module Functions"));
+    buf.writeln("");
 
     let names: [string] = {};
     for (let _fn in functions) {
@@ -408,11 +393,9 @@ fn generate_module_function_toc(module: Module, functions: [Function]): string {
 
     let fn_names: [string] = {};
     for (let name in names) {
-        fn_names.push(`[${name}](#${format_anchor(name)})`);
+        fn_names.push(link(name, `#${name}`));
     }
-    buf.write(fn_names.join(", "));
-    buf.write("\n");
-
+    buf.writeln(fn_names.join(", "));
     return buf.to_string("");
 }
 
@@ -421,19 +404,20 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
     let buf = StringBuffer.new();
 
     if (info.properties.len() > 0) {
-        buf.write("**Properties**\n\n");
+        buf.writeln(bold("Properties"));
+        buf.writeln("");
 
         let prop_names: [string] = {};
         for (let name, prop in info.properties) {
-            let anchor = format_anchor(`${struct_name}#${name}`);
-            prop_names.push(`[${name}](#${anchor})`);
+            prop_names.push(link(name, `#${struct_name}#${name}`));
         }
-        buf.write(prop_names.join(", "));
-        buf.write("\n\n");
+        buf.writeln(prop_names.join(", "));
+        buf.writeln("");
     }
 
     if (info.methods.len() > 0) {
-        buf.write("**Methods**\n\n");
+        buf.writeln(bold("Methods"));
+        buf.writeln("");
 
         let methods = [string] {};
 
@@ -449,10 +433,10 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
             if (func.kind == "method") {
                 anchor = format_anchor(`${struct_name}#${name}`);
             }
-            method_links.push(`[${name}](#${anchor})`);
+            method_links.push(link(name, `#${anchor}`));
         }
-        buf.write(method_links.join(", "));
-        buf.write("\n\n");
+        buf.writeln(method_links.join(", "));
+        buf.writeln("");
     }
 
     return buf.to_string("");
@@ -483,13 +467,12 @@ fn generate_function_doc(
         buf.write(callout(f.desc.deprecated!, kind: "warning", title: "Deprecated"));
     }
 
-    if (f.desc.doc != nil) {
-        let heading = replace_headings(f.desc.doc, level: level + 1);
-        buf.write(heading);
+    if (let doc = f.desc.doc) {
+        buf.write(replace_headings(doc, level: level + 1));
     } else {
         buf.write("_No documentation._");
     }
-    buf.write("\n");
+    buf.writeln("");
 
     return buf.to_string("\n");
 }
@@ -577,10 +560,4 @@ test "generate_function" {
     func.desc._throws = [string] { "Error1", "Error2" };
     func.desc.returns = [string] {};
     assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
-}
-
-bench "generate" {
-    bench.run(|| {
-        try! generate();
-    });
 }

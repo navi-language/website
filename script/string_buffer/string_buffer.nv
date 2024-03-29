@@ -1,3 +1,6 @@
+/// Custom string buffer implementation
+///
+/// This is different from `std.io.StringBuffer`.
 pub struct StringBuffer {
     buffer: [string],
     length: int
@@ -8,7 +11,7 @@ impl StringBuffer {
         return StringBuffer { buffer: {}, length: 0 };
     }
 
-    pub fn write(self, s: any) {
+    pub fn write(self, s: StringBuffer | string) {
         if (let s = s.(StringBuffer)) {
             for (let s1 in s.buffer) {
                 self.buffer.push(s1);
@@ -21,6 +24,10 @@ impl StringBuffer {
         }
     }
 
+    pub fn writeln(self, s: string) {
+        self.write(`${s}\n`);
+    }
+
     pub fn to_string(self, divider: string): string {
         return self.buffer.join(divider);
     }
@@ -29,12 +36,12 @@ impl StringBuffer {
 test "StringBuffer" {
     let buf = StringBuffer.new();
     buf.write("Hello");
-    buf.write("World");
-    assert_eq buf.to_string(" "), "Hello World";
-    assert_eq buf.to_string(", "), "Hello, World";
+    buf.writeln("World");
+    assert_eq buf.to_string(" "), "Hello World\n";
+    assert_eq buf.to_string(", "), "Hello, World\n";
 
     let buf1 = StringBuffer.new();
     buf1.write(buf);
-    buf1.write("!");
-    assert_eq buf1.to_string(" "), "Hello World !";
+    buf1.write("Haha");
+    assert_eq buf1.to_string(" "), "Hello World\n Haha";
 }
