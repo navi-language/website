@@ -12,7 +12,7 @@ pub struct Module {
 
 /// key is the module name
 /// value is the module
-pub type Stdlib = <string, Module>;
+pub type alias Stdlib = <string, Module>;
 
 pub struct Type {
     pub name: string = "",
