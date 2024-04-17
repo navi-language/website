@@ -8,6 +8,13 @@ const target_file = "releases.md";
 const repo = "navi-language/navi";
 const page_size = 200;
 
+const MEATADATA = `
+---
+title: Releases
+editLink: false
+---
+`;
+
 struct Release {
     name: string?,
     tag_name: string,
@@ -29,20 +36,16 @@ fn fetch_releases() throws {
     let releases = try! res.json::<[Release]>();
 
     let buf = StringBuffer.new();
-    buf.push("---\n");
-    buf.push("title: Releases\n");
-    buf.push("editLink: false\n");
-    buf.push("---\n");
-    buf.push("# Releases\n\n");
+    buf.push(MEATADATA);
 
     for (let release in releases) {
-        let prerelease = release.prerelease;
-        if (prerelease) {
-            // ignore pre-releases
+        // ignore pre-releases
+        if (release.prerelease) {
             continue;
         }
 
-        if (release.body == nil || release.body!.is_empty()) {
+        let body = release.body || "";
+        if (body.is_empty()) {
             io.println(`Release ${release.tag_name} has no body, skiped.`);
             continue;
         }
@@ -53,14 +56,16 @@ fn fetch_releases() throws {
         }
 
         let html_url = release.html_url;
-        let body = utils.replace_headings(release.body, level: 2);
+        let body = utils.replace_headings(body, level: 2);
         buf.push(`## [${name}](${html_url})\n\n`);
         buf.push(`${body}\n\n`);
     }
 
     let f = try fs.create(target_file);
-    try f.write_string(buf.to_string());
-    try f.flush();
+    defer {
+        try! f.close();
+    }
+    try f.write_string(buf.to_string().trim());
 }
 
 fn main() throws {
