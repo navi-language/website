@@ -1,5 +1,5 @@
 use std.fs;
-use std.io.{self, StringBuffer};
+use std.io.StringBuffer;
 use std.net.http.{self, Headers};
 
 use utils;
@@ -46,7 +46,7 @@ fn fetch_releases() throws {
 
         let body = release.body || "";
         if (body.is_empty()) {
-            io.println(`Release ${release.tag_name} has no body, skiped.`);
+            println(`Release ${release.tag_name} has no body, skiped.`);
             continue;
         }
 
@@ -70,5 +70,5 @@ fn fetch_releases() throws {
 
 fn main() throws {
     try fetch_releases();
-    io.println("Generate releases success.");
+    println("Generate releases success.");
 }

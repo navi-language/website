@@ -37,7 +37,7 @@ use std.fs;
 fn main() throws {
     try fs.symlink("path/to/source.txt", "path/to/destination.txt");
     let target = try fs.readlink("path/to/destination.txt");
-    io.println(target);
+    println(target);
     // Output: path/to/source.txt
 }
 ```

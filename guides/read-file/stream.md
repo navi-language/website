@@ -10,7 +10,7 @@ Every call `read` method it will return the actual read bytes length, if it's 0,
 
 ```nv, no_run
 use std.fs.File;
-use std.io.{self, Bytes};
+use std.io.Bytes;
 
 fn main() throws {
     let file = try File.open("path/to/file.txt");
@@ -23,7 +23,7 @@ fn main() throws {
         }
 
         // Do something with buf
-        io.print(chunk.to_string());
+        print(chunk.to_string());
     }
 }
 ```

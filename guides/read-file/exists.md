@@ -6,13 +6,12 @@ The [fs.exists](/stdlib/std.fs#exists) function is used to check if a file exist
 
 ```nv, no_run
 use std.fs;
-use std.io;
 
 fn main() {
     if (fs.exists("path/to/file.txt")) {
-        io.println("File exists");
+        println("File exists");
     } else {
-        io.println("File does not exist");
+        println("File does not exist");
     }
 }
 ```

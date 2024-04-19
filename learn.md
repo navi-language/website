@@ -57,12 +57,10 @@ The [Navi Standard Library](/stdlib/) has its own documentation.
 Write a `main.nv`, `.nv` is the file extension of the Navi language.
 
 ```nv
-use std.io;
-
 fn main() throws {
     let name = "World";
     let message = `Hello ${name}!\n`;
-    io.println(message);
+    println(message);
 }
 ```
 
@@ -86,7 +84,7 @@ This code sample demonstrates the basic syntax of Navi.
 - The `let` keyword is used to declare a variable.
 - The `name` variable is a string type, or you can use `let name: string = "World";` to declare it.
 - The `message` variable is defined by a string interpolation (Like JavaScript) by using "``", and the `${name}` is a variable reference.
-- The `io.println` function is used to print a string to the console.
+- The `println` function is used to print a string to the console, the `println` and `print` function is default imported from the `std.io` module.
 - Use `;` to end a statement.
 - Finally, the Code style uses 4 spaces for indentation.\
 
@@ -275,13 +273,11 @@ let v4 = 2.0e+2;
 Navi has a `bool` type, and it has two values: `true` and `false`.
 
 ```nv, no_run
-use std.io;
-
 let passed = true;
 if (passed) {
-    io.println("Passed!");
+    println("Passed!");
 } else {
-    io.println("Failed!");
+    println("Failed!");
 }
 
 let passed = false;
@@ -292,14 +288,12 @@ let passed = false;
 String is a UTF-8 string type, and it is immutable in Navi, all string literals are immutable.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let message = "Hello, World 🎉!";
 
-    io.println(message);
-    io.println(`chars len: ${message.len()}`);
-    io.println(`bytes len: ${message.bytes().len()}`);
+    println(message);
+    println(`chars len: ${message.len()}`);
+    println(`bytes len: ${message.bytes().len()}`);
 }
 ```
 
@@ -326,12 +320,10 @@ bytes len: 18
 If you use `\` in a string outside of an escape sequence, it will be ignored.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
-    io.println("\"Hello, \nWorld!\"");
-    io.println("Hello, \\nWorld!");
-    io.println("Unknown escape sequence: \a");
+    println("\"Hello, \nWorld!\"");
+    println("Hello, \\nWorld!");
+    println("Unknown escape sequence: \a");
 }
 ```
 
@@ -400,8 +392,6 @@ Use the `let` keyword to declare a variable to an identifier, the variable is mu
 
 ```nv,no_run
 // main.nv
-use std.io;
-
 let name = "World";
 let pi = 3.14;
 let passed = true;
@@ -411,7 +401,7 @@ fn main() throws {
     pi = 3.1415926;
     passed = false;
     let message = `Hello ${name}, pi: ${pi}, passed: ${passed}!`;
-    io.println(message);
+    println(message);
 }
 ```
 
@@ -432,14 +422,12 @@ let passed: bool = true;
 Variables must be initialized:
 
 ```nv,compile_fail
-use std.io;
-
 fn main() throws {
     // This will cause a compile error.
     let name: string;
 
     name = "Navi";
-    io.println(`Hello ${name}!`);
+    println(`Hello ${name}!`);
 }
 ```
 
@@ -718,19 +706,17 @@ let use = "World";
 Variables are scoped to the block in which they are declared. A block is a collection of statements enclosed by `{}`.
 
 ```nv,no_run
-use std.io;
-
 const name = "Name in global scope";
 
 fn main() throws {
     let name = "World";
-    io.println(`Hello ${name}!`);
+    println(`Hello ${name}!`);
 
     foo();
 }
 
 fn foo() {
-    io.println(`Hello ${name}!`);
+    println(`Hello ${name}!`);
 }
 ```
 
@@ -1050,8 +1036,8 @@ impl ToString for User {
 
 ```nv, ignore
 fn main() throws {
-    let user = User.new("Sunli", 1);
-    io.println(user.say());
+    let user = User.new("Sunli");
+    println(user.say());
 }
 ```
 
@@ -1372,7 +1358,7 @@ Use the `interface` keyword to declare an interface, and use `.` to access a met
 - We can write a default implementation for a method, and it will be used if the struct does not implement the method.
 - The first argument of the method must be `self`, it is a reference to the current struct instance.
 
-```nv
+```nv, ignore
 interface ToString {
     pub fn to_string(self): string;
 }
@@ -1397,7 +1383,7 @@ fn read_all(reader: Read): ToString {
 
 If any struct has all methods of an interface, it will implement the interface.
 
-```nv
+```nv, ignore
 interface ToString {
     fn to_string(self): string;
 }
@@ -1425,11 +1411,11 @@ Now we can use a `User` type as a `ToString` or a `Read` interface.
 
 ```nv, ignore
 fn foo(item: ToString) {
-    io.println(item.to_string());
+    println(item.to_string());
 }
 
 fn read_info(item: Reader) {
-    io.println(item.read());
+    println(item.read());
 }
 
 fn main() throws {
@@ -1477,8 +1463,6 @@ let user = user.(string); // panic: User can't cast to a string.
 The `switch` statement is used to execute one of many blocks of code.
 
 ```nv,no_run
-use std.io;
-
 fn get_message(n: int): string {
     let message = "";
 
@@ -1495,9 +1479,9 @@ fn get_message(n: int): string {
 }
 
 fn main() throws {
-    io.println(get_message(1));
-    io.println(get_message(2));
-    io.println(get_message(3));
+    println(get_message(1));
+    println(get_message(2));
+    println(get_message(3));
 }
 ```
 
@@ -1535,8 +1519,10 @@ fn get_message(n: int): string {
 
 The `switch` can also used to assert the dynamic type of an interface variable. Use `let t = val.(type)` to assert the type of `val` in the switch condition.
 
+The `Any` type is a special type that can hold any type of value.
+
 ```nv
-fn type_name(val: any): string {
+fn type_name(val: Any): string {
     switch (let t = val.(type)) {
     case int:
         return "int";
@@ -1570,12 +1556,10 @@ A while loop is used to repeatedly execute an expression until some condition is
 Use the `while` keyword to declare a while loop, the condition is an [expression] in `()` that returns a [bool] value.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let n = 0;
     while (n < 5) {
-        io.println(`${n}`);
+        println(`${n}`);
         n += 1;
     }
 }
@@ -1595,12 +1579,10 @@ $ navi run
 Use the `break` keyword to exit a while loop.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let n = 0;
     while (true) {
-        io.println(`${n}`);
+        println(`${n}`);
         n += 1;
         if (n == 2) {
             break;
@@ -1620,8 +1602,6 @@ $ navi run
 Use `continue` to jump back to the beginning of the loop.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let n = 0;
     while (n < 5) {
@@ -1629,7 +1609,7 @@ fn main() throws {
         if (n % 2 == 0) {
             continue;
         }
-        io.println(`${n}`);
+        println(`${n}`);
     }
 }
 ```
@@ -1653,17 +1633,15 @@ Like `while` loop, you can use `break` and `continue` to control the loop.
 
 The range `start..end` contains all values with `start <= x < end`. It is empty if `start >= end`.
 
-The `for (let i in start..end)` statement is used to iterate over a `range`.
+The `for (let i in start..end)` statement is used to iterate over a `std.range.Range`.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     for (let n in 0..5) {
         if (n % 2 == 0) {
             continue;
         }
-        io.println(`n: ${n}`);
+        println(`n: ${n}`);
     }
 }
 ```
@@ -1691,12 +1669,10 @@ assert_eq items, [int] { 1, 3, 5, 7, 9 };
 The `for (let item in array)` statement is used to iterate over an [array].
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let items = [string] { "foo", "bar", "baz" };
     for (let item in items) {
-        io.println(item);
+        println(item);
     }
 }
 ```
@@ -1740,18 +1716,16 @@ url: https://navi-lang.org
 Like most programming languages, Navi has the `if` statement for conditional execution.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let n = 1;
     if (n == 1) {
-        io.println("One");
+        println("One");
     } else if (n == 2) {
-        io.println("Two");
+        println("Two");
     } else if (n == 3) {
-        io.println("Three");
+        println("Three");
     } else {
-        io.println("Other");
+        println("Other");
     }
 }
 ```
@@ -1761,13 +1735,11 @@ fn main() throws {
 The `if let` statement is used to match an [optional] value.
 
 ```nv,no_run
-use std.io;
-
 fn get_a(a: string?) {
     if (let a = a) {
-        io.println(a);
+        println(a);
     } else {
-        io.println("a is nil");
+        println("a is nil");
     }
 }
 
@@ -1801,8 +1773,6 @@ You can define a function at the module level, or in a struct `impl` block.
 - The arguments can be [normal arguments], [keyword arguments] or [arbitrary arguments].
 
 ```nv,no_run
-use std.io;
-
 fn add(a: int, b: int, args: ..string, mode: string = "+"): string {
     let result = a + b;
     return `${a} + ${b} = ${result}`;
@@ -1819,9 +1789,9 @@ impl User {
 }
 
 fn main() throws {
-    io.println(add(1, 2));
+    println(add(1, 2));
     let user = User { name: "Navi" };
-    io.println(user.say());
+    println(user.say());
 }
 ```
 
@@ -1849,8 +1819,6 @@ fn add(a: int, b: int, mode: string = "+"): string {
 To define an [optional] type for an argument, we use `?` after the type, e.g.: `b: int?`.
 
 ```nv,no_run
-use std.io;
-
 fn add(a: int, b: int?): string {
     // unwrap b or default to 0
     let b = b || 0;
@@ -1860,8 +1828,8 @@ fn add(a: int, b: int?): string {
 }
 
 fn main() throws {
-    io.println(add(1, 2));
-    io.println(add(1, nil));
+    println(add(1, 2));
+    println(add(1, nil));
 }
 ```
 
@@ -1902,8 +1870,6 @@ Keyword arguments (Kw Args) are arguments that are passed by name. They are usef
 Use `name: value = default` to declare a keyword argument, the keyword argument must be after positional arguments.
 
 ```nv,no_run
-use std.io;
-
 fn add(a: int, b: int, mode: string = "+", debug: bool = false): string {
     if (debug) {
         return `a: ${a}, b: ${b}, mode: ${mode}`;
@@ -1921,12 +1887,12 @@ fn add(a: int, b: int, mode: string = "+", debug: bool = false): string {
 }
 
 fn main() throws {
-    io.println(add(1, 2));
-    io.println(add(1, 2, mode: "+"));
-    io.println(add(1, 2, mode: "-"));
-    io.println(add(1, 2, mode: "-", debug: true));
-    io.println(add(1, 2, debug: true, mode: "+"));
-    io.println(add(1, 2, debug: true));
+    println(add(1, 2));
+    println(add(1, 2, mode: "+"));
+    println(add(1, 2, mode: "-"));
+    println(add(1, 2, mode: "-", debug: true));
+    println(add(1, 2, debug: true, mode: "+"));
+    println(add(1, 2, debug: true));
 }
 ```
 
@@ -1964,12 +1930,12 @@ impl User {
 }
 
 fn main() throws {
-	let add_fn = add;
-	io.println(add_fn(1, 2));
+	  let add_fn = add;
+	  println(add_fn(1, 2));
 
     let user = User { name: "Navi" };
     let say_fn = user.say;
-    io.println(say_fn());
+    println(say_fn());
 }
 ```
 
@@ -2037,16 +2003,14 @@ If not, don't use it, the [value || default](#unwrap-or-default) is a better way
 :::
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     let name: string? = "Navi";
     // This is ok.
-    io.println(name!);
+    println(name!);
 
     let name: string? = nil;
     // This will cause a panic.
-    io.println(name!);
+    println(name!);
 }
 ```
 
@@ -2100,7 +2064,7 @@ By default, `throw` can throw with a [string] or a custom error type that implem
 Because Navi has implemented the `Error` interface for [string], you can throw a [string] directly.
 :::
 
-```nv
+```nv, ignore
 pub interface Error {
     fn error(self): string;
 }
@@ -2148,8 +2112,6 @@ fn hello_with_custom_error(name: string): string throws MyError {
 For example:
 
 ```nv,no_run
-use std.io;
-
 fn hello(name: string): string throws {
     if (name == "Navi") {
         throw "name can't be Navi";
@@ -2159,7 +2121,7 @@ fn hello(name: string): string throws {
 
 fn main() throws {
     let result = try? hello("Navi");
-    io.println(`${result || ""}`);
+    println(`${result || ""}`);
 }
 ```
 
@@ -2196,10 +2158,10 @@ fn hello(name: string): string throws {
 
 do {
     let result = try hello("Navi");
-    io.println(result);
+    println(result);
     let result1 = try hello("Sunli");
 } catch (e) {
-    io.println(e.error());
+    println(e.error());
 } catch (e: MyError) {
     // ...
 } finally {
@@ -2478,12 +2440,12 @@ use std.io;
 
 fn main() throws {
     defer {
-        io.println("defer 1");
+        println("defer 1");
     }
     defer {
-        io.println("defer 2");
+        println("defer 2");
     }
-    io.println("Hello");
+    println("Hello");
 }
 ```
 
@@ -2501,13 +2463,11 @@ defer 1
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
 
 ```nv,no_run
-use std.io;
-
 fn main() throws {
     spawn {
-        io.println("Hello");
+        println("Hello");
     }
-    io.println("World");
+    println("World");
 }
 ```
 

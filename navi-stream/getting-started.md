@@ -34,10 +34,9 @@ Make a sample JSON data named `data.json`, you can download this sample file: ht
 
 Then you can use it in Navi file, `main.nv`:
 
-```navi
+```nv
 // Import `macd.nvs` file as module
 use macd;
-use std.io;
 use std.fs;
 use std.json;
 
@@ -80,7 +79,7 @@ fn main() throws {
     for (let candlestick in candlesticks) {
         // Execute Navi Stream
         t.execute(time: candlestick.time, close: candlestick.close);
-        io.println(candlestick.to_string());
+        println(candlestick.to_string());
     }
 }
 

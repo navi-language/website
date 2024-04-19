@@ -36,10 +36,8 @@ curl -sSL https://navi-lang.org/install | bash
 The following `main.nv` is a simple "Hello, World!" program in Navi:
 
 ```nv
-use std.io;
-
 fn main() throws {
-    io.println("Hello, World!");
+    println("Hello, World!");
 }
 ```
 
