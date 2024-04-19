@@ -11,11 +11,11 @@ use navi.{Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type}
 use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_slug, replace_headings};
 
-let repo = "navi-language/navi";
-let stdlib_target = "stdlib";
-let pkg_target = "pkg";
-let INDOC_HEADING_LEVEL = 2;
+const STDLIB_TARGET = "stdlib";
+const PKG_TARGET = "pkg";
+const INDOC_HEADING_LEVEL = 2;
 
+/// The logger instance output to stdout with trace level.
 const log = Logger.new(io.stdout(), max_level: Level.Trace);
 
 fn main() throws {
@@ -23,9 +23,9 @@ fn main() throws {
     let start = DateTime.now();
 
     let parsed = try parse_stdlib("/Users/jason/github/navi-website/stdlib.json");
-    try generate_modules(stdlib_target, parsed.stdlib);
+    try generate_modules(STDLIB_TARGET, parsed.stdlib);
     log.info("");
-    try generate_modules(pkg_target, parsed.pkg);
+    try generate_modules(PKG_TARGET, parsed.pkg);
 
     let duration = DateTime.now().sub(start);
     log.info(`Stdlib docs generated. ${duration}`);
@@ -506,10 +506,10 @@ fn generate_function(f: Function): string {
             args_str.write("self");
         } else {
             switch (arg.kind) {
-            case "arbitrary":
-                args_str.write(`${arg.name}: ..${arg._type}${default_value}`);
-            default:
-                args_str.write(`${arg.name}: ${arg._type}${default_value}`);
+                case "arbitrary":
+                    args_str.write(`${arg.name}: ..${arg._type}${default_value}`);
+                default:
+                    args_str.write(`${arg.name}: ${arg._type}${default_value}`);
             }
         }
 

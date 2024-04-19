@@ -17,6 +17,14 @@ const naviStreamSidebar = generateSidebar({
   includeRootIndexFile: true,
 });
 
+const guidesSidebar = generateSidebar({
+  scanStartPath: "guides",
+  resolvePath: "/guides/",
+  useTitleFromFileHeading: true,
+  sortMenusByFrontmatterOrder: true,
+  includeRootIndexFile: false,
+});
+
 const isStdlib = (module: string) => {
   return (
     module == "lang" ||
@@ -73,6 +81,7 @@ export default withMermaid(
           link: "/installation",
         },
         { text: "Learn", link: "/learn" },
+        { text: "Guides", link: "/guides/" },
         { text: "Stdlib", link: "/stdlib/" },
         { text: "Pkg", link: "/pkg/" },
         { text: "Navi Stream", link: "/navi-stream/" },
@@ -106,6 +115,10 @@ export default withMermaid(
       ],
 
       sidebar: {
+        "/guides/": {
+          base: "/guides/",
+          items: guidesSidebar as any,
+        },
         "/stdlib/": stdlibItems,
         "/pkg/": pkgItems,
         "/navi-stream/": [
