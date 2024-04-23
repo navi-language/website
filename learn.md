@@ -2343,13 +2343,20 @@ fn main() throws {
 }
 ```
 
-## Type alias
+## Type
 
-Use `type` keyword to create a type alias.
+We have `type` and `type alias` in Navi to create a type based on an existing type.
+
+- `type` is used to create a new type, user can not see the original type, and the new type not have any method of the original type.
+  And we can use `as` the convert to the original type with zero cost.
+- `type alias` is used to create a new name for an existing type, the new name is acutally the same as the original type.
+
+Use `type` keyword to create a newtype based on an existing type.
 
 ```nv
-type Key = string;
-type Value = int;
+newtype
+type alias Key = string;
+type alias Value = int;
 
 type MyInfo = <Key, Value>;
 
@@ -2360,6 +2367,14 @@ let info: MyInfo = {
 
 assert_eq info["foo"], 1;
 assert_eq info["bar"], 2;
+```
+
+Use `type alias` to create a new name for an existing type.
+
+```nv
+type alias MyString = string;
+
+let name: MyString = "Navi";
 ```
 
 ### Type Implementation

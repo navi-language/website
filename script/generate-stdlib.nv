@@ -7,7 +7,7 @@ use std.path;
 use std.time.{self, DateTime};
 
 use markdown.{bold, bulleted_list, callout, codeblock, frontmatter, heading, link, ordered_list};
-use navi.{Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
+use navi.{Assign, Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
 use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_slug, replace_headings};
 
@@ -84,6 +84,7 @@ fn build_body(module: Module): string {
     buf.write(heading(module.name, level: 1));
 
     buf.write(generate_type_toc(module, module.types));
+    buf.write(generate_assign_toc(module, module.assigns));
     buf.write(generate_enum_toc(module, module.enums));
     buf.write(generate_interface_toc(module, module.interfaces));
     buf.write(generate_struct_toc(module, module.structs));
@@ -96,6 +97,7 @@ fn build_body(module: Module): string {
     buf.write(generate_types(module, module.types, links));
     buf.write(generate_enums(module, module.enums, links));
     buf.write(generate_interfaces(module, module.interfaces, links));
+    buf.write(generate_assigns(module, module.assigns, links));
     buf.write(generate_structs(module, module.structs, links));
 
     buf.writeln("");
@@ -191,6 +193,52 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
         let _enum = enums[name];
         let anchor = format_anchor(`${module.name}.${name}`);
         result.push(link(name, `#${anchor}`));
+    }
+
+    buf.write(result.join(", "));
+    buf.write("\n");
+
+    return buf.to_string("");
+}
+
+fn generate_assigns(module: Module, assigns: <string, Assign>, links: StringBuffer): string {
+    let buf = StringBuffer.new();
+
+    let assign_names = assigns.keys();
+    assign_names.sort();
+
+    for (let assign_name in assign_names) {
+        const info = assigns[assign_name];
+
+        buf.writeln(heading(assign_name, level: 2, anchor: `${module.name}.${assign_name}`));
+        buf.writeln(codeblock(info.source));
+
+        if (let doc = info.doc) {
+            buf.writeln(replace_headings(doc, level: 3));
+        } else {
+            buf.writeln(`No documentation.`);
+        }
+    }
+
+    return buf.to_string("");
+}
+
+fn generate_assign_toc(module: Module, assigns: <string, Assign>): string {
+    if (assigns.len() == 0) {
+        return "";
+    }
+
+    let assign_names = assigns.keys();
+    assign_names.sort();
+
+    let buf = StringBuffer.new();
+    buf.writeln(bold("Consts"));
+    buf.writeln("");
+
+    let result: [string] = {};
+    for (let assign_name in assign_names) {
+        let anchor = format_anchor(`${module.name}.${assign_name}`);
+        result.push(link(assign_name, `#${anchor}`));
     }
 
     buf.write(result.join(", "));

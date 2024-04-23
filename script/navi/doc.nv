@@ -8,6 +8,7 @@ pub struct Module {
     pub interfaces: <string, Interface> = {},
     pub enums: <string, Enum> = {},
     pub types: <string, Type> = {},
+    pub assigns: <string, Assign> = {},
 }
 
 /// key is the module name
@@ -18,6 +19,15 @@ pub struct Type {
     pub name: string = "",
     pub doc: string? = nil,
     pub source_type: string = "",
+    pub source: string = "",
+}
+
+pub struct Assign {
+    pub declare: string = "",
+    pub name: string = "",
+    #[serde(rename = "type")]
+    pub _type: string = "",
+    pub doc: string? = nil,
     pub source: string = "",
 }
 
