@@ -9,7 +9,7 @@ use std.time.{self, DateTime};
 use markdown.{bold, bulleted_list, callout, codeblock, frontmatter, heading, link, ordered_list};
 use navi.{Assign, Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
 use string_buffer.{StringBuffer};
-use utils.{escape_html, format_anchor, format_slug, replace_headings};
+use utils.{escape_html, format_anchor, format_doc, format_slug};
 
 const STDLIB_TARGET = "stdlib";
 const PKG_TARGET = "pkg";
@@ -167,7 +167,7 @@ fn generate_enums(module: Module, enums: <string, Enum>, links: StringBuffer): s
         buf.writeln(codeblock(info.source));
 
         if (let doc = info.doc) {
-            buf.writeln(replace_headings(doc, level: 3));
+            buf.writeln(format_doc(doc, level: 3));
         } else {
             buf.writeln(`No documentation.`);
         }
@@ -214,7 +214,7 @@ fn generate_assigns(module: Module, assigns: <string, Assign>, links: StringBuff
         buf.writeln(codeblock(info.source));
 
         if (let doc = info.doc) {
-            buf.writeln(replace_headings(doc, level: 3));
+            buf.writeln(format_doc(doc, level: 3));
         } else {
             buf.writeln(`No documentation.`);
         }
@@ -262,7 +262,7 @@ fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: S
         buf.write(codeblock(info.source));
 
         if (let doc = info.doc) {
-            buf.writeln(replace_headings(doc, level: 3));
+            buf.writeln(format_doc(doc, level: 3));
         } else {
             buf.writeln(`No documentation.`);
         }
@@ -317,7 +317,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.writeln(codeblock(info.source));
 
         if (let doc = info.doc) {
-            buf.writeln(replace_headings(doc, level: 4));
+            buf.writeln(format_doc(doc, level: 4));
         } else {
             buf.writeln(`No documentation.`);
         }
@@ -348,7 +348,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
 
                 if (prop.doc != nil) {
                     buf.writeln("");
-                    buf.writeln(`    ` + replace_headings(prop.doc, level: 3));
+                    buf.writeln(`    ` + format_doc(prop.doc, level: 3));
                 }
             }
 
@@ -516,7 +516,7 @@ fn generate_function_doc(
     }
 
     if (let doc = f.desc.doc) {
-        buf.write(replace_headings(doc, level: level + 1));
+        buf.write(format_doc(doc, level: level + 1));
     } else {
         buf.write("_No documentation._");
     }

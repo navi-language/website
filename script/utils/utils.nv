@@ -3,10 +3,23 @@ use std.regex.{Captures, Regex};
 
 let heading_re = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
 
+/// Format Navi markdown doc with a specific heading level.
+///
+/// And replace all codeblock language with `nv`.
+pub fn format_doc(doc: string?, level: int = 1): string {
+    if (doc == nil) {
+        return "";
+    }
+
+    let doc = replace_headings(doc, level:);
+    let doc = replace_codeblock_language(doc);
+    return doc;
+}
+
 /// Replace all headings in a markdown document with headings of a different level.
 ///
 /// `level` - The parent level.
-pub fn replace_headings(body: string?, level: int = 1): string {
+fn replace_headings(body: string?, level: int = 1): string {
     if (body == nil) {
         return "";
     }
@@ -79,6 +92,15 @@ pub fn format_anchor(text: string?): string {
     return buf.to_string();
 }
 
+const CODEBLOCK_LANGUAGE_RE = try! Regex.new("```(nv|navi)(,.+?)\n");
+
+/// Replace all language in codeblock
+///
+/// From: `nv,no_run` to `nv`
+fn replace_codeblock_language(code: string): string {
+    return CODEBLOCK_LANGUAGE_RE.replace_all(code, "```nv\n");
+}
+
 test "replace_headings" {
     let raw = "# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3";
     assert_eq replace_headings(raw, level: 2), "### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3";
@@ -110,6 +132,13 @@ test "escape_html" {
     let raw = "<div>foo & bar</div>";
     let expected = "&lt;div&gt;foo &amp; bar&lt;/div&gt;";
     let result = escape_html(raw);
+    assert_eq result, expected;
+}
+
+test "replace_codeblock_language" {
+    let raw = "```nv,no_run\nlet a = 1;\n```\n\n```navi, ignore\nlet a = 1;\n```\n";
+    let expected = "```nv\nlet a = 1;\n```\n\n```nv\nlet a = 1;\n```\n";
+    let result = replace_codeblock_language(raw);
     assert_eq result, expected;
 }
 
