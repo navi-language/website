@@ -34,7 +34,7 @@ Make a sample JSON data named `data.json`, you can download this sample file: ht
 
 Then you can use it in Navi file, `main.nv`:
 
-```nv
+```nv, no_run
 // Import `macd.nvs` file as module
 use macd;
 use std.fs;
@@ -60,7 +60,7 @@ fn main() throws {
     let f = fs.open("data.json");
     let data = json.parse(f.read_to_string());
 
-    let candlesticks = [Candlestick] {};
+    let candlesticks: [Candlestick] = [];
 
     for (let item in data.array()!) {
         candlesticks.push(Candlestick {
@@ -110,11 +110,11 @@ Compile the indicator to get a `Program`, and then use the `Program::instantiate
 
 Now we input the first K line, the period volume is `10`:
 
-```nv
+```nv, no_run
 // total_volume.nv
 use total_volume;
 instance.set_candlestick(Candlestick { time: 1, volume: 10, .. });
-instance.calculate(StepMode::Step);
+instance.calculate(StepMode.Step);
 ```
 
 We can get result of:

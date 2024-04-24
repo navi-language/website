@@ -57,7 +57,7 @@ fn generate_modules(target: string, modules: <string, Module>) throws {
 
 fn build_module_index(stdlib: Stdlib): string {
     let buf = StringBuffer.new();
-    let names = [string] {};
+    let names: [string] = [];
     for (let fname, module in stdlib) {
         names.push(fname);
     }
@@ -141,7 +141,7 @@ fn generate_type_toc(module: Module, types: <string, Type>): string {
     buf.writeln(bold("Types"));
     buf.writeln("");
 
-    let result: [string] = {};
+    let result: [string] = [];
     for (let name in type_names) {
         let _type = types[name];
         let anchor = format_anchor(`${module.name}.${_type.name}`);
@@ -188,7 +188,7 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
     buf.writeln(bold("Enums"));
     buf.writeln("");
 
-    let result: [string] = {};
+    let result: [string] = [];
     for (let name in enum_names) {
         let _enum = enums[name];
         let anchor = format_anchor(`${module.name}.${name}`);
@@ -235,7 +235,7 @@ fn generate_assign_toc(module: Module, assigns: <string, Assign>): string {
     buf.writeln(bold("Consts"));
     buf.writeln("");
 
-    let result: [string] = {};
+    let result: [string] = [];
     for (let assign_name in assign_names) {
         let anchor = format_anchor(`${module.name}.${assign_name}`);
         result.push(link(assign_name, `#${anchor}`));
@@ -291,7 +291,7 @@ fn generate_interface_toc(module: Module, interfaces: <string, Interface>): stri
     buf.writeln(bold("Interfaces"));
     buf.writeln("");
 
-    let result: [string] = {};
+    let result: [string] = [];
     for (let name in names) {
         let _interface = interfaces[name];
         let anchor = format_anchor(`${module.name}.${name}`);
@@ -331,7 +331,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
             for (let name in names) {
                 let prop = info.properties[name];
 
-                let prop_suffix: [string] = {};
+                let prop_suffix: [string] = [];
                 if (prop.getter) {
                     prop_suffix.push("get");
                 }
@@ -356,8 +356,8 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         }
 
         if (info.methods.len() > 0) {
-            let static_methods = [string] {};
-            let instance_methods = [string] {};
+            let static_methods: [string] = [];
+            let instance_methods: [string] = [];
 
             for (let name, func in info.methods) {
                 if (func.kind == "static_method") {
@@ -411,7 +411,7 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
     buf.writeln(bold("Structs"));
     buf.writeln("");
 
-    let result: [string] = {};
+    let result: [string] = [];
     for (let name in struct_names) {
         let _struct = structs[name];
         let anchor = format_anchor(`${module.name}.${_struct.name}`);
@@ -433,13 +433,13 @@ fn generate_module_function_toc(module: Module, functions: [Function]): string {
     buf.writeln(bold("Module Functions"));
     buf.writeln("");
 
-    let names: [string] = {};
+    let names: [string] = [];
     for (let _fn in functions) {
         names.push(_fn.name);
     }
     names.sort();
 
-    let fn_names: [string] = {};
+    let fn_names: [string] = [];
     for (let name in names) {
         fn_names.push(link(name, `#${name}`));
     }
@@ -455,7 +455,7 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
         buf.writeln(bold("Properties"));
         buf.writeln("");
 
-        let prop_names: [string] = {};
+        let prop_names: [string] = [];
         for (let name, prop in info.properties) {
             prop_names.push(link(name, `#${struct_name}#${name}`));
         }
@@ -467,14 +467,14 @@ fn generate_struct_member_toc(struct_name: string, info: Struct): string {
         buf.writeln(bold("Methods"));
         buf.writeln("");
 
-        let methods = [string] {};
+        let methods: [string] = [];
 
         for (let name, func in info.methods) {
             methods.push(name);
         }
         methods.sort();
 
-        let method_links: [string] = {};
+        let method_links: [string] = [];
         for (let name in methods) {
             let func = info.methods[name];
             let anchor = format_anchor(`${struct_name}.${name}`);
@@ -583,7 +583,7 @@ test "generate_function" {
         name: "say_name",
         desc: {
             doc: "Say hello to name.",
-            args: {
+            args: [
                 { name: "self", _type: "self" },
                 { name: "name", _type: "string" },
                 {
@@ -591,8 +591,8 @@ test "generate_function" {
                     _type: "string",
                     default_value: `"!"`
                 }
-            },
-            returns: { "string" },
+            ],
+            returns: ["string"],
             deprecated: "Use `say_name2` instead.",
             _async: true
         },
@@ -602,10 +602,10 @@ test "generate_function" {
     assert_eq generate_function(func), `pub async fn say_name(self, name: string, suffix: string = "!"): string`;
 
     func.desc._async = false;
-    func.desc._throws = [string] {};
+    func.desc._throws = [];
     assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!"): string throws`;
 
-    func.desc._throws = [string] { "Error1", "Error2" };
-    func.desc.returns = [string] {};
+    func.desc._throws = ["Error1", "Error2"];
+    func.desc.returns = [];
     assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
 }

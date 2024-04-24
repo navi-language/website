@@ -113,11 +113,11 @@ test "link" {
 }
 
 test "bulleted_list" {
-    assert_eq bulleted_list({ "hello", "world" }), "- hello\n- world\n";
+    assert_eq bulleted_list(["hello", "world"]), "- hello\n- world\n";
 }
 
 test "ordered_list" {
-    assert_eq ordered_list({ "hello", "world" }), "1. hello\n2. world\n";
+    assert_eq ordered_list(["hello", "world"]), "1. hello\n2. world\n";
 }
 
 test "bold" {

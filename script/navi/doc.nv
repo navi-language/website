@@ -3,7 +3,7 @@ use std.json;
 
 pub struct Module {
     pub name: string = "",
-    pub functions: [Function] = {},
+    pub functions: [Function] = [],
     pub structs: <string, Struct> = {},
     pub interfaces: <string, Interface> = {},
     pub enums: <string, Enum> = {},
@@ -61,7 +61,7 @@ pub struct FunctionDesc {
     pub deprecated: string? = nil,
     #[serde(rename = "async")]
     pub _async: bool = false,
-    pub args: [Argument] = {},
+    pub args: [Argument] = [],
     pub returns: [string]? = nil,
     pub doc: string? = nil,
     #[serde(rename = "throws")]
@@ -79,7 +79,7 @@ pub struct Argument {
 pub struct Enum {
     pub name: string = "",
     pub doc: string? = nil,
-    pub items: [EnumItem] = {},
+    pub items: [EnumItem] = [],
     pub source: string = "",
 }
 

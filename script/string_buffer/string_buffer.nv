@@ -2,13 +2,13 @@
 ///
 /// This is different from `std.io.StringBuffer`.
 pub struct StringBuffer {
-    buffer: [string],
-    length: int
+    buffer: [string] = [],
+    length: int = 0,
 }
 
 impl StringBuffer {
     pub fn new(): StringBuffer {
-        return StringBuffer { buffer: {}, length: 0 };
+        return StringBuffer {};
     }
 
     pub fn write(self, s: StringBuffer | string) {

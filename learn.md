@@ -819,7 +819,9 @@ All 2 tests 2 passed finished in 0.02s.
 
 Array is a collection of items, in Navi array is a mutable collection.
 
-Use `[type] {}` to declare an array, every array must have a type, you can't create an array without a type.
+Use `[]` to declare an array, every array must have a type, you can't create an array without a type.
+
+The left side array type is optional, if array init with items, the type will be inferred.
 
 ```nv
 struct Item {
@@ -827,8 +829,9 @@ struct Item {
 }
 
 test "array" {
-    let a: [int] = [int] { 1, 2, 3 };
-    let b = [string] { "Rust", "Navi" };
+    let a = [1, 2, 3];
+    let b = ["Rust", "Navi"];
+    let c: [string] = ["Foo"];
 
     assert a.len() == 3;
     assert b.len() == 2;
@@ -842,27 +845,20 @@ test "array" {
     assert a[1] == 3;
 
     // Init a struct array
-    let items = [Item] {
-        Item { name: "foo" },
-        Item { name: "bar" },
-        Item { name: "baz" }
-    };
+    let items: [Item] = [
+        { name: "foo" },
+        { name: "bar" },
+        { name: "baz" }
+    ];
     assert_eq items[2].name, "baz";
-
-
 }
 ```
 
-If you declare the array type, then you can assign an array without the type prefix.
+If you init a empty array, you must declare the type.
 
 ```nv
-let items: [string] = { "Rust", "Navi" };
-
-fn receive_method(items: [string]) {
-    // ...
-}
-
-receive_method({ "Rust", "Navi" });
+let items: [string] = [];
+let items: [int] = [];
 ```
 
 ### Get & Set Item
@@ -870,7 +866,7 @@ receive_method({ "Rust", "Navi" });
 Use `[idx]`, `[idx]=` to get and set an item from the array, the index must be an [int] type.
 
 ```nv,should_panic
-let a = [string] { "Rust", "Navi" };
+let a = ["Rust", "Navi"];
 
 a[0]; // "Rust"
 a[1]; // "Navi"
@@ -886,7 +882,7 @@ There are `push`, `pop`, `shift`, `unshift` ... methods in Array, you can use th
 
 ```nv
 test "push | pop" {
-    let items = [string] {};
+    let items: [string] = [];
     items.push("foo");
     items.push("bar");
 
@@ -900,13 +896,12 @@ test "push | pop" {
 }
 
 test "shift | unshift" {
-    let items = [string] {};
+    let items: [string] = [];
     items.unshift("foo");
     items.unshift("bar");
 
     assert_eq items.len(), 2;
-    assert_eq items[0], "bar";
-    assert_eq items[1], "foo";
+    assert_eq items, ["bar", "foo"];
 
     assert_eq items.shift(), "bar";
     assert_eq items.len(), 1;
@@ -914,7 +909,7 @@ test "shift | unshift" {
     assert_eq items.len(), 0;
     assert_eq items.shift(), nil;
 
-    let items = [string] { "foo", "bar" };
+    let items = ["foo", "bar"];
     assert_eq items.shift(), "foo";
     assert_eq items.len(), 1;
     assert_eq items.shift(), "bar";
@@ -928,14 +923,51 @@ test "shift | unshift" {
 The array can be nested.
 
 ```nv
-let items = [[string]] {
-    [string] { "foo", "bar" },
-    [string] { "baz", "qux" }
-};
-let numbers = [[int]] {
-    [int] { 1, 2 },
-    [int] { 3, 4 }
-};
+let items: [[string]] = [
+    ["foo", "bar"],
+    ["baz", "qux"],
+];
+let numbers = [[1, 2], [3, 4]];
+```
+
+## Map
+
+Map is a collection of key-value pairs, in Navi map is a mutable collection.
+
+Use `{}` to declare a map, every map must have a type, you can't create a map without a type.
+
+You use use any built-in type as a key, and any type as a value.
+
+```nv
+let a: <string, string> = {"name": "Navi", "version": "0.1.0"};
+let b: <int, float> = {1: 1.0, 2: 2.0};
+```
+
+If you init a empty map, you must declare the type, otherwise the type will be inferred.
+
+```nv
+let a: <string, string> = {};
+let a: <int, string> = {};
+
+let c = {1: "foo", 2: "bar"};
+let d = {"name": "Navi", "version": "0.1.0"};
+```
+
+### Get & Set Item
+
+Use `[key]`, `[key]=` to get and set an item from the map, the key must be a type that can be compared.
+
+```nv
+let items = {"name": "Navi", "version": "0.1.0"};
+
+assert_eq items["name"], "Navi";
+assert_eq items["version"], "0.1.0";
+assert_eq items.len(), 2;
+assert_eq items.keys(), ["name", "version"];
+assert_eq items.values(), ["Navi", "0.1.0"];
+
+items["name"] = "Navi 1";
+assert_eq items["name"], "Navi 1";
 ```
 
 ## Struct
@@ -963,7 +995,7 @@ struct User {
 struct Profile {
     bio: string?,
     city: string?,
-    tags: [string] = [string] {},
+    tags: [string] = [],
 }
 ```
 
@@ -1544,8 +1576,8 @@ test "type_name" {
     assert_eq type_name("hello"), "string";
     assert_eq type_name(3.14), "float";
     assert_eq type_name(true), "bool";
-    assert_eq type_name(<string, int> {}), "map";
-    assert_eq type_name([int] {}), "unknown";
+    assert_eq type_name({"foo": 1}), "map";
+    assert_eq type_name(["foo"]), "unknown";
 }
 ```
 
@@ -1657,11 +1689,11 @@ n: 3
 Use the `step` method to create a new range with a step.
 
 ```nv
-let items = [int] {};
+let items: [int] = [];
 for (let i in (1..10).step(2)) {
     items.push(i);
 }
-assert_eq items, [int] { 1, 3, 5, 7, 9 };
+assert_eq items, [1, 3, 5, 7, 9];
 ```
 
 ### Iter an Array
@@ -1670,7 +1702,7 @@ The `for (let item in array)` statement is used to iterate over an [array].
 
 ```nv,no_run
 fn main() throws {
-    let items = [string] { "foo", "bar", "baz" };
+    let items = ["foo", "bar", "baz"];
     for (let item in items) {
         println(item);
     }
@@ -1691,12 +1723,12 @@ baz
 The `for (let k, v in map)` statement is used to iterate over a [map].
 
 ```nv
-let items = <string, string> {
+let items = {
     "title": "Navi",
     "url": "https://navi-lang.org"
 };
 
-let result = [string] {};
+let result: [string] = [];
 for (let k, v in items) {
     result.push(`${k}: ${v}`);
 }
@@ -1859,7 +1891,7 @@ fn add(one: int, others: ..int): int {
 
 assert_eq add(1, 2, 3, 4, 5), 15;
 
-let others = [int] { 2, 3, 4, 5 };
+let others = [2, 3, 4, 5];
 assert_eq add(1, ..others), 15;
 ```
 
@@ -2354,7 +2386,6 @@ We have `type` and `type alias` in Navi to create a type based on an existing ty
 Use `type` keyword to create a newtype based on an existing type.
 
 ```nv
-newtype
 type alias Key = string;
 type alias Value = int;
 

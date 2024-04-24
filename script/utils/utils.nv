@@ -1,7 +1,18 @@
 use std.io.{self, StringBuffer};
 use std.regex.{Captures, Regex};
 
-let heading_re = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
+const HEADING_RE = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
+const SLUGIFY_RE = try! Regex.new(`[^\\w\\-_]`);
+const CODEBLOCK_LANGUAGE_RE = try! Regex.new("```(nv|navi)(,.+?)\n");
+
+const ANCHOR_MAPS = {
+    "[": "%5B",
+    "]": "%5D",
+    "<": "%3C",
+    ">": "%3E",
+    "%": "%25",
+    " ": "-"
+};
 
 /// Format Navi markdown doc with a specific heading level.
 ///
@@ -25,7 +36,7 @@ fn replace_headings(body: string?, level: int = 1): string {
     }
 
     // Get the root heading level in the body
-    let all_headings = heading_re.find_all(body!);
+    let all_headings = HEADING_RE.find_all(body!);
     let root_level = 0;
     for (let m in all_headings) {
         let indent_level = m.text.len();
@@ -35,7 +46,7 @@ fn replace_headings(body: string?, level: int = 1): string {
     }
     let offset_level = level + 1 - root_level;
 
-    let result = heading_re.replace_all_with(body!, |caps| {
+    let result = HEADING_RE.replace_all_with(body!, |caps| {
         let p0 = caps?.get(0)!.text;
         let p1 = caps?.get(1)!.text;
         let indent_level = p1.len() + offset_level + 1;
@@ -54,7 +65,6 @@ pub fn escape_html(text: string?): string {
     return text!.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 }
 
-let SLUGIFY_RE = try! Regex.new(`[^\\w\\-_]`);
 pub fn format_slug(text: string?): string {
     if (text == nil) {
         return "";
@@ -62,15 +72,6 @@ pub fn format_slug(text: string?): string {
 
     return SLUGIFY_RE.replace_all(text!, "_");
 }
-
-let ANCHOR_MAPS = <string, string> {
-    "[": "%5B",
-    "]": "%5D",
-    "<": "%3C",
-    ">": "%3E",
-    "%": "%25",
-    " ": "-"
-};
 
 /// Replace all non-alphanumeric characters with `-`
 ///
@@ -91,8 +92,6 @@ pub fn format_anchor(text: string?): string {
 
     return buf.to_string();
 }
-
-const CODEBLOCK_LANGUAGE_RE = try! Regex.new("```(nv|navi)(,.+?)\n");
 
 /// Replace all language in codeblock
 ///
