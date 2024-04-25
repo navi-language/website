@@ -7,7 +7,19 @@ use std.path;
 use std.time.{self, DateTime};
 
 use markdown.{bold, bulleted_list, callout, codeblock, frontmatter, heading, link, ordered_list};
-use navi.{Assign, Enum, Function, Interface, Module, parse_stdlib, Stdlib, Struct, Type};
+use navi.{
+    Assign,
+    Enum,
+    Function,
+    Interface,
+    InterfaceMethods,
+    Methods,
+    Module,
+    parse_stdlib,
+    Stdlib,
+    Struct,
+    Type
+};
 use string_buffer.{StringBuffer};
 use utils.{escape_html, format_anchor, format_doc, format_slug};
 
@@ -76,7 +88,7 @@ fn build_body(module: Module): string {
     // Frontmatter
     // #prelude is a special module name
     let title = module.name.replace("#", "");
-    buf.writeln(frontmatter({ "title": title, "editLink": false }));
+    buf.writeln(frontmatter({"title": title, "editLink": false}));
 
     // Import Component
     buf.write(`<script setup>\nimport FunctionTitle from '../components/FunctionTitle.vue'\n</script>\n`);
@@ -122,6 +134,96 @@ fn generate_types(module: Module, types: <string, Type>, links: StringBuffer): s
         buf.writeln(codeblock(_type.source));
         buf.writeln(_type.doc.unwrap_or("No documentation available."));
         buf.writeln("");
+
+        buf.writeln(generate_methods(name, _type.methods, links, level: 3));
+        buf.writeln(generate_interface_methods(name, _type.interface_methods, links, level: 3));
+    }
+
+    return buf.to_string("");
+}
+
+/// Generate methods
+fn generate_methods(
+    type_name: string,
+    methods: Methods,
+    links: StringBuffer,
+    level: int = 3,
+    title: string = "Methods"
+): string {
+    if (methods.len() == 0) {
+        return "";
+    }
+
+    let buf = StringBuffer.new();
+
+    buf.writeln(bold(title));
+
+    let static_methods: [string] = [];
+    let instance_methods: [string] = [];
+
+    for (let name, func in methods) {
+        if (func.kind == "static_method") {
+            static_methods.push(name);
+        } else {
+            instance_methods.push(name);
+        }
+    }
+    static_methods.sort();
+    instance_methods.sort();
+
+    for (let name in static_methods) {
+        let func = methods[name];
+        buf.write(generate_function_doc(
+            func,
+            links,
+            level:,
+            anchor_prefix: `${type_name}.`,
+            kind: "static_method"
+        ));
+    }
+
+    for (let name in instance_methods) {
+        let func = methods[name];
+        buf.write(generate_function_doc(
+            func,
+            links,
+            level:,
+            anchor_prefix: `${type_name}#`,
+            kind: "method"
+        ));
+    }
+    buf.writeln("");
+
+    return buf.to_string("");
+}
+
+/// Generate interface methods
+fn generate_interface_methods(
+    type_name: string,
+    interface_methods: InterfaceMethods,
+    links: StringBuffer,
+    level: int = 3
+): string {
+    if (interface_methods.len() == 0) {
+        return "";
+    }
+
+    let buf = StringBuffer.new();
+    buf.writeln(bold("Interface Implementations"));
+    buf.writeln("");
+
+    let interface_names = interface_methods.keys();
+    interface_names.sort();
+
+    for (let interface_name in interface_names) {
+        let methods = interface_methods[interface_name];
+        buf.writeln(generate_methods(
+            type_name,
+            methods,
+            links,
+            level:,
+            title: `impl ${interface_name} for ${type_name}`
+        ));
     }
 
     return buf.to_string("");
@@ -171,6 +273,9 @@ fn generate_enums(module: Module, enums: <string, Enum>, links: StringBuffer): s
         } else {
             buf.writeln(`No documentation.`);
         }
+
+        buf.writeln(generate_methods(info.name, info.methods, links, level: 3));
+        buf.writeln(generate_interface_methods(info.name, info.interface_methods, links, level: 3));
     }
 
     return buf.to_string("");
@@ -355,43 +460,8 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
             buf.write("\n");
         }
 
-        if (info.methods.len() > 0) {
-            let static_methods: [string] = [];
-            let instance_methods: [string] = [];
-
-            for (let name, func in info.methods) {
-                if (func.kind == "static_method") {
-                    static_methods.push(name);
-                } else {
-                    instance_methods.push(name);
-                }
-            }
-            static_methods.sort();
-            instance_methods.sort();
-
-            for (let name in static_methods) {
-                let func = info.methods[name];
-                buf.write(generate_function_doc(
-                    func,
-                    links,
-                    level: 3,
-                    anchor_prefix: `${info.name}.`,
-                    kind: "static_method"
-                ));
-            }
-
-            for (let name in instance_methods) {
-                let func = info.methods[name];
-                buf.write(generate_function_doc(
-                    func,
-                    links,
-                    level: 3,
-                    anchor_prefix: `${info.name}#`,
-                    kind: "method"
-                ));
-            }
-            buf.writeln("");
-        }
+        buf.writeln(generate_methods(info.name, info.methods, links, level: 3));
+        buf.writeln(generate_interface_methods(info.name, info.interface_methods, links, level: 3));
     }
 
     return buf.to_string("\n");
@@ -584,8 +654,8 @@ test "generate_function" {
         desc: {
             doc: "Say hello to name.",
             args: [
-                { name: "self", _type: "self" },
-                { name: "name", _type: "string" },
+                {name: "self", _type: "self"},
+                {name: "name", _type: "string"},
                 {
                     name: "suffix",
                     _type: "string",

@@ -1,6 +1,9 @@
 use std.fs;
 use std.json;
 
+pub type alias Methods = <string, Function>;
+pub type alias InterfaceMethods = <string, Methods>;
+
 pub struct Module {
     pub name: string = "",
     pub functions: [Function] = [],
@@ -20,6 +23,8 @@ pub struct Type {
     pub doc: string? = nil,
     pub source_type: string = "",
     pub source: string = "",
+    pub methods: Methods = {},
+    pub interface_methods: InterfaceMethods = {},
 }
 
 pub struct Assign {
@@ -34,7 +39,8 @@ pub struct Assign {
 pub struct Struct {
     pub name: string = "",
     pub properties: <string, Property> = {},
-    pub methods: <string, Function> = {},
+    pub methods: Methods = {},
+    pub interface_methods: InterfaceMethods = {},
     pub doc: string? = nil,
     pub source: string = "",
 }
@@ -81,6 +87,8 @@ pub struct Enum {
     pub doc: string? = nil,
     pub items: [EnumItem] = [],
     pub source: string = "",
+    pub methods: Methods = {},
+    pub interface_methods: InterfaceMethods = {},
 }
 
 pub struct EnumItem {
