@@ -7,11 +7,11 @@ pub type alias InterfaceMethods = <string, Methods>;
 pub struct Module {
     pub name: string = "",
     pub functions: [Function] = [],
-    pub structs: <string, Struct> = {},
-    pub interfaces: <string, Interface> = {},
-    pub enums: <string, Enum> = {},
-    pub types: <string, Type> = {},
-    pub assigns: <string, Assign> = {},
+    pub structs: <string, Struct> = {:},
+    pub interfaces: <string, Interface> = {:},
+    pub enums: <string, Enum> = {:},
+    pub types: <string, Type> = {:},
+    pub assigns: <string, Assign> = {:},
 }
 
 /// key is the module name
@@ -23,8 +23,8 @@ pub struct Type {
     pub doc: string? = nil,
     pub source_type: string = "",
     pub source: string = "",
-    pub methods: Methods = {},
-    pub interface_methods: InterfaceMethods = {},
+    pub methods: Methods = {:},
+    pub interface_methods: InterfaceMethods = {:},
 }
 
 pub struct Assign {
@@ -38,9 +38,9 @@ pub struct Assign {
 
 pub struct Struct {
     pub name: string = "",
-    pub properties: <string, Property> = {},
-    pub methods: Methods = {},
-    pub interface_methods: InterfaceMethods = {},
+    pub properties: <string, Property> = {:},
+    pub methods: Methods = {:},
+    pub interface_methods: InterfaceMethods = {:},
     pub doc: string? = nil,
     pub source: string = "",
 }
@@ -87,8 +87,8 @@ pub struct Enum {
     pub doc: string? = nil,
     pub items: [EnumItem] = [],
     pub source: string = "",
-    pub methods: Methods = {},
-    pub interface_methods: InterfaceMethods = {},
+    pub methods: Methods = {:},
+    pub interface_methods: InterfaceMethods = {:},
 }
 
 pub struct EnumItem {
@@ -101,13 +101,13 @@ pub struct Interface {
     pub name: string,
     pub doc: string? = nil,
     pub inherits: [string]? = nil,
-    pub methods: <string, Function> = {},
+    pub methods: <string, Function> = {:},
     pub source: string = "",
 }
 
 pub struct Parsed {
-    pub stdlib: <string, Module> = {},
-    pub pkg: <string, Module> = {},
+    pub stdlib: <string, Module> = {:},
+    pub pkg: <string, Module> = {:},
 }
 
 fn is_stdlib(key: string): bool {
