@@ -103,6 +103,7 @@ fn main() throws {
         repo: "new-repo",
         has_issues: true,
     };
+
     let body = try json.to_string(payload);
 
     let res = try http.post("https://api.github.com/repos", headers:, body:);
