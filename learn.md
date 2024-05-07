@@ -285,7 +285,9 @@ let passed = false;
 
 ### String {#string}
 
-String is a UTF-8 string type, and it is immutable in Navi, all string literals are immutable.
+Use double quotes (`""`) or backticks (` `` `) to create a `string` type.
+
+In Navi all strings are **IMMUTABLE**, you can't change the value of a string.
 
 ```nv,no_run
 fn main() throws {
@@ -343,6 +345,8 @@ String interpolation is a way to construct a new String value from a mix of cons
 
 Navi's string interpolation is similar to JavaScript's template literals.
 
+Use ` `` ` to create a string with interpolation, use `${}` to insert a value or expression.
+
 ```nv
 let name = "World";
 let hello = `Hello, ${name}!`;
@@ -385,6 +389,25 @@ Navi has a `char` type, and it represents a single Unicode scalar value.
 let c = 'a';
 let c1: char = '🎉';
 ```
+
+### Byte and Bytes
+
+Navi not have byte type, but you can use `int` to represent a byte value, we can use `b''` to create a byte value from a char.
+
+```nv
+let b = b'a';
+assert_eq b, 97;
+```
+
+Use `b""` to create a `Bytes` type from a string.
+
+```nv
+let bytes = b"Hello, World!";
+// Now `bytes` is a `Bytes` type.
+assert_eq bytes.len(), 13;
+```
+
+See also: [std.io.Bytes](/stdlib/std.io#std.io.Bytes)
 
 ### Assignment
 
