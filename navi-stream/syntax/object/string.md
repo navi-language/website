@@ -13,11 +13,11 @@ let b: string = `你好世界`;
 
 ## String Interpolation
 
-We can use `{}` to interpolate a expression into a string, you must use backticks `` ` `` to create a string literal.
+We can use `${}` to interpolate a expression into a string, you must use backticks `` ` `` to create a string literal.
 
 ```nvs
 let a = 100;
-let b = `hello {a + 2}`;
+let b = `hello ${a + 2}`;
 // b = "hello 102"
 ```
 

@@ -934,7 +934,7 @@ let numbers = [[1, 2], [3, 4]];
 
 Map is a collection of key-value pairs, in Navi map is a mutable collection.
 
-Use `{}` to declare a map, every map must have a type, you can't create a map without a type.
+Use `{:}` to declare a map, every map must have a type, you can't create a map without a type.
 
 You use use any built-in type as a key, and any type as a value.
 
@@ -946,8 +946,8 @@ let b: <int, float> = {1: 1.0, 2: 2.0};
 If you init a empty map, you must declare the type, otherwise the type will be inferred.
 
 ```nv
-let a: <string, string> = {};
-let a: <int, string> = {};
+let a: <string, string> = {:};
+let a: <int, string> = {:};
 
 let c = {1: "foo", 2: "bar"};
 let d = {"name": "Navi", "version": "0.1.0"};
