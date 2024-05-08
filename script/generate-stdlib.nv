@@ -199,10 +199,7 @@ fn generate_methods(
 
 /// Generate interface methods
 fn generate_interface_methods(
-    type_name: string,
-    interface_methods: InterfaceMethods,
-    links: StringBuffer,
-    level: int = 3
+    type_name: string, interface_methods: InterfaceMethods, links: StringBuffer, level: int = 3
 ): string {
     if (interface_methods.len() == 0) {
         return "";
@@ -352,9 +349,9 @@ fn generate_assign_toc(module: Module, assigns: <string, Assign>): string {
     return buf.to_string("");
 }
 
-fn generate_interfaces(module: Module, interfaces: <string, Interface>, links: StringBuffer):
-    string
-{
+fn generate_interfaces(
+    module: Module, interfaces: <string, Interface>, links: StringBuffer
+): string {
     let buf = StringBuffer.new();
 
     let interface_names = interfaces.keys();
@@ -566,7 +563,6 @@ fn generate_function_doc(
     links: StringBuffer,
     level: int = 2,
     anchor_prefix: string = "",
-    /// If is method generated doc will skip first argument.
     kind: string = "function"
 ): string {
     let buf = StringBuffer.new();
@@ -601,15 +597,7 @@ fn generate_function(f: Function): string {
         prefix = "async ";
     }
 
-    let returns_str = "";
-    if (f.desc.returns != nil) {
-        let _returns = f.desc.returns!;
-
-        if (_returns.len() > 0) {
-            returns_str = `: ${_returns.join(", ")}`;
-        }
-    }
-
+    let return_str = f.desc.return_type.map(|s| `: ${s}`) || "";
     let args = f.desc.args;
 
     let args_str = StringBuffer.new();
@@ -634,17 +622,15 @@ fn generate_function(f: Function): string {
     }
     let args_str = args_str.to_string(", ");
 
-    let throws_str = "";
-    if (f.desc._throws != nil) {
-        let _throws = f.desc._throws!;
-        if (_throws.len() > 0) {
-            throws_str = ` throws ${_throws.join(", ")}`;
+    let throws_str = f.desc._throws.map(|items| {
+        if (items.is_empty()) {
+            return " throws";
         } else {
-            throws_str = ` throws`;
+            return ` throws ${items.join(", ")}`;
         }
-    }
+    }) || "";
 
-    return `pub ${prefix}fn ${f.name}(${args_str})${returns_str}${throws_str}`;
+    return `pub ${prefix}fn ${f.name}(${args_str})${return_str}${throws_str}`;
 }
 
 test "generate_function" {
@@ -659,14 +645,14 @@ test "generate_function" {
                 {
                     name: "suffix",
                     _type: "string",
-                    default_value: `"!"`
-                }
+                    default_value: `"!"`,
+                },
             ],
-            returns: ["string"],
+            return_type: "string",
             deprecated: "Use `say_name2` instead.",
-            _async: true
+            _async: true,
         },
-        module: ""
+        module: "",
     };
 
     assert_eq generate_function(func), `pub async fn say_name(self, name: string, suffix: string = "!"): string`;
@@ -676,6 +662,6 @@ test "generate_function" {
     assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!"): string throws`;
 
     func.desc._throws = ["Error1", "Error2"];
-    func.desc.returns = [];
+    func.desc.return_type = nil;
     assert_eq generate_function(func), `pub fn say_name(self, name: string, suffix: string = "!") throws Error1, Error2`;
 }

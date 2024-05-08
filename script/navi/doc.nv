@@ -68,7 +68,7 @@ pub struct FunctionDesc {
     #[serde(rename = "async")]
     pub _async: bool = false,
     pub args: [Argument] = [],
-    pub returns: [string]? = nil,
+    pub return_type: string? = nil,
     pub doc: string? = nil,
     #[serde(rename = "throws")]
     pub _throws: [string]? = nil,
