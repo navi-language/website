@@ -1,8 +1,8 @@
 // https://vitepress.dev/guide/custom-theme
-import type { Theme } from 'vitepress';
-import DefaultTheme from 'vitepress/theme';
-import { h } from 'vue';
-import './style.scss';
+import type { Theme } from "vitepress";
+import DefaultTheme from "vitepress/theme";
+import { h } from "vue";
+import "./style.scss";
 
 export default {
   extends: DefaultTheme,

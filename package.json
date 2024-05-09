@@ -19,6 +19,7 @@
     "generate": "navi script/generate-stdlib.nv"
   },
   "dependencies": {
+    "autocorrect-node": "^2.9.1",
     "highlight.js": "^11.9.0",
     "node-fetch": "^3.3.2"
   }

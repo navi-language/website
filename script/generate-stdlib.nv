@@ -73,8 +73,7 @@ fn build_module_index(stdlib: Stdlib): string {
     for (let fname, module in stdlib) {
         names.push(fname);
     }
-    names.sort();
-    let items = names.map::<string, string>(|name| {
+    let items = names.sort().map::<string, string>(|name| {
         return `[${name}](./${name}.md)`;
     });
     buf.writeln(bulleted_list(items));
@@ -124,8 +123,7 @@ fn generate_types(module: Module, types: <string, Type>, links: StringBuffer): s
         return "";
     }
 
-    let type_names = types.keys();
-    type_names.sort();
+    let type_names = types.keys().sort();
 
     let buf = StringBuffer.new();
     for (let name in type_names) {
@@ -209,8 +207,7 @@ fn generate_interface_methods(
     buf.writeln(bold("Interface Implementations"));
     buf.writeln("");
 
-    let interface_names = interface_methods.keys();
-    interface_names.sort();
+    let interface_names = interface_methods.keys().sort();
 
     for (let interface_name in interface_names) {
         let methods = interface_methods[interface_name];
@@ -232,8 +229,7 @@ fn generate_type_toc(module: Module, types: <string, Type>): string {
         return "";
     }
 
-    let type_names = types.keys();
-    type_names.sort();
+    let type_names = types.keys().sort();
 
     let buf = StringBuffer.new();
 
@@ -256,8 +252,7 @@ fn generate_type_toc(module: Module, types: <string, Type>): string {
 fn generate_enums(module: Module, enums: <string, Enum>, links: StringBuffer): string {
     let buf = StringBuffer.new();
 
-    let enum_names = enums.keys();
-    enum_names.sort();
+    let enum_names = enums.keys().sort();
 
     for (let enum_name in enum_names) {
         const info = enums[enum_name];
@@ -283,8 +278,7 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
         return "";
     }
 
-    let enum_names = enums.keys();
-    enum_names.sort();
+    let enum_names = enums.keys().sort();
 
     let buf = StringBuffer.new();
     buf.writeln(bold("Enums"));
@@ -306,8 +300,7 @@ fn generate_enum_toc(module: Module, enums: <string, Enum>): string {
 fn generate_assigns(module: Module, assigns: <string, Assign>, links: StringBuffer): string {
     let buf = StringBuffer.new();
 
-    let assign_names = assigns.keys();
-    assign_names.sort();
+    let assign_names = assigns.keys().sort();
 
     for (let assign_name in assign_names) {
         const info = assigns[assign_name];
@@ -330,8 +323,7 @@ fn generate_assign_toc(module: Module, assigns: <string, Assign>): string {
         return "";
     }
 
-    let assign_names = assigns.keys();
-    assign_names.sort();
+    let assign_names = assigns.keys().sort();
 
     let buf = StringBuffer.new();
     buf.writeln(bold("Consts"));
@@ -354,8 +346,7 @@ fn generate_interfaces(
 ): string {
     let buf = StringBuffer.new();
 
-    let interface_names = interfaces.keys();
-    interface_names.sort();
+    let interface_names = interfaces.keys().sort();
 
     for (let interface_name in interface_names) {
         const info = interfaces[interface_name];
@@ -369,8 +360,7 @@ fn generate_interfaces(
             buf.writeln(`No documentation.`);
         }
 
-        let method_names = info.methods.keys();
-        method_names.sort();
+        let method_names = info.methods.keys().sort();
 
         for (let name in method_names) {
             let method = info.methods[name];
@@ -386,8 +376,7 @@ fn generate_interface_toc(module: Module, interfaces: <string, Interface>): stri
         return "";
     }
 
-    let names = interfaces.keys();
-    names.sort();
+    let names = interfaces.keys().sort();
 
     let buf = StringBuffer.new();
     buf.writeln(bold("Interfaces"));
@@ -409,8 +398,7 @@ fn generate_interface_toc(module: Module, interfaces: <string, Interface>): stri
 fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuffer): string {
     let buf = StringBuffer.new();
 
-    let struct_names = structs.keys();
-    struct_names.sort();
+    let struct_names = structs.keys().sort();
 
     for (let struct_name in struct_names) {
         const info = structs[struct_name];
@@ -427,8 +415,7 @@ fn generate_structs(module: Module, structs: <string, Struct>, links: StringBuff
         buf.write(generate_struct_member_toc(info.name, info));
 
         if (info.properties.len() > 0) {
-            let names = info.properties.keys();
-            names.sort();
+            let names = info.properties.keys().sort();
 
             for (let name in names) {
                 let prop = info.properties[name];
@@ -470,8 +457,7 @@ fn generate_struct_toc(module: Module, structs: <string, Struct>): string {
         return "";
     }
 
-    let struct_names = structs.keys();
-    struct_names.sort();
+    let struct_names = structs.keys().sort();
 
     let buf = StringBuffer.new();
 
