@@ -2412,7 +2412,7 @@ Use `type` keyword to create a newtype based on an existing type.
 type alias Key = string;
 type alias Value = int;
 
-type MyInfo = <Key, Value>;
+type alias MyInfo = <Key, Value>;
 
 let info: MyInfo = {
     "foo": 1,
