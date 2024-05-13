@@ -81,6 +81,7 @@ export default withMermaid(
           link: "/installation",
         },
         { text: "Learn", link: "/learn" },
+        { text: "Playground", link: "/play/" },
         { text: "Guides", link: "/guides/" },
         { text: "Stdlib", link: "/stdlib/" },
         { text: "Pkg", link: "/pkg/" },
