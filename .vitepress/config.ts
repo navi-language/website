@@ -81,7 +81,11 @@ export default withMermaid(
           link: "/installation",
         },
         { text: "Learn", link: "/learn" },
-        { text: "Playground", link: "/play/", target: "_blank" },
+        {
+          text: "Playground",
+          link: "https://navi-lang.org/play/",
+          target: "_blank",
+        },
         { text: "Guides", link: "/guides/" },
         { text: "Stdlib", link: "/stdlib/" },
         { text: "Pkg", link: "/pkg/" },

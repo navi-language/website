@@ -31,7 +31,6 @@ jobs:
           navi run script/generate-release.nv
           navi run script/generate-stdlib.nv
           navi run script/fix-bad-markdown.nv
-          sh script/generate-playground.sh
           bun install
           bun run build
       - name: Setup Pages
