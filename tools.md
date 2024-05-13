@@ -120,8 +120,8 @@ We have [tree-sitter](https://tree-sitter.github.io/) support for Navi and Navi 
 
 There have a `tmLanguage` file of Navi and Navi Stream for syntax highlight.
 
-- [navi.tmLanguage](https://github.com/navi-language/website/blob/main/.vitepress/navi.tmLanguage.json)
-- [navi-stream.tmLanguage](https://github.com/navi-language/website/blob/main/.vitepress/navi-stream.tmLanguage.json)
+- [navi.tmLanguage](https://github.com/navi-language/navi-language.github.io/blob/main/.vitepress/navi.tmLanguage.json)
+- [navi-stream.tmLanguage](https://github.com/navi-language/navi-language.github.io/blob/main/.vitepress/navi-stream.tmLanguage.json)
 
 ## GitHub Actions
 

@@ -64,7 +64,8 @@ export default withMermaid(
     ignoreDeadLinks: true,
     themeConfig: {
       editLink: {
-        pattern: "https://github.com/navi-language/website/edit/main/:path",
+        pattern:
+          "https://github.com/navi-language/navi-language.github.io/edit/main/:path",
       },
       search: {
         provider: "local",
