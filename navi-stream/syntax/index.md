@@ -1,5 +1,6 @@
 ---
 title: Syntax
+order: 2
 ---
 
 # Navi Stream Syntax

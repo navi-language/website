@@ -2,7 +2,7 @@
 order: 3
 ---
 
-# 标准库
+# Stdlib
 
 Navi Stream 内置了一系列的标准库函数，用于快速开发策略。
 

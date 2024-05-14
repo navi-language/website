@@ -1,5 +1,6 @@
 ---
 title: 语法
+order: 2
 ---
 
 # Navi Stream 语法
