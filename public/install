@@ -54,12 +54,6 @@ fetch_github_api() {
   echo "$body"
 }
 
-get_latest_release() {
-  fetch_github_api "https://api.github.com/repos/$repo/releases/latest" | # Get latest release from GitHub api
-    grep '"tag_name":' |                                               # Get tag line
-    sed -E 's/.*"([^"]+)".*/\1/'                                       # Pluck JSON value
-}
-
 get_last_nightly_release() {
   fetch_github_api "https://api.github.com/repos/$repo/releases" | # Get latest release from GitHub api
     grep '"tag_name":' |                                               # Get tag line
@@ -79,7 +73,7 @@ get_version() {
     fi
   else
     # curl -sSL https://navi-lang.org/install | bash
-    version=$(get_latest_release)
+    version="latest"
   fi
 
   # if version is empty, exit
@@ -133,11 +127,15 @@ get_libc() {
 install() {
   name_suffix="$platform$libc-$arch"
   info "Downloading $bin_name@$version ($name_suffix)..."
-  download_url=https://github.com/$repo/releases/download/$version/$bin_name-$name_suffix.tar.gz
+  if [ "$version" = "latest" ]; then
+    download_url=https://github.com/$repo/releases/latest/download/$bin_name-$name_suffix.tar.gz
+  else
+    download_url=https://github.com/$repo/releases/download/$version/$bin_name-$name_suffix.tar.gz
+  fi
 
   mkdir -p $tmpdir && cd $tmpdir
   if ! curl --fail --progress-bar -Lo $bin_name.tar.gz $download_url; then
-    error "${Color_Red}Download failed, please check your network.${Color_Off}"
+    error "${Color_Red}Download failed, please check your network.\n${download_url}${Color_Off}"
     exit 1
   fi
 
