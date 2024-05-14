@@ -7,7 +7,7 @@ order: 2
 
 Navi Stream 的语法大部分与 Navi 相同，但是有一些差异，因为它们在语言设计上有一些不同。
 
-::: success
+::: tip
 
 - `.nvs` 是 **Navi Stream** 文件的扩展名。
 - `.nv` 是 **Navi** 文件的扩展名。

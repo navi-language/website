@@ -48,7 +48,7 @@ a = 3;
 
 `var` use for stream processing, it's like `let` but it's reset to the initial value at the end of each period.
 
-:::success
+::: tip
 `var` is a periodic `let`, its value is only fixed at the end of each period, and other times it is reset to the value at the beginning of the period.
 :::
 

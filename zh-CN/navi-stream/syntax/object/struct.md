@@ -2,7 +2,7 @@
 order: 6
 ---
 
-# Struct
+# 结构体
 
 与 Navi 一样，Navi Stream 支持结构体 Struct。
 

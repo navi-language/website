@@ -2,7 +2,7 @@
 order: 0
 ---
 
-# Operator
+# 运算符
 
 与大多数编程语言一样，Navi Stream 支持基本的算术和逻辑运算符。
 

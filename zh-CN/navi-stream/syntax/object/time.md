@@ -2,7 +2,7 @@
 order: 2
 ---
 
-# DateTime
+# 日期时间
 
 我们可以使用 `time` 包来创建一个 `DateTime` 对象。
 

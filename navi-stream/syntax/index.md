@@ -7,7 +7,7 @@ order: 2
 
 Navi Stream's syntax is mostly the same as Navi, but there are some differences, because they are have a little different in language design.
 
-::: success
+::: tip
 
 - `.nvs` is the **Navi Stream** file extension.
 - `.nv` is the **Navi** file extension.
