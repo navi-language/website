@@ -31,12 +31,19 @@
 }
 
 .dark {
-    --vp-c-brand-1: #8ba6e9;
+    --vp-c-bg: #010106;
+    --vp-c-bg-soft: #0d0d0e;
+    --vp-c-brand-1: #4772dd;
     --vp-c-brand-2: #2463dd;
     --vp-c-brand-3: #2463dd;
     --vp-c-brand-soft: #85a8ec;
     --vp-c-gutter: #2e2f31;
+    --vp-c-gray-3: #26282e;
+    --vp-c-bg-alt: #121213;
 
+    --vp-code-color: #7a7c80;
+
+    --vp-c-text-1: #e3e3e3;
     --vp-c-tip-1: var(--vp-c-brand-3);
     --vp-c-tip-2: var(--vp-c-brand-2);
     --vp-c-tip-3: var(--vp-c-brand-1);
@@ -127,6 +134,19 @@
         code {
             font-size: 12px;
             font-weight: normal;
+        }
+    }
+
+    [class*="language-"] > button.copy {
+        width: 24px;
+        height: 24px;
+        background-size: 14px;
+
+        &:hover.copied::before,
+        &.copied::before {
+            height: 24px;
+            line-height: 24px;
+            padding: 0 8px;
         }
     }
 
