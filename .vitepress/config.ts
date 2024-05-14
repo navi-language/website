@@ -124,7 +124,7 @@ export default withMermaid(
           nav: [
             {
               text: '安装',
-              link: '/installation',
+              link: '/zh-CN/installation',
             },
             { text: '学习', link: '/learn' },
             {
