@@ -2,7 +2,7 @@
 
 ## Define function
 
-Navi Stream's function definition is very similar to Navi, but just support normal arguments, not support keyword arguments.
+Navi Stream's function definition is very similar to Navi, also support keyword arguments.
 
 ```nvs
 fn foo(count: number): number {

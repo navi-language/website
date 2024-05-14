@@ -2,29 +2,29 @@
 order: 1
 ---
 
-# Variables
+# 变量
 
-In Navi Stream we have 3 keywords to store value: `let`, `var` and `varip`.
+在 Navi Stream 中我们有 3 种关键字来存储值：`let`、`var` 和 `varip`。
 
-The syntax of variable declarations is:
+变量声明的语法是：
 
 ```
 [<declaration_mode>] :[<type>] <identifier> = <expression>
 ```
 
-where:
+其中：
 
-- `declaration_mode` - is the variable mode, we can use `let`, `var`, `varip` 3 kinds.
-- `type` - used to declare the variable type, such as `number`, `string` (optional parameter).
-- `identifier` - variable name.
-- `expression` - the value of the variable, can be any expression.
+- `declaration_mode` - 是变量模式，我们可以使用 `let`、`var`、`varip` 3 种。
+- `type` - 用于声明变量类型，如 `number`、`string`（可选参数）。
+- `identifier` - 变量名。
+- `expression` - 变量的值，可以是任何表达式。
 
 ## let
 
-`let` for define a mutable variable. Like `let` in JavaScript.
+`let` 用于定义一个可变变量，类似于 JavaScript 中的 `let`。
 
 ::: info
-We don't have mutable and inmutable types in Navi Stream, so you can change the value of a variable at any time.
+我们在 Navi Stream 中没有可变和不可变类型，所以你可以随时更改变量的值。
 :::
 
 ```nvs
@@ -36,7 +36,7 @@ a += 2;
 // Now `a` value is 11
 ```
 
-You can assignment a new value to a variable at any time.
+你可以随时为变量赋新值。
 
 ```nvs
 let a = 1;
@@ -46,13 +46,13 @@ a = 3;
 
 ## var
 
-`var` use for stream processing, it's like `let` but it's reset to the initial value at the end of each period.
+`var` 用于流处理，它类似于 `let`，但是在每个周期结束时重置为初始值。
 
 :::success
-`var` is a periodic `let`, its value is only fixed at the end of each period, and other times it is reset to the value at the beginning of the period.
+`var` 是一个周期性的 `let`，它的值只在每个周期结束时才固定，其他时间它会重置为周期开始时的值。
 :::
 
-The following example shows how to use `var` to calculate the current period:
+下面的示例展示了如何使用 `var` 来计算当前周期：
 
 ```nvs
 var bar = 0;
@@ -60,7 +60,7 @@ var bar = 0;
 bar += 1;
 ```
 
-After run the code, we can get the following result:
+当我们运行这段代码后），我们可以得到以下结果：
 
 | idx | bar |
 | --- | --- |
@@ -75,9 +75,9 @@ After run the code, we can get the following result:
 | 9   | 1   |
 | 10  | 2   |
 
-The result is consistent with the 5m periodic rule, you can see that the value of `var` variable is only determined at the end of the last 5m.
+上面的结果符合 5m 周期规则，你可以看到 `var` 变量的值只在最后一个 5m 结束时才确定。
 
-The following diagram shows the change of the `var` variable:
+下面的流程图展示了 `var` 变量的变化：
 
 ```mermaid
 gantt
@@ -98,7 +98,7 @@ bar is 2        :n1, 10:10, 1m
 
 ## varip
 
-`varip` use for stream processing, ensure that the value of each period is independent.
+`varip` 用于流处理，它类似于 `var`，但是在每个周期结束时重置为初始值，并且在每个周期结束时输出一个值。
 
 ### Use case
 
@@ -116,7 +116,7 @@ bar is 2        :n1, 10:10, 1m
 | 10  | 10:09 | 102.50 | 300    |
 | 11  | 10:10 | 102.75 | 200    |
 
-Now, we use `varip` to calculate the total amount of each period (5m):
+现在，我们想要计算每个周期（5m）的总量，我们可以使用 `varip` 来计算：
 
 ```nvs
 varip total_amount = 0;
@@ -124,7 +124,7 @@ varip total_amount = 0;
 total_amount += trade.volume;
 ```
 
-If we calculate it, we can get:
+如果我们计算它，我们可以得到：
 
 | idx | total_amount |
 | --- | ------------ |
@@ -143,12 +143,12 @@ If we calculate it, we can get:
 ### barstate.is_confirmed
 
 ::: warning
-Navi Stream's calculation cycle is a little special, the last data in each cycle (period) **will be calculated twice**, the last data will be calculated once in **confirmed** mode.
+Navi Stream 的计算周期有点特殊，每个周期（期间）的最后一个数据**将被计算两次**，最后一个数据将在**确认**模式下计算一次。
 
-When in the last data of the period, `barstate.is_confirmed` is `true`, so we need to judge it to avoid `total_amount` being calculated twice.
+在最后一个数据是，`barstate.is_confirmed` 的状态为 `true`，所以我们可以判断它，以避免 `total_amount` 被计算两次。
 :::
 
-We expected to output data only at the end of each period, so we can write like this:
+我们期望只在每个周期结束时输出数据，所以我们可以这样写：
 
 ```nvs
 varip total_amount = 0;
@@ -160,7 +160,7 @@ if (barstate.is_confirmed) {
 }
 ```
 
-Then Navi Stream well send `alert` like this:
+这样一来，Navi Stream 将会发送 `alert`，如下所示：
 
 | idx | total_amount        |
 | --- | ------------------- |

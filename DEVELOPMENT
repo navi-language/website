@@ -1,0 +1,7 @@
+## How to translate to other languages
+
+Default we write the documentation in English. And then you can copy the contents to `zh-CN` and use `VS Code` + `Copilot` to translate it to Chinese.
+
+In you `VS Code`, press `CMD + Ctrl + I`, and tell `Copilot` to "翻译为中文，如果长度不够，请继续翻译", then Copilot will translate the current opened tab to Chinese, and return to you raw Markdown content.
+
+Then you can copy the content to `zh-CN` folder, and make some manual adjustments to make it more readable.

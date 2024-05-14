@@ -4,14 +4,14 @@ order: 2
 
 # Getting Started
 
-Navi Stream is a embed language in Navi, when you installed Navi, you can use Navi Stream.
+Navi Stream 是 Navi 中的嵌入式语言，当你安装 Navi 后，你就可以使用 Navi Stream。
 
-## Quick Start
+## 快速开始
 
-Create file named `macd.nvs`
+创建一个名为 `main.nv` 的文件：
 
 ::: info
-Navi Stream file extension is `.nvs`, and Navi file extension is `.nv`.
+Navi Stream 采用 `.nvs` 作为文件扩展名，而 Navi 采用 `.nv` 作为文件扩展名。
 :::
 
 ```nvs
@@ -30,9 +30,9 @@ export let signal = ema(hist, Length3);
 export let macd = (hist - signal) * 2;
 ```
 
-Make a sample JSON data named `data.json`, you can download this sample file: https://raw.githubusercontent.com/navi-language/navi/main/examples/macd/data.json
+我们来准备一些数据，创建一个名为 `data.json` 的文件，你可以下载这个示例文件：https://raw.githubusercontent.com/navi-language/navi/main/examples/macd/data.json
 
-Then you can use it in Navi file, `main.nv`:
+然后在 `main.nv` 文件中使用这个数据：
 
 ```nv, no_run
 // Import `macd.nvs` file as module
@@ -85,7 +85,7 @@ fn main() throws {
 
 ```
 
-Then run it:
+现在我们可以运行这个程序：
 
 ```bash
 $ navi run main.nv
