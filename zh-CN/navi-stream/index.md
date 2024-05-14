@@ -1,7 +1,10 @@
 ---
 order: 1
-sidebar_label: "Navi Stream 介绍"
+sidebar_label: 'Navi Stream 介绍'
 ---
+
+- [English Version](/navi-stream/)
+- [中文版本](/zh-CN/navi-stream/)
 
 # Navi Stream
 

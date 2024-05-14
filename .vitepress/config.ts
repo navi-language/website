@@ -71,10 +71,100 @@ export default withMermaid(
       root: {
         label: 'English',
         lang: 'en',
+        themeConfig: {
+          nav: [
+            {
+              text: 'Install',
+              link: '/installation',
+            },
+            { text: 'Learn', link: '/learn' },
+            {
+              text: 'Playground',
+              link: 'https://navi-lang.org/play/',
+              target: '_blank',
+            },
+            { text: 'Guides', link: '/guides/' },
+            { text: 'Stdlib', link: '/stdlib/' },
+            { text: 'Pkg', link: '/pkg/' },
+            { text: 'Navi Stream', link: '/navi-stream/' },
+            {
+              text: 'Tools',
+              items: [
+                { text: 'Overview', link: '/tools' },
+                {
+                  text: 'Editor Plugins',
+                  items: [
+                    {
+                      text: 'VS Code',
+                      link: 'https://marketplace.visualstudio.com/items?itemName=huacnlee.navi',
+                    },
+                    {
+                      text: 'Zed',
+                      link: 'https://github.com/navi-language/zed-navi',
+                    },
+                    {
+                      text: 'tree-sitter-navi',
+                      link: 'https://github.com/navi-language/tree-sitter-navi',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              text: 'Releases',
+              link: '/releases',
+            },
+          ],
+        },
       },
       'zh-CN': {
         label: '简体中文',
         lang: 'zh-CN',
+        themeConfig: {
+          nav: [
+            {
+              text: '安装',
+              link: '/installation',
+            },
+            { text: '学习', link: '/learn' },
+            {
+              text: '在线尝试',
+              link: 'https://navi-lang.org/play/',
+              target: '_blank',
+            },
+            { text: '教程', link: '/guides/' },
+            { text: 'Stdlib', link: '/stdlib/' },
+            { text: 'Pkg', link: '/pkg/' },
+            { text: 'Navi Stream', link: '/zh-CN/navi-stream/' },
+            {
+              text: '工具',
+              items: [
+                { text: '概况', link: '/tools' },
+                {
+                  text: '编辑器插件',
+                  items: [
+                    {
+                      text: 'VS Code',
+                      link: 'https://marketplace.visualstudio.com/items?itemName=huacnlee.navi',
+                    },
+                    {
+                      text: 'Zed',
+                      link: 'https://github.com/navi-language/zed-navi',
+                    },
+                    {
+                      text: 'tree-sitter-navi',
+                      link: 'https://github.com/navi-language/tree-sitter-navi',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              text: '版本发布',
+              link: '/releases',
+            },
+          ],
+        },
       },
     },
     cleanUrls: true,
@@ -99,50 +189,6 @@ export default withMermaid(
         dark: '/logo-dark.svg',
       },
       outline: [2, 3],
-      // https://vitepress.dev/reference/default-theme-config
-      nav: [
-        {
-          text: 'Install',
-          link: '/installation',
-        },
-        { text: 'Learn', link: '/learn' },
-        {
-          text: 'Playground',
-          link: 'https://navi-lang.org/play/',
-          target: '_blank',
-        },
-        { text: 'Guides', link: '/guides/' },
-        { text: 'Stdlib', link: '/stdlib/' },
-        { text: 'Pkg', link: '/pkg/' },
-        { text: 'Navi Stream', link: '/navi-stream/' },
-        {
-          text: 'Tools',
-          items: [
-            { text: 'Overview', link: '/tools' },
-            {
-              text: 'Editor Plugins',
-              items: [
-                {
-                  text: 'VS Code',
-                  link: 'https://marketplace.visualstudio.com/items?itemName=huacnlee.navi',
-                },
-                {
-                  text: 'Zed',
-                  link: 'https://github.com/navi-language/zed-navi',
-                },
-                {
-                  text: 'tree-sitter-navi',
-                  link: 'https://github.com/navi-language/tree-sitter-navi',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          text: 'Releases',
-          link: '/releases',
-        },
-      ],
 
       sidebar: sidebars as any,
 

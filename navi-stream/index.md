@@ -3,6 +3,9 @@ order: 1
 sidebar_label: 'Introduction'
 ---
 
+- [English Version](/navi-stream/)
+- [中文版本](/zh-CN/navi-stream/)
+
 # Navi Stream
 
 Navi Stream is a embed language in Navi, which is used to perform complex calculations and analysis based on market data.
