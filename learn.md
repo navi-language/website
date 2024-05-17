@@ -2540,7 +2540,7 @@ fn main() throws {
 }
 ```
 
-Unlike Go, Navi is a single-thread language, so the `spawn` is to make code run concurrently, not parallelism.
+Unlike Go, Navi is a single-thread language, so the `spawn` is to make code run concurrently, not parallelly.
 
 ![Difference in execution](https://github.com/navi-language/navi/assets/5518/66bba4f1-6147-4c36-ab42-438408ee994d)
 
