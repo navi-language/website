@@ -15,8 +15,7 @@
     "dev": "vitepress dev",
     "build": "NODE_ENV=production vitepress build",
     "preview": "vitepress preview",
-    "test": "navi test && navi test --doc learn.md",
-    "generate": "navi script/generate-stdlib.nv"
+    "test": "navi test -r script && navi test --doc learn.md"
   },
   "dependencies": {
     "autocorrect-node": "^2.9.1",
