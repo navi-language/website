@@ -678,6 +678,71 @@ test main.nv .. fail in 708ms
 All 2 tests 0 passed, 2 failed finished in 0.79s.
 ```
 
+### Track Caller
+
+The `#[track_caller]` attribute can be used to mark a function as implicit caller location. When a function is marked with `#[track_caller]`, the panic call stack will not include this function.
+
+This is useful when you want to hide the internal implementation details of a function from the panic call stack.
+
+For example we have a custom assert function:
+
+```nv
+#[track_caller]
+fn assert_success(value: bool) {
+    assert value == true;
+}
+
+test "assert_success" {
+    assert_success(true);
+    assert_success(false);
+}
+```
+
+When the test faill, the panic call stack will not include the `assert_success` function:
+
+```shell
+error: thread 'thread 1#' at 'assertion failed: value == true', test.nv:8
+
+stack backtrace:
+  0: test#0()
+     at test.nv:8
+```
+
+### Caller Location
+
+We can use `call_location` method in `std.backtrace` module to get the caller, it will return a `CallerLocation` type that contains the file and line number of the caller.
+
+And the `caller_locations` function can returns `[CallerLocation]` that contains a ordered list by call stack.
+
+```nv
+use std.backtrace;
+
+fn assert_success(value: bool) {
+    if (!value) {
+        let caller = backtrace.caller_location()!;
+        panic `assertion failed on caller: ${caller.file}:${caller.line}`;
+    }
+}
+
+test "caller_location" {
+    assert_success(false);
+}
+```
+
+Output:
+
+```
+caller_location
+
+    error: thread 'thread 1#' at 'assertion failed on caller:test.nv:4', test.nv:6
+
+    stack backtrace:
+      0: assert_success(bool)
+         at test.nv:6
+      1: test#0()
+         at test.nv:11
+```
+
 ## Variable
 
 ### Declarations
@@ -685,7 +750,9 @@ All 2 tests 0 passed, 2 failed finished in 0.79s.
 The syntax of variable declarations is:
 
 ```
+
 [<declaration_mode>] :[<type>] <identifier> = <expression>
+
 ```
 
 where:
