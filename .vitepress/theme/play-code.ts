@@ -31,9 +31,8 @@ const registerPlayButton = () => {
 
 const runCode = (container: Element, playBtn: Element, code: string) => {
   playBtn.setAttribute("disabled", "true");
-  playBtn.textContent = "Running...";
 
-  renderOutput(container, "Running, please wait...", "loading");
+  renderOutput(container, "Executing, please wait...", "loading");
 
   fetch(SERVER_URL + "/execute", {
     method: "POST",
@@ -54,7 +53,6 @@ const runCode = (container: Element, playBtn: Element, code: string) => {
     })
     .finally(() => {
       playBtn.removeAttribute("disabled");
-      playBtn.textContent = "Run";
     });
 };
 
