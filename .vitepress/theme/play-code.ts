@@ -67,6 +67,8 @@ const renderOutput = (
   el.classList.add("run-output");
   container.after(el);
   el.setAttribute("status", status);
+
+  // WARNING: Ensure to use `textContent` to set output, to prevent XSS attacks.
   el.textContent = output;
 };
 
