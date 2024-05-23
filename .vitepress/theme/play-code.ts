@@ -76,5 +76,7 @@ const base64Encode = (str: string) => {
   return btoa(unescape(encodeURIComponent(str)));
 };
 
-const observer = new MutationObserver(registerPlayButton);
-observer.observe(document.body, { childList: true, subtree: true });
+if (!import.meta.env.SSR) {
+  const observer = new MutationObserver(registerPlayButton);
+  observer.observe(document.body, { childList: true, subtree: true });
+}
