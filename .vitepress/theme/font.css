@@ -1,0 +1,16 @@
+/**
+ * Navi use `Ruda` font for the main content.
+ *
+ * https://fonts.google.com/specimen/Ruda
+ */
+@import url("https://fonts.googleapis.com/css2?family=Mate:ital@0;1&family=Ruda:wght@400..900&display=swap");
+
+body {
+    font-family: "Ruda", sans-serif;
+    font-optical-sizing: auto;
+}
+
+pre,
+code {
+    font-family: "Menlo", "Consolas", monospace;
+}
