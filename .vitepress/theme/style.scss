@@ -8,6 +8,7 @@
     --vp-c-default-2: var(--vp-c-gray-2);
     --vp-c-default-3: var(--vp-c-gray-3);
     --vp-c-default-soft: var(--vp-c-gray-soft);
+    --vp-border-radius: 4px;
 
     --vp-c-brand-1: #2463dd;
     --vp-c-brand-2: #1d1d1d;
@@ -142,16 +143,88 @@
         margin-top: 1.5em;
     }
 
-    [class*="language-"] > button.copy {
+    div[class*="language-"] {
+        border-radius: 4px;
+    }
+
+    [class*="language-"] {
+        .lang {
+            display: none;
+        }
+    }
+
+    [class*="language-"]:hover {
+        button {
+            opacity: 1 !important;
+        }
+    }
+
+    [class*="language-"] > button.copy,
+    [class*="language-"] > button.play {
+        /*rtl:ignore*/
+        direction: ltr;
+        position: absolute;
+        top: 12px;
+        /*rtl:ignore*/
+        z-index: 3;
+        border: 1px solid var(--vp-code-copy-code-border-color);
+        border-radius: 4px;
+        background-color: var(--vp-code-copy-code-bg);
+        opacity: 0;
+        cursor: pointer;
+        background-image: var(--vp-icon-copy);
+        background-position: 50%;
+        background-repeat: no-repeat;
+        transition:
+            border-color 0.25s,
+            background-color 0.25s,
+            opacity 0.25s;
+
         width: 24px;
         height: 24px;
         background-size: 14px;
+
+        &:hover,
+        &.copy.copied {
+            border-color: var(--vp-code-copy-code-hover-border-color);
+            background-color: var(--vp-code-copy-code-hover-bg);
+        }
 
         &:hover.copied::before,
         &.copied::before {
             height: 24px;
             line-height: 24px;
             padding: 0 8px;
+        }
+    }
+
+    [class*="language-"] > button.copy {
+        right: 12px;
+    }
+    [class*="language-"] > button.play {
+        right: 40px;
+        width: 56px;
+        content: "Run";
+        padding-left: 14px;
+        font-size: 12px;
+        line-height: 1;
+        color: var(--vp-c-text-2);
+        background-position: 5px center;
+        background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' viewBox='0 0 15 15' fill='rgba(128,128,128,1)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.24182 2.32181C3.3919 2.23132 3.5784 2.22601 3.73338 2.30781L12.7334 7.05781C12.8974 7.14436 13 7.31457 13 7.5C13 7.68543 12.8974 7.85564 12.7334 7.94219L3.73338 12.6922C3.5784 12.774 3.3919 12.7687 3.24182 12.6782C3.09175 12.5877 3 12.4252 3 12.25V2.75C3 2.57476 3.09175 2.4123 3.24182 2.32181ZM4 3.57925V11.4207L11.4288 7.5L4 3.57925Z' fill='r' fill-rule='evenodd' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E%0A");
+    }
+
+    .run-output {
+        border-radius: 4px;
+        font-family: var(--vp-font-code);
+        font-size: 14px;
+        background: var(--vp-c-green-soft);
+        padding: 1em;
+
+        &[status="loading"] {
+            background: var(--vp-c-gray-soft);
+        }
+        &[status="error"] {
+            background: var(--vp-c-red-soft);
         }
     }
 
