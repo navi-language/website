@@ -2158,6 +2158,59 @@ test "unwrap or default" {
 }
 ```
 
+### More methods
+
+We also provide some methods to handle the [optional] value, such as `map`, `and`, `and_then`, `is_nil`, `map_or`, `unwrap_or`, `expect`, `unwrap_or_else`.
+
+See also: [Optional Methods](/stdlib/lang.optional).
+
+```nv
+// a normal string
+let name: string = "Navi";
+
+// an optional string
+let optional_name: string? = "Navi";
+let optional_name: string? = nil;
+
+fn main() throws {
+    let name: string? = "Navi";
+    // This is ok.
+    println(name!);
+    // This is also ok.
+    println(name.unwrap());
+    println(name.expect("Name is nil"));
+    println(name.map(|name| {
+        return `Name length: ${name.len()}`;
+    }));
+    println(name.and("And other name"));
+    println(name.and_then(|name| {
+        return `And then name: ${name}`;
+    }));
+
+    let name: string? = nil;
+    println(`name is nil: ${name.is_nil()}`);
+    println(name.map_or("Default value", |name| name.len()));
+    println(name.unwrap_or("unwrap_or a default value"));
+    println(name.or("Or a default value"));
+    println(name.or_else(|| "Or else a default value"));
+
+    // This will cause a panic.
+    println(name!);
+}
+
+test "unwrap or default" {
+    let name: string? = "Navi";
+    let result = name || "";
+    // result is a string type
+    assert_eq result, "Navi";
+
+    let name: string? = nil;
+    let result = name || "";
+    // result is a string type
+    assert_eq result, "";
+}
+```
+
 ## Error
 
 The `throws` keyword on a function to describe that the function can be thrown an error.
@@ -2186,7 +2239,7 @@ By default, `throw` can throw with a [string] or a custom error type that implem
 Because Navi has implemented the `Error` interface for [string], you can throw a [string] directly.
 :::
 
-```nv, ignore
+```nv
 pub interface Error {
     fn error(self): string;
 }
@@ -2200,7 +2253,7 @@ throw "error message";
 
 Or implement the `Error` interface for a custom error type:
 
-```nv, ignore
+```nv
 struct MyError {
     message: string
 }
@@ -2598,12 +2651,32 @@ defer 1
 
 Navi has a `spawn` keyword for spawn a coroutine, it is similar to Go's `go` keyword.
 
-```nv,no_run
+```nv
+use std.time;
+
 fn main() throws {
+    let ch: channel<int> = channel();
+
     spawn {
-        println("Hello");
+        println("This will print 1");
+        time.sleep(0.1.seconds());
+        println("This is print from spawn 1");
+        // Signal that we're done
+        ch.send(1);
     }
-    println("World");
+
+    spawn {
+        println("This will print 2");
+        time.sleep(0.1.seconds());
+        println("This is print from spawn 2");
+        // Signal that we're done
+        ch.send(1);
+    }
+
+    println("This is printed 3");
+    // Wait for the spawned task to finish
+    ch.recv();
+    println("All done");
 }
 ```
 

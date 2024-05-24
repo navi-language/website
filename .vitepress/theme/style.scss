@@ -214,6 +214,9 @@
     }
 
     .run-output {
+        overflow-x: hidden;
+        overflow-y: auto;
+        white-space: pre-wrap;
         border-radius: 4px;
         font-family: var(--vp-font-code);
         font-size: 14px;
