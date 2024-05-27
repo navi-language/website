@@ -1,4 +1,4 @@
-const SERVER_URL = "https://navi-playground.onrender.com";
+const SERVER_URL = "https://navi.leftriver.cn";
 const INLINE_RUN = true;
 
 const registerPlayButton = () => {
