@@ -2,6 +2,9 @@
  * Customize default theme styling by overriding CSS variables:
  * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     --vp-c-default-1: var(--vp-c-gray-1);
@@ -29,6 +32,8 @@
     --vp-c-danger-2: var(--vp-c-red-2);
     --vp-c-danger-3: var(--vp-c-red-3);
     --vp-c-danger-soft: var(--vp-c-red-soft);
+
+    --vp-c-feature-title: #1d1d1d;
 }
 
 .dark {
@@ -49,6 +54,8 @@
     --vp-c-tip-2: var(--vp-c-brand-2);
     --vp-c-tip-3: var(--vp-c-brand-1);
     --vp-c-tip-soft: var(--vp-c-brand-soft);
+
+    --vp-c-feature-title: #4772dd;
 }
 
 /**
@@ -125,8 +132,17 @@
 
 .VPNavBarTitle {
     .title {
-        font-size: 18px;
         color: var(--vp-c-text-1);
+        @apply text-xl;
+    }
+}
+
+.VPContent {
+    .VPFeature {
+        h2.title {
+            color: var(--vp-c-feature-title);
+            @apply text-lg;
+        }
     }
 }
 

@@ -12,8 +12,8 @@ hero:
       text: Get Started
       link: /learn
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/navi-language/navi
+      text: Try Navi
+      link: https://navi-lang.org/play/
 features:
   - title: Simple and Clean Syntax
     details: Designed with a straightforward and clean syntax.
