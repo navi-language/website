@@ -77,7 +77,7 @@ export default withMermaid(
               text: "Install",
               link: "/installation",
             },
-            { text: "Learn", link: "/learn" },
+            { text: "Learn", link: "/learn/" },
             {
               text: "Playground",
               link: "https://navi-lang.org/play/",
@@ -126,7 +126,7 @@ export default withMermaid(
               text: "安装",
               link: "/zh-CN/installation",
             },
-            { text: "学习", link: "/learn" },
+            { text: "学习", link: "/learn/" },
             {
               text: "在线尝试",
               link: "https://navi-lang.org/play/",
