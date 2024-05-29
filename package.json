@@ -2,14 +2,16 @@
   "name": "navi-website",
   "type": "module",
   "devDependencies": {
-    "@types/node": "^20.9.0",
     "@types/bun": "latest",
+    "@types/node": "^20.9.0",
     "@types/node-fetch": "^2.6.9",
+    "@vue/tsconfig": "^0.5.1",
     "mermaid": "^10.6.1",
     "sass": "^1.69.5",
     "vitepress": "^1.0.0",
     "vitepress-plugin-mermaid": "^2.0.15",
-    "vitepress-sidebar": "^1.18.0"
+    "vitepress-sidebar": "^1.18.0",
+    "vue-tsc": "^2.0.19"
   },
   "scripts": {
     "dev": "vitepress dev",
@@ -18,11 +20,13 @@
     "test": "navi test -r script && navi test --doc learn.md"
   },
   "dependencies": {
+    "@shikijs/transformers": "^1.6.1",
     "autocorrect-node": "^2.9.1",
     "autoprefixer": "^10.4.19",
     "highlight.js": "^11.9.0",
     "node-fetch": "^3.3.2",
     "postcss": "^8.4.38",
+    "shiki": "^1.6.1",
     "tailwindcss": "^3.4.3"
   }
 }
