@@ -1,5 +1,5 @@
 <template>
-  <pre v-html="html" />
+  <pre class="shiki navi-code" v-html="html" />
 </template>
 
 <script setup lang="ts">
@@ -10,5 +10,5 @@ const props = defineProps<{
   lang: 'navi' | 'navi-stream' | string;
 }>();
 
-const html = await highlight(props.code, props.lang);
+const html = highlight(props.code, props.lang);
 </script>

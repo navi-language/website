@@ -20,6 +20,7 @@
     "test": "navi test -r script && navi test --doc learn.md"
   },
   "dependencies": {
+    "@shikijs/markdown-it": "^1.6.1",
     "@shikijs/transformers": "^1.6.1",
     "autocorrect-node": "^2.9.1",
     "autoprefixer": "^10.4.19",

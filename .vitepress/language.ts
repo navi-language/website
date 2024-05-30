@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 
 const naviLanguageGrammar = JSON.parse(
-  readFileSync('./.vitepress/navi.tmLanguage.json').toString()
+  readFileSync('src/navi.tmLanguage.json').toString()
 );
 
 const naviLanguage: any = {
@@ -10,7 +10,7 @@ const naviLanguage: any = {
 };
 
 const naviStreamLanguageGrammar = JSON.parse(
-  readFileSync('./.vitepress/navi-stream.tmLanguage.json').toString()
+  readFileSync('src/navi-stream.tmLanguage.json').toString()
 );
 
 const naviStreamLanguage: any = {

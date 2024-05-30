@@ -4,7 +4,6 @@ import DefaultTheme from 'vitepress/theme';
 import { h } from 'vue';
 import './play-code';
 
-import './document.scss';
 import './style.scss';
 
 export default {

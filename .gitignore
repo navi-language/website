@@ -175,7 +175,7 @@ dist
 .DS_Store
 /tmp/
 /.vitepress/cache
-/pkg/
+/pkg.json
 /stdlib.json
 /releases.md
 /public/play/

@@ -1,4 +1,4 @@
-import type { FunctionSymbol, Type } from './types';
+import type { FunctionSymbol, Type } from '../../types';
 
 export const genType = (type: Type): string => {
   switch (type.type) {
@@ -42,7 +42,7 @@ export const genType = (type: Type): string => {
  * @param symbol
  * @returns String
  */
-export const genFunction = (name: String, symbol: FunctionSymbol) => {
+export const genFn = (name: String, symbol: FunctionSymbol) => {
   const args = symbol.arguments.map((arg) => {
     switch (arg.type) {
       case 'keyword':
