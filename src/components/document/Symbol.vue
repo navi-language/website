@@ -7,17 +7,17 @@
       ]"
     />
     <div class="navi-symbol">
-      <div class="type-name">
-        <div class="flex items-center gap-2">
-          <div :class="`type-kind type-kind-${symbol.value_type.type}`">
-            {{ valueTypeName }}
+      <div class="symbol-summary">
+        <div class="symbol-name">
+          <div :class="`symbol-kind symbol-kind-${symbol.value_type.type}`">
+            {{ typeSign }}
           </div>
           <h1 :id="name">{{ name }}</h1>
         </div>
+        <Doc :doc="symbol.doc" />
       </div>
-      <Doc :doc="symbol.doc" />
 
-      <section class="type-fields" v-if="symbol.fields.length > 0">
+      <section class="symbol-fields" v-if="symbol.fields.length > 0">
         <div class="section-title">Fields</div>
         <template v-for="field in symbol.fields" :key="field.name">
           <div class="field-symbol">
@@ -33,23 +33,37 @@
         </template>
       </section>
 
-      <section class="type-methods" v-if="symbol.methods.length > 0">
+      <section class="symbol-methods" v-if="symbol.methods.length > 0">
         <div class="doc-section-title">Methods</div>
         <template v-for="method in symbol.methods" :key="method.name">
-          <Function :name="method.name" :symbol="method" heading="2" />
+          <Function :name="method.name" :symbol="method" :level="2" />
         </template>
+      </section>
+
+      <section class="symbol-items" v-if="symbol.items.length > 0">
+        <div class="doc-section-title">Enum Items</div>
+        <ul>
+          <template v-for="item in symbol.items" :key="item.name">
+            <li :id="item.name">
+              <div>
+                <a :href="`#${item.name}`">{{ item.name }}</a>
+              </div>
+              <Doc :doc="item.doc" />
+            </li>
+          </template>
+        </ul>
       </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { Module, TypeSymbol } from '../../types';
 import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
 import { TokenValueType } from './tokens';
+import { getTypeSign } from './utils';
 
 const props = defineProps<{
   modules: Record<string, Module>;
@@ -58,33 +72,26 @@ const props = defineProps<{
   symbol: TypeSymbol;
 }>();
 
-const valueTypeName = computed(() => {
-  switch (props.symbol.value_type?.type) {
-    case 'new_type':
-      return 'type';
-    case 'struct':
-      return 'struct';
-    case 'enum':
-      return 'enum';
-    default:
-      return 'type';
-  }
+const typeSign = getTypeSign(props.symbol.value_type, {
+  alias: props.symbol.alias,
 });
 </script>
 
-<style type="scss">
-.navi-type {
-  @apply mb-10;
+<style type="scss" scoped>
+.navi-symbol {
+  .symbol-summary {
+    @apply mb-10;
+  }
 
-  .type-name {
-    @apply relative text-sm border-b border-gray-200 border-dashed pb-2;
+  .symbol-name {
+    @apply flex items-baseline gap-2 border-b border-gray-200 border-dashed pb-2 mb-5;
 
     h1 {
-      @apply flex items-center gap-2 p-0 m-0 border-none text-gray-800;
+      @apply p-0 m-0 border-none text-gray-800;
       @apply dark:text-gray-200;
     }
 
-    .type-kind {
+    .symbol-kind {
       @apply text-base text-gray-500;
       @apply dark:text-gray-400;
     }
@@ -100,7 +107,7 @@ const valueTypeName = computed(() => {
     }
   }
 
-  .type-methods {
+  .symbol-methods {
     summary {
       @apply text-gray-600 font-bold cursor-pointer;
     }

@@ -1,5 +1,33 @@
 import type { Field, FunctionSymbol, Type } from '../../types';
 
+/**
+ * Get the name for a `type`
+ * @param type
+ * @param param1
+ * @returns
+ */
+export const getTypeSign = (
+  type?: Type,
+  opts?: {
+    alias?: boolean;
+  }
+): string => {
+  const { alias } = opts || {};
+  if (!type) {
+    return '';
+  }
+
+  switch (type.type) {
+    case 'new_type':
+      if (alias) {
+        return 'type alias';
+      }
+      return 'type';
+    default:
+      return type.type;
+  }
+};
+
 export const genType = (type: Type): string => {
   switch (type.type) {
     case 'struct':

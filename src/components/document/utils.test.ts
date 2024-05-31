@@ -1,6 +1,6 @@
 import { describe, test } from 'bun:test';
 import assert from 'node:assert';
-import { genFn, genType, replaceHeading } from './utils';
+import { genFn, genType, getTypeSign, replaceHeading } from './utils';
 
 test('replaceHeading', () => {
   let raw = '# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3';
@@ -318,5 +318,42 @@ test('genFn', () => {
       id: '',
     }),
     'pub fn foo<T>(arg1: string): std.process.Command'
+  );
+});
+
+test('getTypeSymbolSign', () => {
+  assert.equal(
+    getTypeSign({ type: 'struct', module: 'std.process', name: 'Command' }),
+    'struct'
+  );
+  assert.equal(
+    getTypeSign({
+      type: 'new_type',
+      module: 'std.process',
+      name: 'test',
+    }),
+    'type'
+  );
+  assert.equal(
+    getTypeSign(
+      {
+        type: 'new_type',
+        module: 'std.process',
+        name: 'Command',
+      },
+      { alias: true }
+    ),
+    'type alias'
+  );
+  assert.equal(
+    getTypeSign(
+      {
+        type: 'new_type',
+        module: 'std.process',
+        name: 'Command',
+      },
+      { alias: true }
+    ),
+    'type alias'
   );
 });

@@ -29,7 +29,7 @@
 
         <template v-for="(symbol, name) in module.symbols" :key="name">
           <template v-if="symbol.kind === 'function'">
-            <Function :name="name" :symbol="symbol" heading="2" />
+            <Function :name="name" :symbol="symbol" :level="2" />
           </template>
         </template>
       </div>

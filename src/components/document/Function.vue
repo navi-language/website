@@ -1,11 +1,11 @@
 <template>
   <div class="navi-fn">
-    <component class="hidden" :is="headingTag">{{ name }}</component>
     <div class="fn-name">
       <a :href="`#${name}`" class="heading-anchor fn-anchor">#</a>
+      <component :is="headingTag">{{ name }}</component>
       <NaviCode :code="codeHTML" lang="navi" />
     </div>
-    <Doc :doc="symbol.doc" />
+    <Doc :doc="symbol.doc" :level="level + 1" />
   </div>
 </template>
 
@@ -20,15 +20,15 @@ const props = withDefaults(
   defineProps<{
     name: string;
     symbol: FunctionSymbol;
-    heading?: number;
+    level?: number;
   }>(),
   {
-    heading: 3,
+    level: 3,
   }
 );
 
 const codeHTML = genFn(props.name, props.symbol);
-const headingTag = computed(() => `h${props.heading}`);
+const headingTag = computed(() => `h${props.level}`);
 </script>
 
 <style type="scss" scoped>
@@ -36,8 +36,20 @@ const headingTag = computed(() => `h${props.heading}`);
   @apply mb-10;
 
   .fn-name {
-    @apply relative text-sm border-b border-gray-300 pb-2;
-    @apply dark:border-gray-700;
+    @apply relative text-sm mb-4;
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply mt-5 pt-0 pb-0 mb-2 text-lg text-gray-700 border-gray-700;
+      @apply dark:text-gray-400 dark:border-gray-400;
+    }
+
+    .fn-anchor {
+      @apply top-1;
+    }
 
     &:hover {
       .fn-anchor {

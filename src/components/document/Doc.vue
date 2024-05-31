@@ -4,15 +4,17 @@
 
 <script setup lang="ts">
 import { renderMarkdown } from './hightlight';
+import { replaceHeading } from './utils';
 const props = defineProps<{
   doc: string;
   default?: string;
+  level?: number;
 }>();
 
-const defaultDoc =
-  props.default === undefined ? 'No documentation available.' : props.default;
+const defaultDoc = props.default === undefined ? '' : props.default;
 
-const html = renderMarkdown(props.doc || defaultDoc);
+const md = replaceHeading(props.doc || defaultDoc, props.level || 2);
+const html = renderMarkdown(md);
 </script>
 
 <style type="scss">

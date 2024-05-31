@@ -37,7 +37,7 @@ export interface TypeSymbol extends BaseSymbol {
   // For enum
   items: EnumItem[];
   // for newtype, is a `type alias`
-  alias: Boolean;
+  alias: boolean;
   source_type?: Type;
 
   generic_params: string[];

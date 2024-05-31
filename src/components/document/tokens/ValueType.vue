@@ -16,5 +16,6 @@ const name = genType(props.type);
 <style type="scss" scoped>
 .token-value-type {
   @apply text-violet-800;
+  @apply dark:text-violet-400;
 }
 </style>
