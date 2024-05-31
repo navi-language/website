@@ -1,4 +1,4 @@
-import { pkgModules } from '../src/lib';
+import { pkgModules } from '../src/doc-json';
 
 export default {
   paths() {

@@ -6,9 +6,13 @@
 import { renderMarkdown } from './hightlight';
 const props = defineProps<{
   doc: string;
+  default?: string;
 }>();
 
-const html = renderMarkdown(props.doc || 'No documentation available.');
+const defaultDoc =
+  props.default === undefined ? 'No documentation available.' : props.default;
+
+const html = renderMarkdown(props.doc || defaultDoc);
 </script>
 
 <style type="scss">

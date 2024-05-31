@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { highlight } from './hightlight';
+import { highlight } from '../hightlight';
 
 const props = defineProps<{
   code: string;

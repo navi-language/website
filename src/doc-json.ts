@@ -2,23 +2,42 @@ import pkg from '../pkg.json';
 import stdlib from '../stdlib.json';
 import { Module } from './types';
 
+/**
+ * Prepare JSON
+ * @param module
+ * @returns
+ */
+const prepareLib = (modules: Record<string, Module>) => {
+  for (let [name, module] of Object.entries(modules)) {
+    module.id = name;
+
+    for (let [key, symbol] of Object.entries(module.symbols)) {
+      symbol.id = `${module.id}.${key}`;
+    }
+  }
+};
+
 const isPubModule = (module: string) => {
   return !module.startsWith('_');
 };
 
-export const stdlibModules = {};
-export const coreModules = {};
+export const stdlibModules: Record<string, Module> = {};
+export const coreModules: Record<string, Module> = {};
 
 Object.keys(stdlib.modules).forEach((name) => {
   let module: Module = stdlib.modules[name];
 
   if (name == '__LANG__') {
     for (let [key, symbol] of Object.entries(module.symbols)) {
-      const symbols = {};
-      symbols[key] = symbol;
-      coreModules[key] = {
-        symbols,
+      let moduleKey = key;
+      if (symbol.kind == 'type') {
+        moduleKey = symbol.value_type?.type || key;
+      }
+      coreModules[moduleKey] = coreModules[moduleKey] || {
+        id: moduleKey,
+        symbols: {},
       };
+      coreModules[moduleKey].symbols[key] = symbol;
     }
   } else {
     if (
@@ -33,6 +52,7 @@ Object.keys(stdlib.modules).forEach((name) => {
       return;
     }
 
+    module.id = name;
     stdlibModules[name] = module;
   }
 });
@@ -50,24 +70,37 @@ Object.keys(pkg.modules)
     pkgModules[name] = module;
   });
 
+prepareLib(coreModules);
+prepareLib(stdlibModules);
+prepareLib(pkgModules);
+
 export const vitePressSidebars = {
   stdlib: [
     {
-      text: 'Core',
+      text: 'core',
       link: '/stdlib/',
-      items: Object.keys(coreModules).map((module: string) => {
-        return { module, text: module, link: `/stdlib/${module}` };
-      }),
+      items: Object.keys(coreModules)
+        .sort()
+        .map((name: string) => {
+          const module = coreModules[name];
+          return { text: name, link: `/stdlib/${module.id}` };
+        }),
     },
     {
-      text: 'Std',
+      text: 'std',
       link: '/stdlib/',
-      items: Object.keys(stdlibModules).map((module: string) => {
-        return { module, text: module, link: `/stdlib/${module}` };
-      }),
+      items: Object.keys(stdlibModules)
+        .sort()
+        .map((name: string) => {
+          const module = stdlibModules[name];
+          return { text: name, link: `/stdlib/${module.id}` };
+        }),
     },
   ],
-  pkg: Object.keys(pkgModules).map((module: string) => {
-    return { module, text: module, link: `/pkg/${module}` };
-  }),
+  pkg: Object.keys(pkgModules)
+    .sort()
+    .map((name: string) => {
+      const module = pkgModules[name];
+      return { text: name, link: `/pkg/${module.id}` };
+    }),
 };

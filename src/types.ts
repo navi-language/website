@@ -3,12 +3,28 @@
  */
 
 export interface Module {
+  id: string;
   doc?: string;
   symbols: Record<string, Symbol>;
 }
 
 export type Symbol = TypeSymbol | FunctionSymbol | GlobalVarSymbol;
-export interface TypeSymbol {
+
+interface BaseSymbol {
+  /**
+   * The unique identifier of the symbol.
+   *
+   * Prepare in doc-json.ts
+   */
+  id?: string;
+  /**
+   * The module of the symbol.
+   *
+   * Prepare in doc-json.ts
+   */
+  module?: Module;
+}
+export interface TypeSymbol extends BaseSymbol {
   doc: string;
   kind: 'type';
   value_type?: Type;
@@ -26,15 +42,15 @@ export interface TypeSymbol {
 
   generic_params: string[];
 }
-export interface FunctionSymbol {
+export interface FunctionSymbol extends BaseSymbol {
   doc: string;
   kind: 'function';
   arguments: Argument[];
   return_type?: Type;
   throws?: Type[];
-  generic_params: string[];
+  generic_params?: string[];
 }
-export interface GlobalVarSymbol {
+export interface GlobalVarSymbol extends BaseSymbol {
   doc: string;
   kind: 'global_var';
   is_const: boolean;
@@ -57,7 +73,7 @@ export interface Field {
 export interface Method {
   doc: string;
   name: string;
-  generic_params: string[];
+  generic_params?: string[];
   arguments: Argument[];
   return_type?: Type;
   throws?: Type[];
@@ -117,7 +133,7 @@ export type Type =
   | {
       type: 'closure';
       arguments: Type[];
-      return_type: Type;
+      return_type?: Type;
       throws?: Type[];
     }
   | {
