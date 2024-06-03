@@ -22,6 +22,16 @@ const highlighter = await getHighlighter({
 
 await highlighter.loadLanguage(naviLanguage, naviStreamLanguage);
 
+const shikiConfig = {
+  themes: {
+    light: 'github-light',
+    dark: 'github-dark',
+  },
+  trimEndingNewline: true,
+  defaultColor: 'light',
+  cssVariablePrefix: '--shiki-',
+};
+
 /**
  * Highlight code to HTML
  * @param code
@@ -30,28 +40,13 @@ await highlighter.loadLanguage(naviLanguage, naviStreamLanguage);
  */
 export function highlight(code: string, lang: string) {
   return highlighter.codeToHtml(code, {
-    themes: {
-      light: 'github-light',
-      dark: 'github-dark',
-    },
+    ...shikiConfig,
     lang,
     structure: 'inline',
-    defaultColor: 'light',
-    cssVariablePrefix: '--shiki-',
   });
 }
 
-const md = MarkdownIt().use(
-  fromHighlighter(highlighter, {
-    themes: {
-      light: 'github-light',
-      dark: 'github-dark',
-    },
-    trimEndingNewline: true,
-    defaultColor: 'light',
-    cssVariablePrefix: '--shiki-',
-  })
-);
+const md = MarkdownIt().use(fromHighlighter(highlighter, shikiConfig));
 
 /**
  * Render Markdown to HTML

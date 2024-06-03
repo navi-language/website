@@ -45,10 +45,13 @@ Object.keys(stdlib.modules).forEach((name) => {
         name == 'std' ||
         name.startsWith('std.') ||
         name == 'test_harness' ||
-        name.startsWith('lang.') ||
-        isPubModule(name)
+        name.startsWith('lang.')
       )
     ) {
+      return;
+    }
+
+    if (!isPubModule(name)) {
       return;
     }
 
