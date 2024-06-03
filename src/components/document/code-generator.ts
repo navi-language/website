@@ -1,11 +1,8 @@
 import { Module, Type } from '../../types';
 
-function optionalType(name: string, isOptional: boolean = false): string {
-  return isOptional ? `${name}?` : name;
-}
-
-function link(text: string, href: string): string {
-  return `<a href="${href}">${text}</a>`;
+function link(text: string, href: string, opts?: { class?: string }): string {
+  const classAttr = opts?.class ? ` class="${opts.class}"` : '';
+  return `<a href="${href}"${classAttr}>${text}</a>`;
 }
 
 export class CodeGenerator {
@@ -34,73 +31,93 @@ export class CodeGenerator {
     }
   }
 
-  genType(type: Type, optional: boolean = false): string {
-    switch (type.type) {
-      case 'struct':
-      case 'enum':
-      case 'interface':
-      case 'new_type':
-        const s = `${type.module}.${type.name}`;
-        switch (s) {
-          case 'std.str.string':
-            return link(
-              optionalType('string', optional),
-              this.moduleURL('std.str', 'string')
-            );
-          case 'std.any.Any':
-            return link(
-              optionalType('Any', optional),
-              this.moduleURL('std.any', 'Any')
-            );
-          default:
-            return link(
-              optionalType(s, optional),
-              this.moduleURL(type.module, type.name)
-            );
-        }
-      case 'array':
-        return `[${this.genType(type.element)}]`;
-      case 'map':
-        return `&lt;${this.genType(type.key)}, ${this.genType(type.value)}&gt;`;
-      case 'channel':
-        return `channel::<${this.genType(type.element)}>`;
-      case 'closure':
-        let args = `|(${type.arguments
-          .map((t) => this.genType(t))
-          .join(', ')})|`;
-        let returns = type.return_type
-          ? `: ${this.genType(type.return_type)}`
-          : '';
+  genType(type: Type): string {
+    const options = {
+      class: '--code-class',
+    };
 
-        return args + returns;
-      case 'bool':
-        return link(
-          optionalType('bool', optional),
-          this.moduleURL('bool', 'bool')
-        );
-      case 'char':
-        return link(
-          optionalType('char', optional),
-          this.moduleURL('char', 'char')
-        );
-      case 'float':
-        return link(
-          optionalType('float', optional),
-          this.moduleURL('float', 'float')
-        );
-      case 'generic':
-        return `T`;
-      case 'int':
-        return link(
-          optionalType('int', optional),
-          this.moduleURL('int', 'int')
-        );
-      case 'optional':
-        return `${this.genType(type.element)}?`;
-      case 'union':
-        return type.types.map((t) => this.genType(t)).join(' | ');
-      default:
-        throw `unimplemented: ${JSON.stringify(type)}`;
+    const getText = () => {
+      switch (type.type) {
+        case 'struct':
+        case 'enum':
+        case 'interface':
+        case 'new_type':
+          const s = `${type.module}.${type.name}`;
+          switch (s) {
+            case 'std.str.string':
+              return {
+                name: 'string',
+                module: 'std.str',
+                symbol: 'string',
+              };
+            case 'std.any.Any':
+              return {
+                name: 'Any',
+                module: 'std.any',
+                symbol: 'string',
+              };
+            default:
+              return {
+                name: type.name,
+                module: type.module,
+                symbol: type.name,
+              };
+          }
+        case 'bool':
+          return {
+            name: 'bool',
+            module: 'bool',
+          };
+        case 'char':
+          return {
+            name: 'char',
+            module: 'char',
+          };
+        case 'float':
+          return {
+            name: 'float',
+            module: 'float',
+          };
+        case 'generic':
+          return `T`;
+        case 'int':
+          return {
+            name: 'int',
+            module: 'int',
+          };
+        case 'optional':
+          return `${this.genType(type.element)}?`;
+        case 'array':
+          return `[${this.genType(type.element)}]`;
+        case 'map':
+          return `&lt;${this.genType(type.key)}, ${this.genType(
+            type.value
+          )}&gt;`;
+        case 'channel':
+          return `channel::<${this.genType(type.element)}>`;
+        case 'closure':
+          let args = `|(${type.arguments
+            .map((t) => this.genType(t))
+            .join(', ')})|`;
+          let returns = type.return_type
+            ? `: ${this.genType(type.return_type)}`
+            : '';
+
+          return args + returns;
+        case 'union':
+          return type.types.map((t) => this.genType(t)).join(' | ');
+        default:
+          throw `unimplemented: ${JSON.stringify(type)}`;
+      }
+    };
+
+    let text = getText();
+    if (typeof text === 'string') {
+      return text;
     }
+
+    return link(text.name, this.moduleURL(text.module, text.symbol), {
+      class: '_nv_class',
+    });
   }
 }

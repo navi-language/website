@@ -12,7 +12,7 @@ describe('genType', () => {
         module: 'std.process',
         name: 'Command',
       }),
-      'std.process.Command'
+      '<a href="/stdlib/std.process.Command" class="_nv_class">Command</a>'
     );
   });
 
@@ -23,7 +23,7 @@ describe('genType', () => {
         module: 'std.foo',
         name: 'Bar',
       }),
-      'std.foo.Bar'
+      '<a href="/stdlib/std.foo.Bar" class="_nv_class">Bar</a>'
     );
   });
 
@@ -34,7 +34,7 @@ describe('genType', () => {
         module: 'std.str',
         name: 'string',
       }),
-      'string'
+      '<a href="/stdlib/std.str.string" class="_nv_class">string</a>'
     );
   });
 
@@ -48,7 +48,7 @@ describe('genType', () => {
           name: 'string',
         },
       }),
-      '[string]'
+      '[<a href="/stdlib/std.str.string" class="_nv_class">string</a>]'
     );
   });
 
@@ -62,7 +62,7 @@ describe('genType', () => {
           name: 'Command',
         },
       }),
-      '[std.process.Command]'
+      '[<a href="/stdlib/std.process.Command" class="_nv_class">Command</a>]'
     );
   });
 
@@ -81,7 +81,7 @@ describe('genType', () => {
           name: 'Command',
         },
       }),
-      '<string, std.process.Command>'
+      '&lt;<a href="/stdlib/std.str.string" class="_nv_class">string</a>, <a href="/stdlib/std.process.Command" class="_nv_class">Command</a>&gt;'
     );
   });
 
@@ -102,7 +102,7 @@ describe('genType', () => {
           },
         ],
       }),
-      'string | std.process.Command'
+      '<a href="/stdlib/std.str.string" class="_nv_class">string</a> | <a href="/stdlib/std.process.Command" class="_nv_class">Command</a>'
     );
   });
 
@@ -116,7 +116,7 @@ describe('genType', () => {
           name: 'string',
         },
       }),
-      'string?'
+      '<a href="/stdlib/std.str.string" class="_nv_class">string</a>?'
     );
   });
 
@@ -130,7 +130,7 @@ describe('genType', () => {
           name: 'Command',
         },
       }),
-      'std.process.Command?'
+      '<a href="/stdlib/std.process.Command" class="_nv_class">Command</a>?'
     );
   });
 
@@ -151,7 +151,7 @@ describe('genType', () => {
           name: 'Command',
         },
       }),
-      '|(string)|: std.process.Command'
+      '|(<a href="/stdlib/std.str.string" class="_nv_class">string</a>)|: <a href="/stdlib/std.process.Command" class="_nv_class">Command</a>'
     );
 
     assert.equal(
@@ -165,7 +165,7 @@ describe('genType', () => {
           },
         ],
       }),
-      '|(string)|'
+      '|(<a href="/stdlib/std.str.string" class="_nv_class">string</a>)|'
     );
   });
 });
