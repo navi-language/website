@@ -1,4 +1,4 @@
-import type { Field, FunctionSymbol, Type } from '../../types';
+import type { Field, FunctionSymbol, Type, TypeSymbol } from '../../types';
 
 function link(text: string, href: string, opts?: { class?: string }): string {
   const classAttr = opts?.class ? ` class="${opts.class}"` : '';
@@ -38,6 +38,43 @@ export class CodeGenerator {
     } else {
       return `${symbolSuffix}${suffix || ''}`;
     }
+  }
+
+  /**
+   * Get the name for a `type`
+   * @param type
+   * @param param1
+   * @returns
+   */
+  getTypeSign(name: string, symbol: TypeSymbol): string {
+    if (!symbol.kind) {
+      return '';
+    }
+
+    const sign = () => {
+      switch (symbol.kind) {
+        case 'type':
+          if (symbol.value_type?.type == 'new_type' || symbol.source_type) {
+            if (symbol.alias) {
+              return 'type alias';
+            }
+
+            return 'type';
+          }
+
+          return symbol.value_type?.type || 'type';
+
+        default:
+          return symbol.kind;
+      }
+    };
+
+    let suffix = '';
+    if (symbol.source_type) {
+      suffix = seq(` `, `=`, ` `, this.genType(symbol.source_type));
+    }
+
+    return seq(token('keyword', sign()), ' ', token('type', name), suffix);
   }
 
   genType(type: Type): string {
@@ -173,7 +210,12 @@ export class CodeGenerator {
     let throws = '';
     if (symbol.throws) {
       let throws_types = symbol.throws.map((t) => this.genType(t));
-      throws = seq(' ', token('keyword', 'throws'), throws_types.join(', '));
+      throws = seq(
+        ' ',
+        token('keyword', 'throws'),
+        throws_types.length > 0 ? ' ' : '',
+        throws_types.join(', ')
+      );
     }
 
     let generics = '';
@@ -212,6 +254,18 @@ export class CodeGenerator {
       ':',
       ' ',
       this.genType(field.value_type)
+    );
+  }
+
+  genImplFor(interface_: Type, for_: Type) {
+    return seq(
+      token('keyword', 'impl'),
+      ' ',
+      this.genType(interface_),
+      ' ',
+      token('keyword', 'for'),
+      ' ',
+      this.genType(for_)
     );
   }
 }

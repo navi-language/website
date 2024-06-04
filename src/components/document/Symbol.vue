@@ -7,18 +7,16 @@
       ]"
     />
     <div class="navi-symbol">
-      <details class="symbol-summary" open>
-        <summary class="symbol-name">
-          <div :class="`symbol-kind symbol-kind-${symbol.value_type.type}`">
-            {{ typeSign }}
-          </div>
+      <div class="symbol-summary" open>
+        <div class="symbol-name">
           <h1 :id="name">{{ name }}</h1>
-        </summary>
+          <pre class="_navi_code" v-html="typeSign" />
+        </div>
         <Doc :doc="symbol.doc" />
-      </details>
+      </div>
 
       <section class="symbol-fields" v-if="symbol.fields.length > 0">
-        <div class="doc-section-title">Fields</div>
+        <div class="doc-section-title" id="fields">Fields</div>
         <template v-for="field in symbol.fields" :key="field.name">
           <details class="field-symbol">
             <summary>
@@ -38,15 +36,8 @@
         </template>
       </section>
 
-      <section class="symbol-methods" v-if="symbol.methods.length > 0">
-        <div class="doc-section-title">Methods</div>
-        <template v-for="method in symbol.methods" :key="method.name">
-          <Function :name="method.name" :symbol="method" :level="2" />
-        </template>
-      </section>
-
       <section class="symbol-items" v-if="symbol.items.length > 0">
-        <div class="doc-section-title">Enum Items</div>
+        <div class="doc-section-title" id="items">Enum Items</div>
         <ul>
           <template v-for="item in symbol.items" :key="item.name">
             <li :id="item.name">
@@ -58,6 +49,23 @@
           </template>
         </ul>
       </section>
+
+      <section class="symbol-impls" v-if="symbol.implementions.length > 0">
+        <div class="doc-section-title" id="implementions">Implementions</div>
+        <template v-for="impl in symbol.implementions" :key="impl">
+          <pre
+            class="_nv_code"
+            v-html="codeGenerator.genImplFor(impl, symbol.value_type)"
+          />
+        </template>
+      </section>
+
+      <section class="symbol-methods" v-if="symbol.methods.length > 0">
+        <div class="doc-section-title" id="methods">Methods</div>
+        <template v-for="method in symbol.methods" :key="method.name">
+          <Function :name="method.name" :symbol="method" :level="2" />
+        </template>
+      </section>
     </div>
   </div>
 </template>
@@ -68,7 +76,6 @@ import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
 import { codeGenerator } from './code-generator';
-import { getTypeSign } from './utils';
 
 import './style.scss';
 
@@ -80,9 +87,7 @@ const props = defineProps<{
   symbol: TypeSymbol;
 }>();
 
-const typeSign = getTypeSign(props.symbol.value_type, {
-  alias: props.symbol.alias,
-});
+const typeSign = codeGenerator.getTypeSign(props.name, props.symbol);
 </script>
 
 <style type="scss" scoped>
@@ -92,14 +97,14 @@ const typeSign = getTypeSign(props.symbol.value_type, {
   }
 
   .symbol-name {
-    @apply flex items-baseline gap-2 border-b border-gray-200 border-dashed pb-2 mb-5;
+    @apply border-b border-gray-200 border-dashed pb-2 mb-5;
 
     &::before {
       top: 19px;
     }
 
     h1 {
-      @apply p-0 m-0 border-none text-gray-800;
+      @apply p-0 m-0 border-none text-gray-800 mb-3;
       @apply dark:text-gray-200;
     }
 

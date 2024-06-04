@@ -1,33 +1,3 @@
-import type { Type } from '../../types';
-
-/**
- * Get the name for a `type`
- * @param type
- * @param param1
- * @returns
- */
-export const getTypeSign = (
-  type?: Type,
-  opts?: {
-    alias?: boolean;
-  }
-): string => {
-  const { alias } = opts || {};
-  if (!type) {
-    return '';
-  }
-
-  switch (type.type) {
-    case 'new_type':
-      if (alias) {
-        return 'type alias';
-      }
-      return 'type';
-    default:
-      return type.type;
-  }
-};
-
 /**
  * Replace all headings in a markdown document with headings of a different level.
  * @param markdown
