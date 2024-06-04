@@ -243,11 +243,10 @@ test('genFn', () => {
       },
     ],
   });
-  console.log(result);
 
   assert.equal(
     result,
-    '<span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <span class="_nv_token_fn">foo</span><T>(self, arg1: <a href="std.str.string"><span class="_nv_token_type">string</span></a>, arg2: <a href="int"><span class="_nv_token_type">int</span></a> = 101, arg3: ..<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>? throws <a href="std.err.Error"><span class="_nv_token_type">Error</span></a>, <a href="std.err.IOError"><span class="_nv_token_type">IOError</span></a>'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a><T>(<span class="_nv_token_self">self</span>, <span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>, <span class="_nv_token_argument">arg2</span>: <a href="int"><span class="_nv_token_type">int</span></a> = 101, <span class="_nv_token_argument">arg3</span>: ..<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>? <span class="_nv_token_keyword">throws</span><a href="std.err.Error"><span class="_nv_token_type">Error</span></a>, <a href="std.err.IOError"><span class="_nv_token_type">IOError</span></a>'
   );
 
   result = genFn('foo', {
@@ -271,10 +270,9 @@ test('genFn', () => {
     id: '',
     throws: [],
   });
-  console.log(result);
   assert.equal(
     result,
-    'pub fn foo(self, arg3: ..<a href="std.process.Command" class="_nv_class">Command</a>) throws'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a>(<span class="_nv_token_self">self</span>, <span class="_nv_token_argument">arg3</span>: ..<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>) <span class="_nv_token_keyword">throws</span>'
   );
 
   assert.equal(
@@ -300,7 +298,7 @@ test('genFn', () => {
       generic_params: ['T'],
       id: '',
     }),
-    'pub fn foo<T>(arg1: <a href="std.str.string" class="_nv_class">string</a>): <a href="std.process.Command" class="_nv_class">Command</a>'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a><T>(<span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>'
   );
 });
 
@@ -315,6 +313,6 @@ test('genField', () => {
         name: 'string',
       },
     }),
-    '<span class="_nv_token_variable">title</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>'
+    '<span id="field.title" /><a href="#field.title"><span class="_nv_token_variable">title</span></a>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>'
   );
 });
