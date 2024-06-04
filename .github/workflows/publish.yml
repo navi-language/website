@@ -4,7 +4,7 @@ on:
       - main
       - fix-ci
   schedule:
-    - cron: "0 0 * * 0"
+    - cron: '0 0 * * 0'
 permissions:
   contents: read
   pages: write
@@ -27,10 +27,9 @@ jobs:
           echo "$HOME/.navi" >> $GITHUB_PATH
       - name: Build Website
         run: |
-          navi doc --stdlib -o stdlib.json
+          navi doc ~/.navi/stdlib -o stdlib.json --include-native
+          navi doc ~/.navi/pkg -o pkg.json --include-native
           navi run script/generate-release.nv
-          navi run script/generate-stdlib.nv
-          navi run script/fix-bad-markdown.nv
           bun install
           bun run build
       - name: Setup Pages
@@ -38,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ".vitepress/dist"
+          path: '.vitepress/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2

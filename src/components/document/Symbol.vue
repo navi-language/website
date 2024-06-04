@@ -2,34 +2,39 @@
   <div class="navi-document">
     <Breadcumb
       :breadcumbs="[
-        { name: module, href: `/stdlib/${module}` },
+        { name: module, href: `/${prefix}/${module}` },
         { name: name },
       ]"
     />
     <div class="navi-symbol">
-      <div class="symbol-summary">
-        <div class="symbol-name">
+      <details class="symbol-summary" open>
+        <summary class="symbol-name">
           <div :class="`symbol-kind symbol-kind-${symbol.value_type.type}`">
             {{ typeSign }}
           </div>
           <h1 :id="name">{{ name }}</h1>
-        </div>
+        </summary>
         <Doc :doc="symbol.doc" />
-      </div>
+      </details>
 
       <section class="symbol-fields" v-if="symbol.fields.length > 0">
-        <div class="section-title">Fields</div>
+        <div class="doc-section-title">Fields</div>
         <template v-for="field in symbol.fields" :key="field.name">
-          <div class="field-symbol">
-            <div class="field-name">
-              <a :href="`#${name}`" class="heading-anchor fn-anchor">#</a>
-              <div class="flex items-center justify-between flex1">
-                <h3>{{ field.name }}</h3>
-                <TokenValueType :type="field.value_type" />
+          <details class="field-symbol">
+            <summary>
+              <div class="field-name">
+                <a :href="`#${name}`" class="heading-anchor fn-anchor">#</a>
+                <div class="flex items-center justify-between flex1">
+                  <pre
+                    class="_nv_code"
+                    v-html="codeGenerator.genField(field)"
+                  />
+                </div>
               </div>
-            </div>
+              <Doc :doc="field.doc" summary />
+            </summary>
             <Doc :doc="field.doc" />
-          </div>
+          </details>
         </template>
       </section>
 
@@ -62,10 +67,13 @@ import type { Module, TypeSymbol } from '../../types';
 import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
-import { TokenValueType } from './tokens';
+import { codeGenerator } from './code-generator';
 import { getTypeSign } from './utils';
 
+import './style.scss';
+
 const props = defineProps<{
+  prefix: 'stdlib' | 'pkg';
   modules: Record<string, Module>;
   name: string;
   module: string;
@@ -85,6 +93,10 @@ const typeSign = getTypeSign(props.symbol.value_type, {
 
   .symbol-name {
     @apply flex items-baseline gap-2 border-b border-gray-200 border-dashed pb-2 mb-5;
+
+    &::before {
+      top: 19px;
+    }
 
     h1 {
       @apply p-0 m-0 border-none text-gray-800;
@@ -115,12 +127,14 @@ const typeSign = getTypeSign(props.symbol.value_type, {
 }
 
 .field-symbol {
-  @apply mt-5;
+  summary {
+    &::before {
+      top: 4px;
+    }
+  }
 
   .field-name {
-    @apply flex items-center gap-2 pb-1 border-b border-gray-200;
-    @apply dark:border-gray-900;
-
+    @apply flex items-center;
     h3 {
       @apply p-0 m-0 border-none text-gray-800;
       @apply dark:text-gray-200;

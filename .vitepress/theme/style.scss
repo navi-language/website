@@ -6,8 +6,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '../../src/components/document/style.scss';
-
 :root {
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);

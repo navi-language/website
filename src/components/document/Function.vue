@@ -1,20 +1,23 @@
 <template>
-  <div class="navi-fn">
-    <div class="fn-name">
-      <a :href="`#${name}`" class="heading-anchor fn-anchor">#</a>
-      <component :is="headingTag">{{ name }}</component>
-      <NaviCode :code="codeHTML" lang="navi" />
-    </div>
+  <details class="navi-fn">
+    <summary>
+      <div class="fn-name">
+        <component :is="headingTag" class="hidden">{{ name }}</component>
+        <pre class="_nv_code" v-html="codeHTML" />
+      </div>
+      <Source :source="symbol.source" />
+      <Doc :doc="symbol.doc" summary />
+    </summary>
     <Doc :doc="symbol.doc" :level="level + 1" />
-  </div>
+  </details>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { FunctionSymbol } from '../../types';
 import Doc from './Doc.vue';
-import NaviCode from './tokens/NaviCode.vue';
-import { genFn } from './utils';
+import Source from './Source.vue';
+import { codeGenerator } from './code-generator';
 
 const props = withDefaults(
   defineProps<{
@@ -27,16 +30,16 @@ const props = withDefaults(
   }
 );
 
-const codeHTML = genFn(props.name, props.symbol);
+const codeHTML = codeGenerator.genFn(props.name, props.symbol);
 const headingTag = computed(() => `h${props.level}`);
 </script>
 
 <style type="scss" scoped>
 .navi-fn {
-  @apply mb-10;
+  @apply mb-5;
 
   .fn-name {
-    @apply relative text-sm mb-4;
+    @apply relative text-sm mb-4 flex items-center justify-between;
 
     h2,
     h3,
@@ -47,18 +50,8 @@ const headingTag = computed(() => `h${props.level}`);
       @apply dark:text-gray-400 dark:border-gray-400;
     }
 
-    .fn-anchor {
-      @apply top-1;
-    }
-
-    &:hover {
-      .fn-anchor {
-        @apply block;
-      }
-    }
-
-    pre {
-      @apply whitespace-break-spaces outline-none;
+    pre._nv_code {
+      @apply whitespace-break-spaces outline-none text-base font-semibold;
     }
   }
 }

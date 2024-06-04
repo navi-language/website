@@ -1,5 +1,5 @@
 <template>
-  <pre class="shiki navi-code" v-html="html" />
+  <div class="shiki navi-code" v-html="html" />
 </template>
 
 <script setup lang="ts">

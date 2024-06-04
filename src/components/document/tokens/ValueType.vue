@@ -1,16 +1,16 @@
 <template>
-  <span class="token-value-type">{{ name }}</span>
+  <span class="token-value-type" v-html="nameHTML"></span>
 </template>
 
 <script setup lang="ts">
 import type { Type } from '../../../types';
-import { genType } from '../utils';
+import { codeGenerator } from '../code-generator';
 
 const props = defineProps<{
   type: Type;
 }>();
 
-const name = genType(props.type);
+const nameHTML = codeGenerator.genType(props.type);
 </script>
 
 <style type="scss" scoped>

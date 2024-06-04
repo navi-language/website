@@ -66,8 +66,8 @@ export interface Field {
   doc: string;
   name: string;
   value_type: Type;
-  read: boolean;
-  write: boolean;
+  read?: boolean;
+  write?: boolean;
 }
 
 export interface Method {

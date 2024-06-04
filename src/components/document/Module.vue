@@ -15,6 +15,11 @@
               <template v-if="symbol.kind === 'type'">
                 <li>
                   <a :href="symbol.id">{{ name }}</a>
+                  <span class="ml-1 text-gray-500">{{
+                    getTypeSign(symbol.value_type, {
+                      alias: symbol.alias,
+                    })
+                  }}</span>
                 </li>
               </template>
             </template>
@@ -43,7 +48,11 @@ import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
 
+import './style.scss';
+import { getTypeSign } from './utils';
+
 const props = defineProps<{
+  prefix: 'stdlib' | 'pkg';
   name: String;
   module: Module;
   modules: Record<string, Module>;

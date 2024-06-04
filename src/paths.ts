@@ -1,5 +1,9 @@
 import { Module, TypeSymbol } from '../src/types';
 
+const formatFilename = (name: string) => {
+  return name.replace(/[^a-zA-Z\-_\.]/g, '');
+};
+
 type Params =
   | {
       type: 'module';
@@ -27,7 +31,7 @@ export const generatePaths = (allModules: Record<string, Module>) => {
         results.push({
           params: {
             type: 'module',
-            id,
+            id: formatFilename(id),
             name: id,
             module,
             modules: allModules,
@@ -40,7 +44,7 @@ export const generatePaths = (allModules: Record<string, Module>) => {
             results.push({
               params: {
                 type: 'type',
-                id: `${module_id}.${symbol_name}`,
+                id: formatFilename(`${module_id}.${symbol_name}`),
                 module: module_id,
                 name: symbol_name,
                 symbol,
