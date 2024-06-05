@@ -31,10 +31,9 @@ const sourceHTML = highlight(rawSource, 'navi');
       top: 2px;
     }
   }
-  pre {
-    @apply mt-2 text-sm p-4 rounded-sm overflow-hidden overflow-x-scroll;
-    @apply bg-gray-50 border border-gray-200;
-    @apply dark:bg-gray-950 dark:border-gray-800;
+  pre.shiki {
+    @apply mt-2 text-sm p-4 rounded-sm overflow-hidden overflow-x-scroll whitespace-break-spaces;
+    @apply bg-gray-100 dark:bg-stone-900;
   }
 }
 </style>
