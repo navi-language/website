@@ -2412,10 +2412,10 @@ The `use` keyword is used to import a module from the standard library or a file
 
 ```nv
 use std.io;
-use std.url.URL;
+use std.url.Url;
 
 fn main() throws {
-    let url = try URL.parse("https://navi-lang.org");
+    let url = try Url.parse("https://navi-lang.org");
     assert_eq url.host(), "navi-lang.org";
 }
 ```
@@ -2427,9 +2427,9 @@ When you import, the last part of the module name is the name of the module, e.g
 Sometimes we may want to use a different name for a module, we can use `as` to import a module with an alias.
 
 ```nv
-use std.url.URL as BaseURL;
+use std.url.Url as BaseUrl;
 
-let url = try! BaseURL.parse("https://navi-lang.org");
+let url = try! BaseUrl.parse("https://navi-lang.org");
 assert_eq url.host(), "navi-lang.org";
 ```
 
@@ -2438,10 +2438,10 @@ assert_eq url.host(), "navi-lang.org";
 We can use multiple modules by one `use`.
 
 ```nv
-use std.{io, url.URL};
+use std.{io, url.Url};
 
 fn main() throws {
-    let url = try URL.parse("https://navi-lang.org");
+    let url = try Url.parse("https://navi-lang.org");
     assert_eq url.host(), "navi-lang.org";
 }
 ```

@@ -1,0 +1,102 @@
+.navi-document {
+  .doc-section-title {
+    @apply text-lg font-semibold my-8 mb-6 border-b pb-1;
+  }
+
+  .heading-anchor {
+    @apply absolute px-1 -left-4 hidden text-blue-600;
+    @apply dark:border-blue-400;
+  }
+
+  .navi-token-type {
+    @apply text-violet-800;
+    @apply dark:text-violet-200;
+  }
+
+  details {
+    summary {
+      @apply relative m-0;
+      list-style: none;
+      outline: none;
+    }
+    summary::marker {
+      content: '';
+      display: none;
+    }
+    & > summary::before {
+      @apply absolute cursor-pointer w-4 h-4 inline-block opacity-40 hover:opacity-90 -left-6;
+
+      top: 5px;
+      content: '';
+
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z'%3E%3C/path%3E%3C/svg%3E")
+        no-repeat top left;
+    }
+    &[open] > summary::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z'%3E%3C/path%3E%3C/svg%3E");
+    }
+    & > summary::after {
+      @apply overflow-hidden w-0 h-0 absolute;
+    }
+  }
+}
+
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  /* Optional, if you also want font styles */
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/** Highlight */
+._nv_code {
+  @apply text-gray-600 dark:text-gray-400;
+  @apply font-normal;
+  a {
+    @apply no-underline;
+  }
+}
+._nv_token_keyword {
+  color: #0433ff;
+  @apply font-normal;
+}
+._nv_token_fn {
+  @apply font-normal;
+  color: #0000a2;
+}
+._nv_token_argument {
+  @apply text-gray-600 dark:text-gray-400 font-normal;
+}
+._nv_token_variable {
+  @apply text-yellow-600 dark:text-yellow-400 font-normal;
+}
+._nv_token_type {
+  @apply font-semibold;
+  color: #571ab7;
+}
+._nv_token_self {
+  @apply text-purple-600 dark:text-purple-400 font-normal;
+}
+
+html.dark {
+  ._nv_code {
+    color: #caccca;
+  }
+  ._nv_token_keyword {
+    color: #ae9513;
+  }
+  ._nv_token_argument {
+    color: #caccca;
+  }
+  ._nv_token_type {
+    color: #d73737;
+  }
+  ._nv_token_fn {
+    color: #c0b298;
+  }
+  ._nv_token_self {
+    color: #e1d797;
+  }
+}

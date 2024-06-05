@@ -90,7 +90,7 @@ fn build_body(module: Module): string {
     buf.writeln(frontmatter({"title": title, "editLink": false}));
 
     // Import Component
-    buf.write(`<script setup>\nimport FunctionTitle from '../components/FunctionTitle.vue'\n</script>\n`);
+    buf.write(`<script setup>\nimport FunctionTitle from '../src/components/FunctionTitle.vue'\n</script>\n`);
 
     buf.write(heading(module.name, level: 1));
 

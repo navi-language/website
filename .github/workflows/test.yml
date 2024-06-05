@@ -6,8 +6,8 @@ jobs:
     name: Test Script
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: dist/.cache
           key: cache-dist
@@ -16,12 +16,12 @@ jobs:
         with:
           navi-version: nightly
       - run: |
-          bun run test
+          bun run test:all
   test_install:
     name: Test Install Navi
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: |
           ./public/install
           ./public/install nightly

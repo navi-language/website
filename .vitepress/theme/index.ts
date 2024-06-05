@@ -1,9 +1,10 @@
 // https://vitepress.dev/guide/custom-theme
-import type { Theme } from "vitepress";
-import DefaultTheme from "vitepress/theme";
-import { h } from "vue";
-import "./style.scss";
-import "./play-code";
+import type { Theme } from 'vitepress';
+import DefaultTheme from 'vitepress/theme';
+import { h } from 'vue';
+import './play-code';
+
+import './style.scss';
 
 export default {
   extends: DefaultTheme,
