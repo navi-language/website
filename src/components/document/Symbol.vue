@@ -90,7 +90,7 @@ if (props.module) {
   });
 }
 
-const typeSign = codeGenerator.getTypeSign(props.name, props.symbol);
+const typeSign = codeGenerator.genType(props.name, props.symbol);
 </script>
 
 <style type="scss" scoped>

@@ -54,6 +54,7 @@ export interface GlobalVarSymbol extends BaseSymbol {
   doc: string;
   kind: 'global_var';
   is_const: boolean;
+  value_type: Type;
 }
 
 export interface EnumItem {

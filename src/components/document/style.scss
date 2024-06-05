@@ -113,7 +113,10 @@ html.dark .shiki span {
   @apply text-gray-600 dark:text-gray-400 font-normal;
 }
 ._nv_token_variable {
-  @apply text-yellow-600 dark:text-yellow-400 font-normal;
+  @apply text-yellow-700 dark:text-yellow-300 font-normal;
+}
+._nv_token_const {
+  @apply text-red-700 dark:text-red-300 font-normal;
 }
 ._nv_token_type {
   @apply font-semibold;
@@ -141,5 +144,11 @@ html.dark {
   }
   ._nv_token_self {
     color: #e1d797;
+  }
+  ._nv_token_variable {
+    color: #e1d797;
+  }
+  ._nv_token_const {
+    color: #b54e05;
   }
 }
