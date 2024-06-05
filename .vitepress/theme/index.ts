@@ -2,6 +2,7 @@
 import type { Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import { h } from "vue";
+import "./font.css";
 import "./style.scss";
 import "./play-code";
 
