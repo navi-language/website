@@ -285,6 +285,10 @@ export class CodeGenerator {
       this.genType(for_)
     );
   }
+
+  genImplementations(impls: Type[]): string {
+    return impls.map((impl) => this.genType(impl)).join(span(', '));
+  }
 }
 
 export const codeGenerator = new CodeGenerator();

@@ -14,8 +14,10 @@
   }
 
   details {
+    @apply p-0 m-0;
+
     summary {
-      @apply relative m-0;
+      @apply relative m-0 p-0;
       list-style: none;
       outline: none;
     }
@@ -59,6 +61,36 @@ html.dark .shiki span {
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.navi-doc {
+  @apply pl-5;
+
+  p {
+    @apply my-2;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  h7 {
+    margin: 0;
+    padding: 0;
+    border: none !important;
+  }
+
+  h2 {
+    font-size: 1em;
+  }
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 0.9em;
+  }
 }
 
 /** Highlight */

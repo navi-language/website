@@ -47,12 +47,10 @@
 
       <section class="symbol-impls" v-if="symbol.implementions.length > 0">
         <div class="doc-section-title" id="implementions">Implementions</div>
-        <template v-for="impl in symbol.implementions" :key="impl">
-          <pre
-            class="_nv_code"
-            v-html="codeGenerator.genImplFor(impl, symbol.value_type)"
-          />
-        </template>
+        <div
+          class="_nv_code"
+          v-html="codeGenerator.genImplementations(symbol.implementions)"
+        />
       </section>
 
       <section class="symbol-methods" v-if="symbol.methods.length > 0">
