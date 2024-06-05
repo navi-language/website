@@ -38,8 +38,19 @@
     & > summary::after {
       @apply overflow-hidden w-0 h-0 absolute;
     }
+
+    &[open] {
+      .navi-doc-summary {
+        display: none;
+      }
+    }
   }
 }
+
+pre.shiki {
+  @apply overflow-x-scroll text-sm p-4 rounded;
+}
+
 html.dark .shiki,
 html.dark .shiki span {
   color: var(--shiki-dark) !important;

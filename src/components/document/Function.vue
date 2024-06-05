@@ -39,7 +39,7 @@ const headingTag = computed(() => `h${props.level}`);
   @apply mb-5;
 
   .fn-name {
-    @apply relative text-sm mb-4 flex items-center justify-between pr-6;
+    @apply relative text-sm flex items-center justify-between pr-6;
 
     h2,
     h3,

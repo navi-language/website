@@ -6,7 +6,7 @@
       <h1>{{ name }}</h1>
       <Doc :doc="module.doc" default="" />
 
-      <template v-if="Object.keys(module.symbols).length > 0">
+      <template v-if="hasTypes">
         <div class="navi-types">
           <div id="types" class="doc-section-title">Types</div>
 
@@ -24,7 +24,7 @@
 
       <div class="module-doc">{{ module.doc }}</div>
 
-      <div class="navi-fns">
+      <div class="navi-fns" v-if="hasFunctions">
         <div class="doc-section-title" id="fn">Functions</div>
 
         <template v-for="(symbol, name) in module.symbols" :key="name">
@@ -45,11 +45,18 @@ import Function from './Function.vue';
 
 import './style.scss';
 
-defineProps<{
+const props = defineProps<{
   prefix: 'stdlib' | 'pkg';
   name: string;
   module: Module;
 }>();
+
+const hasFunctions = Object.entries(props.module.symbols).some(
+  ([_, symbol]) => symbol.kind === 'function'
+);
+const hasTypes = Object.entries(props.module.symbols).some(
+  ([_, symbol]) => symbol.kind === 'type'
+);
 </script>
 
 <style type="scss" scoped>

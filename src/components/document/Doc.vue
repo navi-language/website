@@ -24,22 +24,12 @@ const summaryHTML = renderMarkdown((md || '').split('\n\n')[0]);
 const html = renderMarkdown(md);
 </script>
 
-<style type="scss">
-details {
-  &[open] {
-    .navi-doc-summary {
-      display: none;
-    }
-  }
-}
+<style type="scss" scoped>
 .navi-doc {
   @apply pl-5;
 
   p {
     @apply my-2;
-  }
-  pre.shiki {
-    @apply overflow-x-scroll text-sm p-2 rounded-sm;
   }
 
   h1,
