@@ -1,5 +1,14 @@
 import type { Field, FunctionSymbol, Type, TypeSymbol } from '../../types';
 
+/**
+ * Escape HTML
+ * @param text
+ * @returns
+ */
+function h(text: string): string {
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function link(text: string, href: string, opts?: { class?: string }): string {
   const classAttr = opts?.class ? ` class="${opts.class}"` : '';
   return `<a href="${href}"${classAttr}>${text}</a>`;
@@ -27,7 +36,11 @@ function token(
   ty: 'keyword' | 'self' | 'fn' | 'variable' | 'const' | 'type' | 'argument',
   name: string
 ): string {
-  return `<span class="_nv_token_${ty}">${name}</span>`;
+  return `<span class="_nv_token_${ty}">${h(name)}</span>`;
+}
+
+function span(text: string): string {
+  return h(text);
 }
 
 export class CodeGenerator {
@@ -128,36 +141,36 @@ export class CodeGenerator {
             module: 'int',
           };
         case 'optional':
-          return seq(this.genType(type.element), '?');
+          return seq(this.genType(type.element), span('?'));
         case 'array':
-          return seq('[', this.genType(type.element), ']');
+          return seq(span('['), this.genType(type.element), span(']'));
         case 'map':
           return seq(
-            '&lt;',
+            span('<'),
             this.genType(type.key),
-            ', ',
+            span(', '),
             this.genType(type.value),
-            '&gt;'
+            span('>')
           );
         case 'channel':
           return seq(
             token('keyword', 'channel'),
-            '::',
-            '&lt;',
+            span('::'),
+            span('<'),
             this.genType(type.element),
-            '&gt;'
+            span('>')
           );
         case 'closure':
           let args = `|(${type.arguments
             .map((t) => this.genType(t))
-            .join(', ')})|`;
+            .join(span(', '))})|`;
           let returns = type.return_type
-            ? seq(': ', this.genType(type.return_type))
+            ? seq(span(': '), this.genType(type.return_type))
             : '';
 
           return args + returns;
         case 'union':
-          return type.types.map((t) => this.genType(t)).join(' | ');
+          return type.types.map((t) => this.genType(t)).join(span(' | '));
         default:
           throw `unimplemented: ${JSON.stringify(type)}`;
       }
@@ -186,7 +199,7 @@ export class CodeGenerator {
             arg.default_value.length > 0 ? seq(' = ', arg.default_value) : '';
           return seq(
             token('argument', arg.name),
-            ': ',
+            span(': '),
             this.genType(arg.value_type),
             defaultValue
           );
@@ -195,13 +208,13 @@ export class CodeGenerator {
         case 'arbitrary':
           return seq(
             token('argument', arg.name),
-            ': ..',
+            span(': ..'),
             this.genType(arg.value_type)
           );
         default:
           return seq(
             token('argument', arg.name),
-            ': ',
+            span(': '),
             this.genType(arg.value_type)
           );
       }
@@ -211,20 +224,24 @@ export class CodeGenerator {
     if (symbol.throws) {
       let throws_types = symbol.throws.map((t) => this.genType(t));
       throws = seq(
-        ' ',
+        span(' '),
         token('keyword', 'throws'),
-        throws_types.length > 0 ? ' ' : '',
-        throws_types.join(', ')
+        throws_types.length > 0 ? span(' ') : '',
+        throws_types.join(span(', '))
       );
     }
 
     let generics = '';
     if (symbol.generic_params && symbol.generic_params.length > 0) {
-      generics = `<${symbol.generic_params.join(', ')}>`;
+      generics = seq(
+        span('<'),
+        symbol.generic_params.join(span(', ')),
+        span('>')
+      );
     }
 
     let return_type = symbol.return_type
-      ? seq(':', ' ', this.genType(symbol.return_type))
+      ? seq(span(':'), span(' '), this.genType(symbol.return_type))
       : '';
 
     const anchor = `${kind}.${name}`;
@@ -232,14 +249,14 @@ export class CodeGenerator {
       seq(
         `<span id="${anchor}" />`,
         token('keyword', 'pub'),
-        ' ',
+        span(' '),
         token('keyword', 'fn'),
-        ' ',
+        span(' '),
         link(token('fn', name), `#${anchor}`),
         generics,
-        '(',
-        args.join(', '),
-        ')',
+        span('('),
+        args.join(span(', ')),
+        span(')'),
         return_type,
         throws
       )
@@ -251,8 +268,7 @@ export class CodeGenerator {
     return seq(
       `<span id="${anchor}" />`,
       link(token('variable', field.name), `#${anchor}`),
-      ':',
-      ' ',
+      span(': '),
       this.genType(field.value_type)
     );
   }
@@ -260,11 +276,11 @@ export class CodeGenerator {
   genImplFor(interface_: Type, for_: Type) {
     return seq(
       token('keyword', 'impl'),
-      ' ',
+      span(' '),
       this.genType(interface_),
-      ' ',
+      span(' '),
       token('keyword', 'for'),
-      ' ',
+      span(' '),
       this.genType(for_)
     );
   }

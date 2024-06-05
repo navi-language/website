@@ -1,11 +1,6 @@
 <template>
   <div class="navi-document">
-    <Breadcumb
-      :breadcumbs="[
-        { name: module, href: `/${prefix}/${module}` },
-        { name: name },
-      ]"
-    />
+    <Breadcumb :breadcumbs="breadcumbs" />
     <div class="navi-symbol">
       <div class="symbol-summary" open>
         <div class="symbol-name">
@@ -85,6 +80,17 @@ const props = defineProps<{
   module: string;
   symbol: TypeSymbol;
 }>();
+
+const breadcumbs: {
+  name: string;
+  href?: string;
+}[] = [{ name: props.name }];
+if (props.module) {
+  breadcumbs.unshift({
+    name: props.module,
+    href: `/${props.prefix}/${props.module}`,
+  });
+}
 
 const typeSign = codeGenerator.getTypeSign(props.name, props.symbol);
 </script>

@@ -1,18 +1,20 @@
 import pkg from '../pkg.json';
 import stdlib from '../stdlib.json';
-import { Module } from './types';
+import { Module, Symbol } from './types';
 
 /**
  * Prepare JSON
  * @param module
  * @returns
  */
-const prepareLib = (modules: Record<string, Module>) => {
+const prepareLib = (modules: Record<string, Module | Symbol>) => {
   for (let [name, module] of Object.entries(modules)) {
     module.id = name;
 
-    for (let [key, symbol] of Object.entries(module.symbols)) {
-      symbol.id = `${module.id}.${key}`;
+    if ('symbols' in module) {
+      for (let [key, symbol] of Object.entries(module.symbols)) {
+        symbol.id = `${module.id}.${key}`;
+      }
     }
   }
 };
@@ -22,7 +24,7 @@ const isPubModule = (module: string) => {
 };
 
 export const stdlibModules: Record<string, Module> = {};
-export const coreModules: Record<string, Module> = {};
+export const coreModules: Record<string, Symbol> = {};
 
 Object.keys(stdlib.modules).forEach((name) => {
   let module: Module = stdlib.modules[name];
@@ -33,11 +35,7 @@ Object.keys(stdlib.modules).forEach((name) => {
       if (symbol.kind == 'type') {
         moduleKey = symbol.value_type?.type || key;
       }
-      coreModules[moduleKey] = coreModules[moduleKey] || {
-        id: moduleKey,
-        symbols: {},
-      };
-      coreModules[moduleKey].symbols[key] = symbol;
+      coreModules[moduleKey] = symbol;
     }
   } else {
     if (
