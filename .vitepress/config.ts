@@ -58,16 +58,21 @@ export default withMermaid(
               text: 'Install',
               link: '/installation',
             },
-            { text: 'Learn', link: '/learn/' },
+            {
+              text: 'Learn',
+              items: [
+                { text: 'Navi', link: '/learn/' },
+                { text: 'Navi Stream', link: '/navi-stream/' },
+              ],
+            },
+            { text: 'Guides', link: '/guides/' },
             {
               text: 'Playground',
               link: 'https://navi-lang.org/play/',
               target: '_blank',
             },
-            { text: 'Guides', link: '/guides/' },
             { text: 'Stdlib', link: '/stdlib/' },
             { text: 'Pkg', link: '/pkg/' },
-            { text: 'Navi Stream', link: '/navi-stream/' },
             {
               text: 'Tools',
               items: [

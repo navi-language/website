@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /learn
+      link: /learn/
     - theme: alt
       text: Try Navi
       link: https://navi-lang.org/play/
