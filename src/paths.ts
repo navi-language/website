@@ -10,7 +10,6 @@ type Params =
       name: string;
       id: string;
       module: Module;
-      modules: Record<string, Module>;
     }
   | {
       type: 'type';
@@ -18,7 +17,6 @@ type Params =
       module: string;
       id: string;
       symbol: TypeSymbol;
-      modules: Record<string, Module>;
     };
 
 export const generatePaths = (allModules: Record<string, Module>) => {
@@ -34,7 +32,6 @@ export const generatePaths = (allModules: Record<string, Module>) => {
             id: formatFilename(id),
             name: id,
             module,
-            modules: allModules,
           },
         });
 
@@ -48,7 +45,6 @@ export const generatePaths = (allModules: Record<string, Module>) => {
                 module: module_id,
                 name: symbol_name,
                 symbol,
-                modules: allModules,
               },
             });
           }

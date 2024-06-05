@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Module, TypeSymbol } from '../../types';
+import type { TypeSymbol } from '../../types';
 import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
@@ -81,7 +81,6 @@ import './style.scss';
 
 const props = defineProps<{
   prefix: 'stdlib' | 'pkg';
-  modules: Record<string, Module>;
   name: string;
   module: string;
   symbol: TypeSymbol;

@@ -49,7 +49,6 @@ const props = defineProps<{
   prefix: 'stdlib' | 'pkg';
   name: String;
   module: Module;
-  modules: Record<string, Module>;
 }>();
 </script>
 

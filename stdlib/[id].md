@@ -4,8 +4,8 @@ import Symbol from '../src/components/document/Symbol.vue';
 </script>
 
 <template v-if="$params.type == 'module'">
-  <Module prefix="stdlib" :name="$params.name" :module="$params.module" :modules="$params.modules" />
+  <Module prefix="stdlib" :name="$params.name" :module="$params.module" />
 </template>
 <template v-if="$params.type == 'type'">
-  <Symbol prefix="stdlib" :name="$params.name" :module="$params.module" :symbol="$params.symbol" :modules="$params.modules" />
+  <Symbol prefix="stdlib" :name="$params.name" :module="$params.module" :symbol="$params.symbol" />
 </template>
