@@ -1,22 +1,14 @@
 import pkg from '../pkg.json';
 import stdlib from '../stdlib.json';
 import { Module, Symbol } from './types';
+import { escape } from './utils';
 
-/**
- * Prepare JSON
- * @param module
- * @returns
- */
-const prepareLib = (modules: Record<string, Module | Symbol>) => {
-  for (let [name, module] of Object.entries(modules)) {
-    module.id = name;
-
-    if ('symbols' in module) {
-      for (let [key, symbol] of Object.entries(module.symbols)) {
-        symbol.id = `${module.id}.${key}`;
-      }
-    }
+export const formatFilename = (name: string) => {
+  if (name === 'T?') {
+    return 'optional';
   }
+
+  return name.replace(/[^a-zA-Z0-9\-_ ,\.:\[\]<>]/g, '');
 };
 
 const isPubModule = (module: string) => {
@@ -26,12 +18,26 @@ const isPubModule = (module: string) => {
 export const stdlibModules: Record<string, Module> = {};
 export const coreModules: Record<string, Symbol> = {};
 
+const prepareSymbols = (
+  symbols: Record<string, Symbol>,
+  module_id?: string
+) => {
+  for (let [key, symbol] of Object.entries(symbols)) {
+    if (module_id) {
+      symbol.id = `${module_id}.${formatFilename(key)}`;
+    } else {
+      symbol.id = formatFilename(key);
+    }
+  }
+};
+
 Object.keys(stdlib.modules).forEach((name) => {
   let module: Module = stdlib.modules[name];
 
   if (name == '__LANG__') {
-    for (let [key, symbol] of Object.entries(module.symbols)) {
-      coreModules[key] = symbol;
+    for (let [name, symbol] of Object.entries(module.symbols)) {
+      symbol.id = formatFilename(name);
+      coreModules[name] = symbol;
     }
   } else {
     if (
@@ -49,7 +55,8 @@ Object.keys(stdlib.modules).forEach((name) => {
       return;
     }
 
-    module.id = name;
+    module.id = formatFilename(name);
+    prepareSymbols(module.symbols, module.id);
     stdlibModules[name] = module;
   }
 });
@@ -64,12 +71,9 @@ Object.keys(pkg.modules)
   })
   .forEach((name) => {
     let module: Module = pkg.modules[name];
+    prepareSymbols(module.symbols, module.id);
     pkgModules[name] = module;
   });
-
-prepareLib(coreModules);
-prepareLib(stdlibModules);
-prepareLib(pkgModules);
 
 export const vitePressSidebars = {
   stdlib: [
@@ -79,8 +83,8 @@ export const vitePressSidebars = {
       items: Object.keys(coreModules)
         .sort()
         .map((name: string) => {
-          const module = coreModules[name];
-          return { text: name, link: `/stdlib/${module.id}` };
+          const symbol = coreModules[name];
+          return { text: escape(name), link: `/stdlib/${symbol.id}` };
         }),
     },
     {
@@ -90,7 +94,7 @@ export const vitePressSidebars = {
         .sort()
         .map((name: string) => {
           const module = stdlibModules[name];
-          return { text: name, link: `/stdlib/${module.id}` };
+          return { text: escape(name), link: `/stdlib/${module.id}` };
         }),
     },
   ],
@@ -98,6 +102,6 @@ export const vitePressSidebars = {
     .sort()
     .map((name: string) => {
       const module = pkgModules[name];
-      return { text: name, link: `/pkg/${module.id}` };
+      return { text: escape(name), link: `/pkg/${module.id}` };
     }),
 };

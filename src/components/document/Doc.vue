@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
+import { replaceHeading } from '../../utils';
 import { renderMarkdown } from './hightlight';
-import { replaceHeading } from './utils';
 const props = defineProps<{
   doc: string;
   default?: string;

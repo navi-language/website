@@ -174,7 +174,7 @@ test('genFn', () => {
       generic_params: ['A', 'B'],
       id: '',
     }),
-    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a><A, B>(<span class="_nv_token_self">self</span>)'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a>&lt;A, B&gt;(<span class="_nv_token_self">self</span>)'
   );
 
   let result = genFn('foo', {
@@ -214,7 +214,7 @@ test('genFn', () => {
 
   assertDiff(
     result,
-    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a><T>(<span class="_nv_token_self">self</span>, <span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>, <span class="_nv_token_argument">arg2</span>: <a href="int"><span class="_nv_token_type">int</span></a> = 101, <span class="_nv_token_argument">arg3</span>: ..<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>? <span class="_nv_token_keyword">throws</span> <a href="std.err.Error"><span class="_nv_token_type">Error</span></a>, <a href="std.err.IOError"><span class="_nv_token_type">IOError</span></a>'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a>&lt;T&gt;(<span class="_nv_token_self">self</span>, <span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>, <span class="_nv_token_argument">arg2</span>: <a href="int"><span class="_nv_token_type">int</span></a> = 101, <span class="_nv_token_argument">arg3</span>: ..<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>? <span class="_nv_token_keyword">throws</span> <a href="std.err.Error"><span class="_nv_token_type">Error</span></a>, <a href="std.err.IOError"><span class="_nv_token_type">IOError</span></a>'
   );
 
   result = genFn('foo', {
@@ -254,7 +254,7 @@ test('genFn', () => {
       generic_params: ['T'],
       id: '',
     }),
-    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a><T>(<span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>'
+    '<span id="method.foo" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">fn</span> <a href="#method.foo"><span class="_nv_token_fn">foo</span></a>&lt;T&gt;(<span class="_nv_token_argument">arg1</span>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>): <a href="std.process.Command"><span class="_nv_token_type">Command</span></a>'
   );
 });
 

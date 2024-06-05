@@ -45,9 +45,9 @@ import Function from './Function.vue';
 
 import './style.scss';
 
-const props = defineProps<{
+defineProps<{
   prefix: 'stdlib' | 'pkg';
-  name: String;
+  name: string;
   module: Module;
 }>();
 </script>

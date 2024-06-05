@@ -1,4 +1,5 @@
 import type { Field, FunctionSymbol, Type, TypeSymbol } from '../../types';
+import { escape } from '../../utils';
 
 /**
  * Escape HTML
@@ -6,7 +7,7 @@ import type { Field, FunctionSymbol, Type, TypeSymbol } from '../../types';
  * @returns
  */
 function h(text: string): string {
-  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escape(text);
 }
 
 function link(text: string, href: string, opts?: { class?: string }): string {

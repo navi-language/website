@@ -1,27 +1,26 @@
-import { test } from 'bun:test';
-import assert from 'node:assert';
-import { replaceHeading } from './utils';
+import { expect, test } from 'bun:test';
+import { escape, replaceHeading } from './utils';
+
+test('escape', () => {
+  expect(escape('<T>')).toEqual('&lt;T&gt;');
+});
 
 test('replaceHeading', () => {
   let raw = '# heading 1\n\n## heading 2\n\n## heading 2.1\n\n### heading 3';
 
-  assert.equal(
-    replaceHeading(raw, 2),
+  expect(replaceHeading(raw, 2)).toEqual(
     '### heading 1\n\n#### heading 2\n\n#### heading 2.1\n\n##### heading 3'
   );
-  assert.equal(
-    replaceHeading(raw, 3),
+  expect(replaceHeading(raw, 3)).toEqual(
     '#### heading 1\n\n##### heading 2\n\n##### heading 2.1\n\n###### heading 3'
   );
 
   raw = '## heading 2\n\n### heading 2.1\n\n#### heading 3';
 
-  assert.equal(
-    replaceHeading(raw, 1),
+  expect(replaceHeading(raw, 1)).toEqual(
     '## heading 2\n\n### heading 2.1\n\n#### heading 3'
   );
-  assert.equal(
-    replaceHeading(raw, 3),
+  expect(replaceHeading(raw, 3)).toEqual(
     '#### heading 2\n\n##### heading 2.1\n\n###### heading 3'
   );
 });

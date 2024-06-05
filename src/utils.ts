@@ -30,3 +30,12 @@ export const replaceHeading = (body: string, level: number = 2) => {
 
   return result;
 };
+
+/**
+ * Escape HTML
+ * @param text
+ * @returns
+ */
+export const escape = (text: string): string => {
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};

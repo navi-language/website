@@ -144,3 +144,18 @@ export type Type =
       type: 'union';
       types: Type[];
     };
+
+export type Params =
+  | {
+      type: 'module';
+      name: string;
+      id: string;
+      module: Module;
+    }
+  | {
+      type: 'type';
+      name: string;
+      module: string;
+      id: string;
+      symbol: TypeSymbol;
+    };
