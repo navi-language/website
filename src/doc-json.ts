@@ -31,11 +31,7 @@ Object.keys(stdlib.modules).forEach((name) => {
 
   if (name == '__LANG__') {
     for (let [key, symbol] of Object.entries(module.symbols)) {
-      let moduleKey = key;
-      if (symbol.kind == 'type') {
-        moduleKey = symbol.value_type?.type || key;
-      }
-      coreModules[moduleKey] = symbol;
+      coreModules[key] = symbol;
     }
   } else {
     if (
