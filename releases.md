@@ -2,54 +2,6 @@
 title: Releases
 editLink: false
 ---
-## [v0.10.0](https://github.com/navi-language/navi/releases/tag/v0.10.0)
-
-### Language
-
-- Added `expect`, `unwrap`, `unwrap_or`, `or`, `or_else`, and, `and_then`, `is_nil`, `map`, `map_or`, `ok_or`, `inspect`, `flatten` methods to optional value.
-- Added `type alias` statement to define a type alias, and `type` statement to define a newtype.
-- Improved `do/catch` to better handle error.
-- Added to support call method in union type.
-- Added support `tag` attribute for newtype serde.
-- Added to support overridden the default imported names in code scope. e.g.: `Error`, you can have your own `struct Error` to override the default `Error`.
-
-### Stdlib
-
-- Removed `std.io.Buffer`, instead with new `std.io.Bytes`.
-- Moved module under `lang` to `std`, and default import `string`, `channel`, `Any`, `Decimal`, removed `lang` module.
-- Improved to default import `print` and `println` method from `std`, now we can call it directly without `use`.
-- Added to support log format (full, json, pretty, compact).
-- Renamed `URLEncodedForm` to `UrlEncodedForm` in `std.net.http`.
-- Added `File.seek` and `File.rewind` method to `std.fs`.
-- Added to support `flag` and `mode` options for `fs.open` and `File.open` method.
-- Added `fs.copy`, `fs.copy_dir`, `fs.rename`, `fs.hard_link`, `fs.symlink`, `fs.unlink` method.
-- Improved `assert_throws`, the secondary argument support with a closure to write custom assert.
-
-### Pkg
-
-- Added `csv` package to support read and write CSV file.
-
-### Navi Stream
-
-- Add `draw` function.
-
-### Tools
-
-- doc: Added more details doc for array methods.
-- doc: Added to support navi-doc to generate method docs in `lang.optional`, `lang.int` ...
-- doc: impl Display for Enum, Struct, Interface, and Module.
-- doc: show "instance" for nvs object value types.
-- fmt: Updated to indent for switch and case with different levels.
-- lsp: Added `navi_stream` language match support for Zed editor.
-- lsp: Added to support goto definition for Navi to Navi Stream source.
-- lsp: Added to support show hover info for struct fields.
-- lsp: Improved find symbol of TypePathNode::Normal.
-- lsp: determine `language_id` by file extension.
-- lsp: find ImportedModule in current module file symbols first.
-- lsp: fix bug of there being always an error message left (nvs).
-- lsp: generate diagnostics for Navi Stream.
-- lsp: optimize inlay hint padding and improve hover info for Navi Stream.
-
 
 ## [v0.9.6](https://github.com/navi-language/navi/releases/tag/v0.9.6)
 
@@ -77,6 +29,7 @@ editLink: false
 ### Tools
 
 - We have released the [Zed extension](https://github.com/navi-language/zed-navi) for Zed with LSP support. Now code formatting, code completion, hover, go-to-definition, find references, rename, and more features are available in Zed.
+
   - Open your Zed and go to `Extensions` to search for `navi` and install it.
   - Currently, only available for Zed Preview version.
 
@@ -122,7 +75,6 @@ editLink: false
 - Improve Navi LSP performance, and improve auto-completion details.
 - Improve [zed-navi](https://github.com/navi-language/zed-navi) syntax highlight [v0.0.4](https://github.com/navi-language/zed-navi/releases/tag/v0.0.4)
 - Improve [vscode-navi](https://marketplace.visualstudio.com/items?itemName=huacnlee.navi) to support decimal.
-
 
 ## [v0.9.4](https://github.com/navi-language/navi/releases/tag/v0.9.4)
 
@@ -201,7 +153,7 @@ editLink: false
     io.println(c);
   }
   ```
-  
+
 - Improve string performance.
 - Improve string interpolation for support `${x:?}` to print debug format.
 - Improve implicit conversion to support.
@@ -210,24 +162,24 @@ editLink: false
   // Option type
   let a: int? = 10;
   assert_eq a!, 10;
-  
+
   let a: int??? = 10;
   let b: int? = a;
   assert_eq b!, 10;
-  
+
   let a: int? = 10;
   let b: int??? = a;
   assert_eq b!!!, 10;
-  
+
   // Union type
   let a: int | string = "abc";
   assert_eq a.(string), "abc";
-  
+
   // Interface
   let a: ToString = 10;
   assert_eq a.to_string(), "10";
   ```
-  
+
 - Fix the `break` in `do, catch` block can't break the outside `loop` bug.
 
 ### Stdlib
@@ -292,7 +244,6 @@ The `pkg` is used to manage packages that many split out of Navi in the future.
 - fmt: sort outer-layer use { ... } statements
 - New [tree-sitter-navi](https://github.com/navi-language/tree-sitter-navi), [tree-sitter-navi-stream](https://github.com/navi-language/tree-sitter-navi-stream) project for tree-sitter support.
 - Add [Zed extension](https://github.com/navi-language/zed-navi) support, current only syntax highlight support.
-
 
 ## [v0.9.3](https://github.com/navi-language/navi/releases/tag/v0.9.3)
 
@@ -475,7 +426,6 @@ The `pkg` is used to manage packages that many split out of Navi in the future.
 - test: Improve `assert` results and use `""` to wrap them for a better read.
 - build: We use Navi to write our internal CI build and publish script now.
 
-
 ## [v0.9.1](https://github.com/navi-language/navi/releases/tag/v0.9.1)
 
 ### Language
@@ -624,7 +574,6 @@ The `pkg` is used to manage packages that many split out of Navi in the future.
 - Add `navi doc --stdlib` command to generate documentation for Navi's standard library.
 - Add `navi test --doc` command to test the Markdown code blocks in Navi files.
 
-
 ## [v0.9.0](https://github.com/navi-language/navi/releases/tag/v0.9.0)
 
 ### Language
@@ -721,7 +670,6 @@ fn main() {
 }
 ```
 
-
 ## [v0.8.6](https://github.com/navi-language/navi/releases/tag/v0.8.6)
 
 ### What's Changed
@@ -734,8 +682,8 @@ fn main() {
 - Add `std.net.http` with HTTP request methods and `Headers`, `Request`, `Response` types.
 - Add `std.net.tcp_conn`, `std.net.tcp_listener`, `std.net.ip_addr` this is still in development.
 - Add `std.io.bytes` to the storage bytes array, move `std.buffer` to `std.io.buffer` and base on `std.io.bytes`.
-    - Now all `bytes` methods will return `std.io.Bytes` type.
-    - Refactor Stdlib API, `std.io.bytes.new` to `std.io.new_bytes`, `std.io.buffer.new` to `std.io.new_buffer`.
+  - Now all `bytes` methods will return `std.io.Bytes` type.
+  - Refactor Stdlib API, `std.io.bytes.new` to `std.io.new_bytes`, `std.io.buffer.new` to `std.io.new_buffer`.
 
 ### Optional Type
 
@@ -782,7 +730,6 @@ foo("Jason Lee", done = true);
 - Improve test results to show the test file path.
 - Move `std.path.glob` to `std.fs.glob`.
 
-
 ## [v0.8.4](https://github.com/navi-language/navi/releases/tag/v0.8.4)
 
 ### Language
@@ -794,7 +741,7 @@ foo("Jason Lee", done = true);
     return a - b;
   };
   ```
-  
+
 - Improve the internal objects to map string interpolation call to `to_string` method.
 - Fix to assign map element by key: `items["foo"] = 1`.
 - Fix comparing object and nil.
