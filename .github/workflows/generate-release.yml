@@ -1,3 +1,4 @@
+name: 'Generate Release Notes'
 on:
   push:
     branches:
@@ -12,8 +13,8 @@ permissions:
   id-token: write
 
 jobs:
-  generate-release:
-    name: Generate Release
+  run:
+    name: Run Script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
