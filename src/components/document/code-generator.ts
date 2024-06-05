@@ -1,4 +1,10 @@
-import type { Field, FunctionSymbol, Type, TypeSymbol } from '../../types';
+import type {
+  Field,
+  FunctionSymbol,
+  GlobalVarSymbol,
+  Type,
+  TypeSymbol,
+} from '../../types';
 import { escape } from '../../utils';
 
 /**
@@ -10,8 +16,16 @@ function h(text: string): string {
   return escape(text);
 }
 
-function link(text: string, href: string, opts?: { class?: string }): string {
+function link(text: string, href?: string, opts?: { class?: string }): string {
   const classAttr = opts?.class ? ` class="${opts.class}"` : '';
+  if (!href) {
+    if (opts?.class) {
+      return `<span${classAttr}>${text}</span>`;
+    }
+
+    return text;
+  }
+
   return `<a href="${href}"${classAttr}>${text}</a>`;
 }
 
@@ -60,7 +74,7 @@ export class CodeGenerator {
    * @param param1
    * @returns
    */
-  getTypeSign(name: string, symbol: TypeSymbol): string {
+  genType(name: string, symbol: TypeSymbol): string {
     if (!symbol.kind) {
       return '';
     }
@@ -85,13 +99,18 @@ export class CodeGenerator {
 
     let suffix = '';
     if (symbol.source_type) {
-      suffix = seq(` `, `=`, ` `, this.genType(symbol.source_type));
+      suffix = seq(` `, `=`, ` `, this._type(symbol.source_type));
     }
 
-    return seq(token('keyword', sign()), ' ', token('type', name), suffix);
+    return seq(
+      token('keyword', sign()),
+      ' ',
+      link(token('type', name), symbol.id),
+      suffix
+    );
   }
 
-  genType(type: Type): string {
+  _type(type: Type): string {
     const getText = () => {
       switch (type.type) {
         case 'struct':
@@ -142,15 +161,15 @@ export class CodeGenerator {
             module: 'int',
           };
         case 'optional':
-          return seq(this.genType(type.element), span('?'));
+          return seq(this._type(type.element), span('?'));
         case 'array':
-          return seq(span('['), this.genType(type.element), span(']'));
+          return seq(span('['), this._type(type.element), span(']'));
         case 'map':
           return seq(
             span('<'),
-            this.genType(type.key),
+            this._type(type.key),
             span(', '),
-            this.genType(type.value),
+            this._type(type.value),
             span('>')
           );
         case 'channel':
@@ -158,20 +177,20 @@ export class CodeGenerator {
             token('keyword', 'channel'),
             span('::'),
             span('<'),
-            this.genType(type.element),
+            this._type(type.element),
             span('>')
           );
         case 'closure':
           let args = `|(${type.arguments
-            .map((t) => this.genType(t))
+            .map((t) => this._type(t))
             .join(span(', '))})|`;
           let returns = type.return_type
-            ? seq(span(': '), this.genType(type.return_type))
+            ? seq(span(': '), this._type(type.return_type))
             : '';
 
           return args + returns;
         case 'union':
-          return type.types.map((t) => this.genType(t)).join(span(' | '));
+          return type.types.map((t) => this._type(t)).join(span(' | '));
         default:
           throw `unimplemented: ${JSON.stringify(type)}`;
       }
@@ -201,7 +220,7 @@ export class CodeGenerator {
           return seq(
             token('argument', arg.name),
             span(': '),
-            this.genType(arg.value_type),
+            this._type(arg.value_type),
             defaultValue
           );
         case 'self':
@@ -210,20 +229,20 @@ export class CodeGenerator {
           return seq(
             token('argument', arg.name),
             span(': ..'),
-            this.genType(arg.value_type)
+            this._type(arg.value_type)
           );
         default:
           return seq(
             token('argument', arg.name),
             span(': '),
-            this.genType(arg.value_type)
+            this._type(arg.value_type)
           );
       }
     });
 
     let throws = '';
     if (symbol.throws) {
-      let throws_types = symbol.throws.map((t) => this.genType(t));
+      let throws_types = symbol.throws.map((t) => this._type(t));
       throws = seq(
         span(' '),
         token('keyword', 'throws'),
@@ -242,7 +261,7 @@ export class CodeGenerator {
     }
 
     let return_type = symbol.return_type
-      ? seq(span(':'), span(' '), this.genType(symbol.return_type))
+      ? seq(span(':'), span(' '), this._type(symbol.return_type))
       : '';
 
     const anchor = `${kind}.${name}`;
@@ -270,7 +289,7 @@ export class CodeGenerator {
       `<span id="${anchor}" />`,
       link(token('variable', field.name), `#${anchor}`),
       span(': '),
-      this.genType(field.value_type)
+      this._type(field.value_type)
     );
   }
 
@@ -278,16 +297,30 @@ export class CodeGenerator {
     return seq(
       token('keyword', 'impl'),
       span(' '),
-      this.genType(interface_),
+      this._type(interface_),
       span(' '),
       token('keyword', 'for'),
       span(' '),
-      this.genType(for_)
+      this._type(for_)
     );
   }
 
   genImplementations(impls: Type[]): string {
-    return impls.map((impl) => this.genType(impl)).join(span(', '));
+    return impls.map((impl) => this._type(impl)).join(span(', '));
+  }
+
+  genGlobalVar(name: string, symbol: GlobalVarSymbol) {
+    const anchor = `${name}`;
+    return seq(
+      `<span id="${anchor}" />`,
+      token('keyword', 'pub'),
+      span(' '),
+      token('keyword', symbol.is_const ? 'const' : 'let'),
+      span(' '),
+      link(token('const', name), `#${anchor}`),
+      span(': '),
+      this._type(symbol.value_type)
+    );
   }
 }
 

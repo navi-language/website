@@ -56,28 +56,28 @@ const newType = (module: string, name: string): Type => {
 describe('genType', () => {
   test('struct', () => {
     assertDiff(
-      generator.genType(newStruct('std.process', 'Command')),
+      generator._type(newStruct('std.process', 'Command')),
       '<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>'
     );
   });
 
   test('enum', () => {
     assertDiff(
-      generator.genType(newEnum('std.foo', 'Bar')),
+      generator._type(newEnum('std.foo', 'Bar')),
       '<a href="std.foo.Bar"><span class="_nv_token_type">Bar</span></a>'
     );
   });
 
   test('string', () => {
     assertDiff(
-      generator.genType(newStruct('std.str', 'string')),
+      generator._type(newStruct('std.str', 'string')),
       '<a href="std.str.string"><span class="_nv_token_type">string</span></a>'
     );
   });
 
   test('array', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'array',
         element: newStruct('std.str', 'string'),
       }),
@@ -87,7 +87,7 @@ describe('genType', () => {
 
   test('array of struct', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'array',
         element: newStruct('std.process', 'Command'),
       }),
@@ -97,7 +97,7 @@ describe('genType', () => {
 
   test('map', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'map',
         key: newStruct('std.str', 'string'),
         value: newStruct('std.process', 'Command'),
@@ -108,7 +108,7 @@ describe('genType', () => {
 
   test('union', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'union',
         types: [
           newStruct('std.str', 'string'),
@@ -121,7 +121,7 @@ describe('genType', () => {
 
   test('optional', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'optional',
         element: newStruct('std.str', 'string'),
       }),
@@ -131,7 +131,7 @@ describe('genType', () => {
 
   test('optional struct', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'optional',
         element: newStruct('std.process', 'Command'),
       }),
@@ -141,7 +141,7 @@ describe('genType', () => {
 
   test('closure', () => {
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'closure',
         arguments: [newStruct('std.str', 'string')],
         return_type: newStruct('std.process', 'Command'),
@@ -150,7 +150,7 @@ describe('genType', () => {
     );
 
     assertDiff(
-      generator.genType({
+      generator._type({
         type: 'closure',
         arguments: [newStruct('std.str', 'string')],
       }),
@@ -282,7 +282,7 @@ test('genImplFor', () => {
 
 test('getTypeSymbolSign', () => {
   expect(
-    generator.getTypeSign(
+    generator.genType(
       'Command',
       newTypeSymbol(newStruct('std.process', 'Command'))
     )
@@ -291,7 +291,7 @@ test('getTypeSymbolSign', () => {
   );
 
   expect(
-    generator.getTypeSign(
+    generator.genType(
       'Command',
       newTypeSymbol(newEnum('std.process', 'Command'))
     )
@@ -300,13 +300,13 @@ test('getTypeSymbolSign', () => {
   );
 
   expect(
-    generator.getTypeSign('Foo', newTypeSymbol(newType('std.process', 'Foo')))
+    generator.genType('Foo', newTypeSymbol(newType('std.process', 'Foo')))
   ).toEqual(
     '<span class="_nv_token_keyword">type</span> <span class="_nv_token_type">Foo</span>'
   );
 
   expect(
-    generator.getTypeSign(
+    generator.genType(
       'Foo',
       newTypeSymbol(newType('std.process', 'Foo'), { alias: true })
     )
@@ -315,7 +315,7 @@ test('getTypeSymbolSign', () => {
   );
 
   expect(
-    generator.getTypeSign(
+    generator.genType(
       'Foo',
       newTypeSymbol(newStruct('std.process', 'Foo'), {
         source_type: newStruct('std.process', 'Foo'),
@@ -324,5 +324,40 @@ test('getTypeSymbolSign', () => {
     )
   ).toEqual(
     `<span class="_nv_token_keyword">type alias</span> <span class="_nv_token_type">Foo</span> = <a href="std.process.Foo"><span class="_nv_token_type">Foo</span></a>`
+  );
+});
+
+test('genImplementations', () => {
+  expect(
+    generator.genImplementations([
+      newInterface('std.process', 'Command'),
+      newInterface('std.process', 'Process'),
+    ])
+  ).toEqual(
+    '<a href="std.process.Command"><span class="_nv_token_type">Command</span></a>, <a href="std.process.Process"><span class="_nv_token_type">Process</span></a>'
+  );
+});
+
+test('genGlobalVar', () => {
+  expect(
+    generator.genGlobalVar('FOO', {
+      doc: '',
+      kind: 'global_var',
+      value_type: newStruct('std.str', 'string'),
+      is_const: false,
+    })
+  ).toEqual(
+    '<span id="FOO" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">let</span> <a href="#FOO"><span class="_nv_token_const">FOO</span></a>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>'
+  );
+
+  expect(
+    generator.genGlobalVar('FOO', {
+      doc: '',
+      kind: 'global_var',
+      value_type: newStruct('std.str', 'string'),
+      is_const: true,
+    })
+  ).toEqual(
+    '<span id="FOO" /><span class="_nv_token_keyword">pub</span> <span class="_nv_token_keyword">const</span> <a href="#FOO"><span class="_nv_token_const">FOO</span></a>: <a href="std.str.string"><span class="_nv_token_type">string</span></a>'
   );
 });

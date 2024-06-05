@@ -10,21 +10,36 @@
         <div class="navi-types">
           <div id="types" class="doc-section-title">Types</div>
 
-          <ul>
+          <div>
             <template v-for="(symbol, name) in module.symbols" :key="name">
               <template v-if="symbol.kind === 'type'">
-                <li>
-                  <a :href="symbol.id">{{ name }}</a>
-                </li>
+                <pre
+                  class="_nv_code"
+                  v-html="codeGenerator.genType(name, symbol)"
+                />
               </template>
             </template>
-          </ul>
+          </div>
         </div>
       </template>
 
-      <div class="module-doc">{{ module.doc }}</div>
+      <section class="navi-consts" v-if="hasConsts">
+        <div class="doc-section-title" id="consts">Global Variables</div>
+        <template v-for="(symbol, name) in module.symbols" :key="name">
+          <template v-if="symbol.kind === 'global_var'">
+            <div>
+              <pre
+                class="_nv_code"
+                v-html="codeGenerator.genGlobalVar(name, symbol)"
+              />
 
-      <div class="navi-fns" v-if="hasFunctions">
+              <Doc :doc="symbol.doc" />
+            </div>
+          </template>
+        </template>
+      </section>
+
+      <section class="navi-fns" v-if="hasFunctions">
         <div class="doc-section-title" id="fn">Functions</div>
 
         <template v-for="(symbol, name) in module.symbols" :key="name">
@@ -32,7 +47,7 @@
             <Function :name="name" :symbol="symbol" :level="2" />
           </template>
         </template>
-      </div>
+      </section>
     </div>
   </div>
 </template>
@@ -42,6 +57,7 @@ import type { Module } from '../../types';
 import Breadcumb from './Breadcumb.vue';
 import Doc from './Doc.vue';
 import Function from './Function.vue';
+import { codeGenerator } from './code-generator';
 
 import './style.scss';
 
@@ -56,6 +72,9 @@ const hasFunctions = Object.entries(props.module.symbols).some(
 );
 const hasTypes = Object.entries(props.module.symbols).some(
   ([_, symbol]) => symbol.kind === 'type'
+);
+const hasConsts = Object.entries(props.module.symbols).some(
+  ([_, symbol]) => symbol.kind === 'global_var'
 );
 </script>
 
