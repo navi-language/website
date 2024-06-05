@@ -29,7 +29,6 @@ jobs:
         run: |
           navi doc ~/.navi/stdlib -o stdlib.json --include-native
           navi doc ~/.navi/pkg -o pkg.json --include-native
-          navi run script/generate-release.nv
           bun install
           bun run build
       - name: Setup Pages
