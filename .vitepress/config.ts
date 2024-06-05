@@ -2,7 +2,12 @@ import { defineConfig } from 'vitepress';
 import { withMermaid } from 'vitepress-plugin-mermaid';
 import { generateSidebar } from 'vitepress-sidebar';
 import { vitePressSidebars } from '../src/doc-json';
-import { naviLanguage, naviStreamLanguage } from './language';
+import {
+  naviDarkTheme,
+  naviLanguage,
+  naviLightTheme,
+  naviStreamLanguage,
+} from './language';
 
 /**
  * https://github.com/jooy2/vitepress-sidebar
@@ -147,6 +152,10 @@ export default withMermaid(
     markdown: {
       languages: [naviLanguage, naviStreamLanguage],
       defaultHighlightLang: 'nv',
+      theme: {
+        light: naviLightTheme,
+        dark: naviDarkTheme,
+      },
       toc: {
         level: [2, 3],
       },

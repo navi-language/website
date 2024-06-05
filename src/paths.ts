@@ -1,7 +1,7 @@
 import { Module, TypeSymbol } from '../src/types';
 
 const formatFilename = (name: string) => {
-  return name.replace(/[^a-zA-Z\-_\.]/g, '');
+  return name.replace(/[^a-zA-Z0-9\-_\.]/g, '');
 };
 
 type Params =

@@ -1,7 +1,7 @@
 <template>
   <details class="navi-source" v-if="hasSource">
     <summary>[src]</summary>
-    <pre v-html="sourceHTML" />
+    <pre class="shiki" v-html="sourceHTML" />
   </details>
 </template>
 

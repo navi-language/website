@@ -10,7 +10,7 @@
       <div class="symbol-summary" open>
         <div class="symbol-name">
           <h1 :id="name">{{ name }}</h1>
-          <pre class="_navi_code" v-html="typeSign" />
+          <pre class="_nv_code" v-html="typeSign" />
         </div>
         <Doc :doc="symbol.doc" />
       </div>

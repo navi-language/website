@@ -710,7 +710,7 @@
           "match": "\\b(struct)\\s+(_?[A-Z][A-Za-z0-9_]*)\\b",
           "captures": {
             "1": {
-              "name": "keyword.declaration.struct.navi storage.type.navi"
+              "name": "keyword.declaration.struct.navi"
             },
             "2": {
               "name": "entity.name.type.struct.navi"

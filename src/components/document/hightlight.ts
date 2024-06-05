@@ -2,6 +2,8 @@ import { fromHighlighter } from '@shikijs/markdown-it/core';
 import MarkdownIt from 'markdown-it';
 import { getHighlighter } from 'shiki';
 
+import naviDark from '../../navi-dark.theme.json';
+import naviLight from '../../navi-light.theme.json';
 import naviStreamLanguageGrammar from '../../navi-stream.tmLanguage.json';
 import naviLanguageGrammar from '../../navi.tmLanguage.json';
 
@@ -17,18 +19,18 @@ const naviStreamLanguage: any = {
 
 const highlighter = await getHighlighter({
   langs: ['javascript', 'json', 'bash', 'toml', 'yaml', 'plaintext', 'diff'],
-  themes: ['github-light', 'github-dark'],
+  themes: [],
 });
 
 await highlighter.loadLanguage(naviLanguage, naviStreamLanguage);
+await highlighter.loadTheme(naviLight as any, naviDark as any);
 
 const shikiConfig = {
   themes: {
-    light: 'github-light',
-    dark: 'github-dark',
+    light: 'navi-light',
+    dark: 'navi-dark',
   },
   trimEndingNewline: true,
-  defaultColor: 'light',
   cssVariablePrefix: '--shiki-',
 };
 
