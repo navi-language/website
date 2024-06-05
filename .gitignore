@@ -177,5 +177,6 @@ dist
 /.vitepress/cache
 /pkg.json
 /stdlib.json
+/releases.md
 /public/play/
 .tmp_install
