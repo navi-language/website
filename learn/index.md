@@ -450,7 +450,7 @@ let passed: bool = true;
 
 Variables must be initialized:
 
-```nv,compile_fail
+```nv
 fn main() throws {
     // This will cause a compile error.
     let name: string;
@@ -2170,7 +2170,7 @@ We also provide some methods to handle the [optional] value, such as `map`, `and
 
 See also: [Optional Methods](/stdlib/lang.optional).
 
-```nv
+```nv,no_run
 // a normal string
 let name: string = "Navi";
 
