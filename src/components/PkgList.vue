@@ -2,7 +2,11 @@
   <div class="max-w-3xl mx-auto">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <h1>Pkgs</h1>
+        <h1>
+          <a href="/pkg/" class="text-black no-underline dark:text-white"
+            >Pkgs</a
+          >
+        </h1>
       </div>
       <form action="" method="GET">
         <input
@@ -71,6 +75,20 @@
         </div>
       </tempalte>
     </div>
+    <div class="pkg-pagination">
+      <template v-if="offset <= 0">
+        <span class="page-link" disabled>Previus</span>
+      </template>
+      <template v-else>
+        <a class="page-link" :href="`?offset=${offset - pageSize}`">Previus</a>
+      </template>
+      <template v-if="pkgs.length < pageSize">
+        <span class="page-link" disabled>Next</span>
+      </template>
+      <template v-else>
+        <a :href="`?offset=${offset + pageSize}`" class="page-link">Next</a>
+      </template>
+    </div>
     <div class="mt-10">
       All packages are hosted on
       <a href="https://github.com/orgs/navi-language/packages/" target="_blank"
@@ -86,7 +104,7 @@ import { supabase } from '../supabase';
 
 const query = new URLSearchParams(window.location.search);
 const offset = parseInt(query.get('offset') || '0');
-const pageSize = 20;
+const pageSize = 10;
 const q = query.get('q') || '';
 const loading = ref(true);
 
@@ -146,6 +164,18 @@ onMounted(fetchPkgs);
 
   .pkg-description {
     @apply text-sm text-ellipsis overflow-hidden;
+  }
+}
+
+.pkg-pagination {
+  @apply flex justify-between mt-5;
+
+  .page-link {
+    @apply text-blue-500 no-underline px-4 py-1 rounded-md border border-blue-500;
+
+    &[disabled] {
+      @apply text-gray-300 border-gray-300 dark:text-stone-700 dark:border-stone-700 cursor-default;
+    }
   }
 }
 
