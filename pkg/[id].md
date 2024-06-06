@@ -1,3 +1,8 @@
+---
+aside: false
+editLink: false
+---
+
 <script setup>
 import Module from '../src/components/document/Module.vue';
 import Symbol from '../src/components/document/Symbol.vue';
