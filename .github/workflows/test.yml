@@ -16,6 +16,8 @@ jobs:
         with:
           navi-version: nightly
       - run: |
+          navi doc ~/.navi/stdlib -o stdlib.json --include-native
+          navi doc ~/.navi/pkg -o pkg.json --include-native
           bun run test:all
   test_install:
     name: Test Install Navi
