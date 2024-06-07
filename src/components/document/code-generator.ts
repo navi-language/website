@@ -59,12 +59,14 @@ function span(text: string): string {
 }
 
 export class CodeGenerator {
-  moduleURL(module: string, symbol?: string, suffix?: string): string {
+  moduleURL(module: string, symbol?: string): string {
+    const basePath = module.startsWith('std.') ? '/stdlib/' : '/pkg/';
+
     let symbolSuffix = symbol ? `.${symbol}` : '';
     if (module) {
-      return `${module}${symbolSuffix}${suffix || ''}`;
+      return `${basePath}${module}${symbolSuffix}`;
     } else {
-      return `${symbolSuffix}${suffix || ''}`;
+      return `/stdlib/${symbol}`;
     }
   }
 
@@ -102,10 +104,14 @@ export class CodeGenerator {
       suffix = seq(` `, `=`, ` `, this._type(symbol.source_type));
     }
 
+    const href = symbol.id
+      ? `${symbol.module?.basePath || ''}${symbol.id}`
+      : '';
+
     return seq(
       token('keyword', sign()),
       ' ',
-      link(token('type', name), symbol.id),
+      link(token('type', name), href),
       suffix
     );
   }
@@ -141,24 +147,28 @@ export class CodeGenerator {
         case 'bool':
           return {
             name: 'bool',
-            module: 'bool',
+            symbol: 'bool',
+            module: '',
           };
         case 'char':
           return {
             name: 'char',
-            module: 'char',
+            symbol: 'char',
+            module: '',
           };
         case 'float':
           return {
             name: 'float',
-            module: 'float',
+            symbol: 'float',
+            module: '',
           };
         case 'generic':
           return `T`;
         case 'int':
           return {
             name: 'int',
-            module: 'int',
+            symbol: 'int',
+            module: '',
           };
         case 'optional':
           return seq(this._type(type.element), span('?'));
@@ -306,7 +316,7 @@ export class CodeGenerator {
   }
 
   genImplementations(impls: Type[]): string {
-    return impls.map((impl) => this._type(impl)).join(span(', '));
+    return impls.map((impl) => this._type(impl)).join(span(' '));
   }
 
   genGlobalVar(name: string, symbol: GlobalVarSymbol) {

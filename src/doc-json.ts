@@ -56,6 +56,7 @@ Object.keys(stdlib.modules).forEach((name) => {
     }
 
     module.id = formatFilename(name);
+    module.basePath = '/stdlib/';
     prepareSymbols(module.symbols, module.id);
     stdlibModules[name] = module;
   }
@@ -71,6 +72,9 @@ Object.keys(pkg.modules)
   })
   .forEach((name) => {
     let module: Module = pkg.modules[name];
+    module.id = formatFilename(name);
+    module.basePath = '/pkg/';
+
     prepareSymbols(module.symbols, module.id);
     pkgModules[name] = module;
   });

@@ -3,6 +3,7 @@
  */
 
 export interface Module {
+  basePath?: '/stdlib/' | '/pkg/';
   id: string;
   doc?: string;
   symbols: Record<string, Symbol>;
