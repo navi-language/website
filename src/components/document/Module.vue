@@ -27,7 +27,7 @@
         <div class="doc-section-title" id="consts">Global Variables</div>
         <template v-for="(symbol, name) in module.symbols" :key="name">
           <template v-if="symbol.kind === 'global_var'">
-            <div>
+            <div class="navi-const">
               <pre
                 class="_nv_code"
                 v-html="codeGenerator.genGlobalVar(name, symbol)"
@@ -85,5 +85,9 @@ const hasConsts = Object.entries(props.module.symbols).some(
       list-style: square;
     }
   }
+}
+
+.navi-const {
+  @apply mb-8;
 }
 </style>
