@@ -187,7 +187,7 @@
         "constant.other.color"
       ],
       "settings": {
-        "foreground": "#b54e05"
+        "foreground": "#ca8a04"
       }
     },
     {
@@ -256,7 +256,7 @@
         "meta.instance.constructor"
       ],
       "settings": {
-        "foreground": "#D73737"
+        "foreground": "#b54e05"
       }
     },
     {
