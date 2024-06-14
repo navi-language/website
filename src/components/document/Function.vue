@@ -1,5 +1,5 @@
 <template>
-  <details class="navi-fn" open>
+  <details class="navi-fn">
     <summary>
       <div class="fn-name">
         <component :is="headingTag" class="hidden">{{ name }}</component>
@@ -36,7 +36,7 @@ const headingTag = computed(() => `h${props.level}`);
 
 <style type="scss" scoped>
 .navi-fn {
-  @apply mb-10;
+  @apply mb-5;
 
   .fn-name {
     @apply relative text-sm flex items-center justify-between pr-6;

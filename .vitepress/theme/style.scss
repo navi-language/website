@@ -55,7 +55,7 @@
   --vp-c-tip-3: var(--vp-c-brand-1);
   --vp-c-tip-soft: var(--vp-c-brand-soft);
 
-  --vp-custom-block-info-code-bg: #bdc0a212;
+  --vp-custom-block-info-code-bg: #1c1917;
 
   --vp-c-feature-title: #ae9513;
 }
@@ -92,14 +92,6 @@
   --vp-home-hero-image-filter: blur(44px);
 
   --vp-layout-max-width: 1600px;
-}
-
-.dark {
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    90deg,
-    #b54e05 45%,
-    #ae9513
-  );
 }
 
 @media (min-width: 640px) {
