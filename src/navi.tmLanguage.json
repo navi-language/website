@@ -492,11 +492,11 @@
         {
           "comment": "control flow keywords",
           "name": "keyword.control.navi",
-          "match": "\\b(break|case|catch|continue|default|default|defer|do|else|finally|for|if|in|loop|match|return|select|switch|try|while)\\b"
+          "match": "\\b(break|case|catch|continue|default|default|defer|do|else|finally|for|if|in|loop|match|return|select|switch|try|while|panic|throw|throws)\\b"
         },
         {
           "comment": "Built-in functions",
-          "match": "\\b(assert|assert_eq|assert_ne|error|panic|print|println|throw|throws|trace)\\b",
+          "match": "\\b(assert|assert_eq|assert_ne|error|print|println|trace)\\b",
           "name": "support.function.core.navi"
         },
         {
