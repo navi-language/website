@@ -3,7 +3,7 @@
  */
 
 export interface Module {
-  basePath?: '/stdlib/' | '/pkg/';
+  basePath?: "/stdlib/" | "/pkg/";
   id: string;
   doc?: string;
   symbols: Record<string, Symbol>;
@@ -27,7 +27,7 @@ interface BaseSymbol {
 }
 export interface TypeSymbol extends BaseSymbol {
   doc: string;
-  kind: 'type';
+  kind: "type";
   value_type?: Type;
   implementions: Type[];
 
@@ -45,7 +45,7 @@ export interface TypeSymbol extends BaseSymbol {
 }
 export interface FunctionSymbol extends BaseSymbol {
   doc: string;
-  kind: 'function';
+  kind: "function";
   arguments: Argument[];
   return_type?: Type;
   throws?: Type[];
@@ -53,7 +53,7 @@ export interface FunctionSymbol extends BaseSymbol {
 }
 export interface GlobalVarSymbol extends BaseSymbol {
   doc: string;
-  kind: 'global_var';
+  kind: "global_var";
   is_const: boolean;
   value_type: Type;
 }
@@ -83,79 +83,81 @@ export interface Method {
 
 export type Argument =
   | {
-      type: 'positional' | 'arbitrary';
+      type: "positional" | "arbitrary";
       name: string;
       value_type: Type;
     }
   | {
-      type: 'keyword';
+      type: "keyword";
       name: string;
       value_type: Type;
       default_value: string;
     }
   | {
-      type: 'self';
+      type: "self";
     };
 
 export type Type =
   | {
-      type: 'struct' | 'enum' | 'interface' | 'new_type';
+      type: "struct" | "enum" | "interface" | "new_type";
       module: string;
       name: string;
     }
   | {
-      type: 'generic';
+      type: "generic";
       index: number;
     }
   | {
-      type: 'bool';
+      type: "bool";
     }
   | {
-      type: 'int';
+      type: "int";
     }
   | {
-      type: 'float';
+      type: "float";
     }
   | {
-      type: 'char';
+      type: "char";
     }
   | {
-      type: 'array';
+      type: "array";
       element: Type;
     }
   | {
-      type: 'map';
+      type: "map";
       key: Type;
       value: Type;
     }
   | {
-      type: 'channel';
+      type: "channel";
       element: Type;
     }
   | {
-      type: 'closure';
+      type: "closure";
       arguments: Type[];
       return_type?: Type;
       throws?: Type[];
     }
   | {
-      type: 'optional';
+      type: "optional";
       element: Type;
     }
   | {
-      type: 'union';
+      type: "union";
       types: Type[];
     };
 
 export type Params =
   | {
-      type: 'module';
+      type: "module";
+      title: string;
       name: string;
       id: string;
       module: Module;
     }
   | {
-      type: 'type';
+      type: "type";
+      title: string;
       name: string;
       module: string;
       id: string;

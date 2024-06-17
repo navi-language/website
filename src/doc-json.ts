@@ -109,3 +109,16 @@ export const vitePressSidebars = {
       return { text: escape(name), link: `/pkg/${module.id}` };
     }),
 };
+
+// Custom transformer for support set page title from $params.name
+export const transformPageData = (pageData, { siteConfig }) => {
+  if (pageData.params) {
+    if (pageData.params.title) {
+      pageData.title = pageData.params.title;
+    }
+    if (pageData.params.description) {
+      pageData.description = pageData.params.description;
+    }
+  }
+  return pageData;
+};
