@@ -1,6 +1,6 @@
 <template>
   <div class="navi-document">
-    <Breadcumb :breadcumbs="[{ name: name }]" />
+    <Breadcumb :channel="prefix" :breadcumbs="[{ name: name }]" />
 
     <div class="navi-module">
       <h1>{{ name }}</h1>

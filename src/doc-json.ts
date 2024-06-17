@@ -1,18 +1,18 @@
-import pkg from '../pkg.json';
-import stdlib from '../stdlib.json';
-import { Module, Symbol } from './types';
-import { escape } from './utils';
+import pkg from "../pkg.json";
+import stdlib from "../stdlib.json";
+import type { Module, Symbol } from "./types";
+import { escape } from "./utils";
 
 export const formatFilename = (name: string) => {
-  if (name === 'T?') {
-    return 'optional';
+  if (name === "T?") {
+    return "optional";
   }
 
-  return name.replace(/[^a-zA-Z0-9\-_ ,\.:\[\]<>]/g, '');
+  return name.replace(/[^a-zA-Z0-9\-_ ,\.:\[\]<>]/g, "");
 };
 
 const isPubModule = (module: string) => {
-  return !module.startsWith('_');
+  return !module.startsWith("_");
 };
 
 export const stdlibModules: Record<string, Module> = {};
@@ -20,7 +20,7 @@ export const coreModules: Record<string, Symbol> = {};
 
 const prepareSymbols = (
   symbols: Record<string, Symbol>,
-  module_id?: string
+  module_id?: string,
 ) => {
   for (let [key, symbol] of Object.entries(symbols)) {
     if (module_id) {
@@ -34,7 +34,7 @@ const prepareSymbols = (
 Object.keys(stdlib.modules).forEach((name) => {
   let module: Module = stdlib.modules[name];
 
-  if (name == '__LANG__') {
+  if (name == "__LANG__") {
     for (let [name, symbol] of Object.entries(module.symbols)) {
       symbol.id = formatFilename(name);
       coreModules[name] = symbol;
@@ -42,10 +42,10 @@ Object.keys(stdlib.modules).forEach((name) => {
   } else {
     if (
       !(
-        name == 'std' ||
-        name.startsWith('std.') ||
-        name == 'test_harness' ||
-        name.startsWith('lang.')
+        name == "std" ||
+        name.startsWith("std.") ||
+        name == "test_harness" ||
+        name.startsWith("lang.")
       )
     ) {
       return;
@@ -56,7 +56,7 @@ Object.keys(stdlib.modules).forEach((name) => {
     }
 
     module.id = formatFilename(name);
-    module.basePath = '/stdlib/';
+    module.basePath = "/stdlib/";
     prepareSymbols(module.symbols, module.id);
     stdlibModules[name] = module;
   }
@@ -67,13 +67,13 @@ Object.keys(pkg.modules)
   .filter((name) => {
     return (
       isPubModule(name) &&
-      !(name.startsWith('std.') || name.startsWith('test_harness'))
+      !(name.startsWith("std.") || name.startsWith("test_harness"))
     );
   })
   .forEach((name) => {
     let module: Module = pkg.modules[name];
     module.id = formatFilename(name);
-    module.basePath = '/pkg/';
+    module.basePath = "/pkg/";
 
     prepareSymbols(module.symbols, module.id);
     pkgModules[name] = module;
@@ -82,8 +82,8 @@ Object.keys(pkg.modules)
 export const vitePressSidebars = {
   stdlib: [
     {
-      text: 'core',
-      link: '/stdlib/',
+      text: "core",
+      link: "/stdlib/",
       items: Object.keys(coreModules)
         .sort()
         .map((name: string) => {
@@ -92,8 +92,8 @@ export const vitePressSidebars = {
         }),
     },
     {
-      text: 'std',
-      link: '/stdlib/',
+      text: "std",
+      link: "/stdlib/",
       items: Object.keys(stdlibModules)
         .sort()
         .map((name: string) => {

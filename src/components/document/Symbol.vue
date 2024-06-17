@@ -1,6 +1,6 @@
 <template>
   <div class="navi-document">
-    <Breadcumb :breadcumbs="breadcumbs" />
+    <Breadcumb :channel="prefix" :breadcumbs="breadcumbs" />
     <div class="navi-symbol">
       <div class="symbol-summary" open>
         <div class="symbol-name">
