@@ -5,7 +5,7 @@
  */
 export const replaceHeading = (body: string, level: number = 2) => {
   if (!body) {
-    return '';
+    return "";
   }
 
   // Get the root heading level in the body
@@ -25,7 +25,7 @@ export const replaceHeading = (body: string, level: number = 2) => {
   let offsetLevel = level + 1 - rootLevel;
   let result = body.replace(/^(#+)/gm, (match, p1) => {
     let indentLevel = p1.length + offsetLevel;
-    return match.replace(p1, '#'.repeat(indentLevel));
+    return match.replace(p1, "#".repeat(indentLevel));
   });
 
   return result;
@@ -37,5 +37,18 @@ export const replaceHeading = (body: string, level: number = 2) => {
  * @returns
  */
 export const escape = (text: string): string => {
-  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
+/**
+ * Check if the code includes test
+ */
+export const isIncludesTest = (code: string) => {
+  if (/fn[\s]+main[\s]+(throws[\s]+)?{/.test(code)) {
+    return false;
+  }
+
+  return (
+    /assert([_]eq|ne)?/gim.test(code) || /test[\s]+"(.+?)?[\s]+{/gim.test(code)
+  );
 };

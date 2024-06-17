@@ -1,4 +1,6 @@
-const SERVER_URL = "https://navi.leftriver.cn";
+import { isIncludesTest } from "./utils";
+
+const SERVER_URL = "https://play.navi-lang.org";
 const INLINE_RUN = true;
 
 const registerPlayButton = () => {
@@ -12,12 +14,17 @@ const registerPlayButton = () => {
     let source = code.textContent || "";
     if (!source) return;
 
+    const isTest = isIncludesTest(source);
+
     const playBtn = document.createElement("button");
-    playBtn.innerHTML = "Run";
+    playBtn.innerHTML = isTest ? "Test" : "Run";
     playBtn.classList.add("play");
     playBtn.addEventListener("click", () => {
+      let source = code.textContent || "";
+      if (!source) return;
+
       if (INLINE_RUN) {
-        runCode(container, playBtn, code.textContent || "");
+        runCode(container, playBtn, source);
       } else {
         const url =
           "https://navi-lang.org/play?source=" +
@@ -32,9 +39,15 @@ const registerPlayButton = () => {
 const runCode = (container: Element, playBtn: Element, code: string) => {
   playBtn.setAttribute("disabled", "true");
 
-  renderOutput(container, "Executing, please wait...", "loading");
+  const isTest = isIncludesTest(code);
+  const apiPath = isTest ? "/test" : "/execute";
+  const loadingMessage = isTest
+    ? "Testing, please wait..."
+    : "Executing, please wait...";
 
-  fetch(SERVER_URL + "/execute", {
+  renderOutput(container, loadingMessage, "loading");
+
+  fetch(SERVER_URL + apiPath, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -76,7 +89,7 @@ const base64Encode = (str: string) => {
   return btoa(unescape(encodeURIComponent(str)));
 };
 
-if (!import.meta.env.SSR) {
+if (!import.meta.env.SSR && typeof MutationObserver !== "undefined") {
   const observer = new MutationObserver(registerPlayButton);
   observer.observe(document.body, { childList: true, subtree: true });
 }

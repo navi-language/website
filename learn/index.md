@@ -755,10 +755,8 @@ caller_location
 
 The syntax of variable declarations is:
 
-```
-
+```rs
 [<declaration_mode>] :[<type>] <identifier> = <expression>
-
 ```
 
 where:
@@ -2714,7 +2712,7 @@ The `channel` is a communication mechanism that allows one goroutine to send val
 
 Use `channel` to create a channel, and use `send` to send a value to the channel, and use `recv` to receive a value from the channel.
 
-```nv,no_run
+```nv
 let ch = channel::<int>();
 
 spawn {
