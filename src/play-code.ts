@@ -4,7 +4,7 @@ const SERVER_URL = "https://play.navi-lang.org";
 const INLINE_RUN = true;
 
 const registerPlayButton = () => {
-  const codeBlocks = document.querySelectorAll(".language-nv");
+  const codeBlocks = document.querySelectorAll("[class*=language-nv]");
 
   codeBlocks.forEach((container) => {
     if (container.querySelector("button.play")) return;

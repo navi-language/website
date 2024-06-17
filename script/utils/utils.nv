@@ -1,5 +1,4 @@
-use std.io.{self, StringBuffer};
-use std.regex.{Captures, Regex};
+use std.{io.{self, StringBuffer}, regex.{Captures, Regex}};
 
 const HEADING_RE = try! Regex.new(r`(?m)^\s*([#]+)\s*`);
 const SLUGIFY_RE = try! Regex.new(`[^\\w\\-_]`);
@@ -11,7 +10,7 @@ const ANCHOR_MAPS = {
     "<": "%3C",
     ">": "%3E",
     "%": "%25",
-    " ": "-"
+    " ": "-",
 };
 
 /// Format Navi markdown doc with a specific heading level.
@@ -95,7 +94,7 @@ pub fn format_anchor(text: string?): string {
 
 /// Replace all language in codeblock
 ///
-/// From: `nv,no_run` to `nv`
+/// From: `nv, no_run` to `nv`
 fn replace_codeblock_language(code: string): string {
     return CODEBLOCK_LANGUAGE_RE.replace_all(code, "```nv\n");
 }
@@ -135,7 +134,7 @@ test "escape_html" {
 }
 
 test "replace_codeblock_language" {
-    let raw = "```nv,no_run\nlet a = 1;\n```\n\n```navi, ignore\nlet a = 1;\n```\n";
+    let raw = "```nv, no_run\nlet a = 1;\n```\n\n```navi, ignore\nlet a = 1;\n```\n";
     let expected = "```nv\nlet a = 1;\n```\n\n```nv\nlet a = 1;\n```\n";
     let result = replace_codeblock_language(raw);
     assert_eq result, expected;
