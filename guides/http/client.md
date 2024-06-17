@@ -15,7 +15,7 @@ use std.net.http.{Client, Request};
 
 fn main() throws {
     let client = Client.new(timeout: 15.seconds(), redirect: 5, user_agent: "navi-client");
-    let req = Request.new(method: "GET", url: "https://api.github.com/repos/navi-language/navi");
+    let req = Request.new(method: "GET", url: "https://httpbin.org/get");
     let res = try client.execute(req);
 
     if (res.status() != 200) {
