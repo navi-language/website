@@ -2532,11 +2532,54 @@ We have `type` and `type alias` in Navi to create a type based on an existing ty
   And we can use `as` the convert to the original type with zero cost.
 - `type alias` is used to create a new name for an existing type, the new name is acutally the same as the original type.
 
-Use `type` keyword to create a newtype based on an existing type.
+### New Type
+
+Use `type` keyword to create a newtype based on an existing type, when define as a new type, the original type will not be seen.
+
+The rules of the new type:
+
+- New type can base on any type.
+- The behavior of the original type will not be seen (init way, methods, etc)
+- Unlike define a Struct, wrap a new type is zero cost.
+- We can use `as` to convert to the original type, or convert from the original type to the new type.
+- We can use `impl` to add methods to the new type.
+
+```nv
+type MyString = string;
+
+impl MyString {
+    fn as_string(self): string {
+        return self as string;
+    }
+
+    pub fn len(self): int {
+        return self.as_string().len();
+    }
+}
+
+let s = "hello" as MyString;
+assert_eq s.len(), 5;
+// This will fall, because MyString is a new type, it only have `len` method by the below impl.
+// s.to_uppercase()
+
+let s1 = s as string;
+// now we can use the string method
+assert_eq s1.to_uppercase(), "HELLO";
+```
+
+### Type Alias
+
+Use `type alias` to create a new name for an existing type.
+
+Unlike the [new type], the type alias is **just a new name** for the original type, so we can use the original type's method directly.
 
 ```nv
 type alias Key = string;
 type alias Value = int;
+
+// We can assign a string to Key type, because Key is a string alias, use is same as string.
+let key = "test";
+assert_eq key.len(), 4;
 
 type alias MyInfo = <Key, Value>;
 
@@ -2548,37 +2591,6 @@ let info: MyInfo = {
 assert_eq info["foo"], 1;
 assert_eq info["bar"], 2;
 ```
-
-Use `type alias` to create a new name for an existing type.
-
-```nv
-type alias MyString = string;
-
-let name: MyString = "Navi";
-```
-
-### Type Implementation
-
-You can use `impl` to implement some method to a type alias.
-
-::: warning NOTE
-The type alias is not a new type, it is just an alias of the original type, so when you implement that type, the original type will also be changed.
-:::
-
-```nv
-struct User {
-    name: string,
-}
-
-type NewUser = User;
-
-impl NewUser {
-    fn new_method(self) {
-    }
-}
-```
-
-After this implementation, the `User` type will also have the `new_method` method.
 
 ## Union Type
 
@@ -2806,3 +2818,4 @@ The following are reserved keywords in Navi, they can't be used as [identifier].
 [Error]: #error
 [Type Alias]: #type-alias
 [Defer]: #defer
+[new type]: #new-type
