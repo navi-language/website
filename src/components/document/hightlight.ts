@@ -1,24 +1,24 @@
-import { fromHighlighter } from '@shikijs/markdown-it/core';
-import MarkdownIt from 'markdown-it';
-import { getHighlighter } from 'shiki';
+import { fromHighlighter } from "@shikijs/markdown-it/core";
+import MarkdownIt from "markdown-it";
+import { getHighlighter } from "shiki";
 
-import naviDark from '../../navi-dark.theme.json';
-import naviLight from '../../navi-light.theme.json';
-import naviStreamLanguageGrammar from '../../navi-stream.tmLanguage.json';
-import naviLanguageGrammar from '../../navi.tmLanguage.json';
+import naviDark from "../../navi-dark.theme.json";
+import naviLight from "../../navi-light.theme.json";
+import naviStreamLanguageGrammar from "../../navi-stream.tmLanguage.json";
+import naviLanguageGrammar from "../../navi.tmLanguage.json";
 
 const naviLanguage: any = {
-  aliases: ['navi', 'nv', 'nv,'],
+  aliases: ["navi", "nv", "nv,"],
   ...naviLanguageGrammar,
 };
 
 const naviStreamLanguage: any = {
-  aliases: ['nvs'],
+  aliases: ["nvs"],
   ...naviStreamLanguageGrammar,
 };
 
 const highlighter = await getHighlighter({
-  langs: ['javascript', 'json', 'bash', 'toml', 'yaml', 'plaintext', 'diff'],
+  langs: ["javascript", "json", "bash", "toml", "yaml", "plaintext", "diff"],
   themes: [],
 });
 
@@ -27,11 +27,11 @@ await highlighter.loadTheme(naviLight as any, naviDark as any);
 
 const shikiConfig = {
   themes: {
-    light: 'navi-light',
-    dark: 'navi-dark',
+    light: "navi-light",
+    dark: "navi-dark",
   },
   trimEndingNewline: true,
-  cssVariablePrefix: '--shiki-',
+  cssVariablePrefix: "--shiki-",
 };
 
 /**
@@ -44,11 +44,48 @@ export function highlight(code: string, lang: string) {
   return highlighter.codeToHtml(code, {
     ...shikiConfig,
     lang,
-    structure: 'inline',
+    structure: "inline",
   });
 }
 
-const md = MarkdownIt().use(fromHighlighter(highlighter, shikiConfig));
+function extractLang(info: string) {
+  return info
+    .trim()
+    .replace(/=(\d*)/, "")
+    .replace(/:(no-)?line-numbers({| |$|=\d*).*/, "")
+    .replace(/(-vue|{| ).*$/, "")
+    .replace(/^vue-html$/, "template")
+    .replace(/^ansi$/, "");
+}
+
+// https://github.com/vuejs/vitepress/blob/ed6ada7a688c466920f3e0ef33b7176b8eb01eee/src/node/markdown/plugins/preWrapper.ts
+export function preWrapperPlugin(md: MarkdownIt, options: any) {
+  const fence = md.renderer.rules.fence!;
+  md.renderer.rules.fence = (...args) => {
+    const [tokens, idx] = args;
+    const token = tokens[idx];
+
+    // remove title from info
+    token.info = token.info.replace(/\[.*\]/, "");
+
+    const active = / active( |$)/.test(token.info) ? " active" : "";
+    token.info = token.info.replace(/ active$/, "").replace(/ active /, " ");
+
+    const lang = extractLang(token.info);
+
+    return (
+      `<div class="language-${lang}">` +
+      `<button class="copy"></button>` +
+      `<span class="lang">${lang}</span>` +
+      fence(...args) +
+      "</div>"
+    );
+  };
+}
+
+const md = MarkdownIt()
+  .use(fromHighlighter(highlighter, shikiConfig))
+  .use(preWrapperPlugin);
 
 /**
  * Render Markdown to HTML

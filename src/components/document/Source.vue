@@ -1,5 +1,5 @@
 <template>
-  <details class="navi-source" v-if="hasSource">
+  <details class="navi-source language-nv" v-if="hasSource">
     <summary>[src]</summary>
     <pre class="shiki" v-html="sourceHTML" />
   </details>

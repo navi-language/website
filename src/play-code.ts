@@ -5,6 +5,7 @@ const INLINE_RUN = true;
 
 const registerPlayButton = () => {
   const codeBlocks = document.querySelectorAll(".language-nv");
+
   codeBlocks.forEach((container) => {
     if (container.querySelector("button.play")) return;
 
