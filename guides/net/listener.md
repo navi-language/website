@@ -10,7 +10,9 @@ You can accept a new connection by using the `accept()` method.
 
 ## Creating a TcpListener
 
-```nv
+```nv,no_run
+use std.net.TcpListener;
+
 let listener = try! TcpListener.bind("127.0.0.1:3000");
 ```
 
@@ -22,13 +24,13 @@ Binding with a port number of `0` will request that the OS assigns a port to thi
 
 The method `local_addr()` returns the local address that the listener is bound to. This can be useful, for example, when binding to port 0 to figure out which port was actually bound.
 
-```nv
+```nv,ignore
 io.println(`listening on ${try! listener.local_addr()}`);
 ```
 
 ## Accepting Connections
 
-```nv
+```nv,ignore
 let stream = try! listener.accept();
 ```
 

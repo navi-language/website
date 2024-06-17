@@ -4,7 +4,7 @@ The [fs.exists](/stdlib/std.fs#exists) function is used to check if a file exist
 
 ## Navi Code
 
-```nv, no_run
+```nv,no_run
 use std.fs;
 
 fn main() {

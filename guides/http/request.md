@@ -6,7 +6,7 @@ There have `request`, `get`, `post`, `put`, `delete`, `head`, `options`, `patch`
 
 ## Send a GET request
 
-```nv
+```nv,no_run
 use std.net.http;
 
 struct Repo {
@@ -74,7 +74,7 @@ navi - https://github.com/navi-language/navi
 
 ## Send a POST request
 
-```nv
+```nv,no_run
 use std.net.http;
 use std.json;
 

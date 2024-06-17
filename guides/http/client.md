@@ -10,7 +10,7 @@ And the client also provides a way to set more complex options like `timeout`, `
 
 ## Create a HTTP client
 
-```nv
+```nv,no_run
 use std.net.http.{Client, Request};
 
 fn main() throws {

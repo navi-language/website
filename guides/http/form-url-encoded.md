@@ -2,7 +2,7 @@
 
 The `www-form-urlencoded` is a common format for sending data to the server. You can use the `FormUrlEncoded` type to create a URL-encoded form.
 
-```nv
+```nv,no_run
 use std.net.http.{self, FormUrlEncoded};
 
 fn main() throws {

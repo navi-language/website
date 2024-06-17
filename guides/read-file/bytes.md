@@ -12,7 +12,7 @@ Or use [encode_to_string](/stdlib/std.io#Bytes#encode_to_string) method to conve
 
 ## Navi Code
 
-```nv, no_run
+```nv,no_run
 use std.fs;
 
 fn main() throws {

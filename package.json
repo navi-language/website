@@ -19,7 +19,8 @@
     "build": "NODE_ENV=production vitepress build",
     "preview": "vitepress preview",
     "test": "bun test",
-    "test:all": "bun test && navi test -r script && navi test --doc learn/index.md"
+    "test:doc": "sh script/test-docs.sh",
+    "test:all": "bun test && navi test -r script && bun run test:doc"
   },
   "dependencies": {
     "@shikijs/markdown-it": "^1.6.1",

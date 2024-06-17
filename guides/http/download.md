@@ -2,7 +2,7 @@
 
 You can download a file from the server using the `http.get` function.
 
-```nv
+```nv,no_run
 use std.net.http;
 use std.io;
 use std.fs;
@@ -17,7 +17,7 @@ fn main() throws {
         return;
     }
 
-    let content_length = res.headers.get("Content-Length");
+    let content_length = res.headers().get("Content-Length");
     println("Downloaded file size:", content_length);
 
     try io.copy(res.body(), f);

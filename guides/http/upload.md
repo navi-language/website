@@ -9,7 +9,7 @@ HTTP upload file is have a muiple ways:
 
 We have [FormData] type to create a form data.
 
-```nv
+```nv,no_run
 use std.net.http.{self, FormData};
 use std.fs;
 
@@ -57,7 +57,7 @@ In this case, we create a `FormData` type and set the file to the form using the
 
 Sometimes, the HTTP server may only accept the file as a binary data, you can use the `File` type to read the file and send it as a binary data.
 
-```nv
+```nv,no_run
 use std.net.http;
 use std.fs;
 

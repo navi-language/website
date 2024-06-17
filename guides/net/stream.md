@@ -4,7 +4,6 @@ Each accepted connection gives a `std.net.TcpStream` instance, and you can then 
 
 This guide provides an overview of the TcpStream type, focusing on creating a stream, reading from it, writing to it, and shutting it down. By following this guide, you will be able to understand and implement TCP communication in their applications.
 
-
 ## What is TcpStream?
 
 A `TcpStream` represents a TCP connection between a local and a remote socket.
@@ -15,7 +14,9 @@ Reading and writing to a TcpStream is typically done using the convenience metho
 
 A `TcpStream` can be created by accepting a connection from a listener. An example is shown below.
 
-```nv
+```nv,no_run
+use std.net.TcpListener;
+
 let listener = try! TcpListener.bind("127.0.0.1:3000");
 loop {
     let stream = try! listener.accept();
@@ -29,7 +30,7 @@ loop {
 
 The `read()` method pulls some bytes from the `TcpStream` into the specified buffer, returning the number of bytes read. An example is shown below.
 
-```nv
+```nv,ignore
 let buf = Bytes.new(len: 1024);
 let n = try! stream.read(buf);
 io.println(`read ${n} bytes`);
@@ -41,7 +42,7 @@ In the above example, a buffer of `1024` bytes is created to hold the data read 
 
 The `write()` method writes a buffer into the `TcpStream`, returning the number of bytes written. The `flush()` method ensures that all intermediately buffered contents reach their destination. An example is shown below.
 
-```nv
+```nv,ignore
 let data = "hello world".bytes();
 let n = try! stream.write(data);
 try! stream.flush();
@@ -58,7 +59,7 @@ For each accepted connection, you can obtain the remote address of the client us
 
 To shut down the stream in the write direction, you can call the `shutdown()` method. This will cause the other peer to receive a read of length `0`, indicating that no more data will be sent. This only closes the stream in one direction. An example is shown below.
 
-```nv
+```nv,ignore
 try! stream.shutdown();
 io.println("stream shut down");
 ```
