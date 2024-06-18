@@ -5,10 +5,9 @@ This example demonstrates a basic TCP echo server that binds to a local address 
 Here is the overall example and we will break it down into pieces so that it is easy to understand.
 
 ```nv
-use std.{env, io.{self, Bytes}, net.{http.{Client, Request}, TcpListener}, process};
+use std.{io.{self, Bytes}, net.{http.{Client, Request}, TcpListener}, process};
 
 fn main() {
-    let jj = env.get("jj");
     let listener = try! TcpListener.bind("127.0.0.1:0");
     io.println(`listening on ${try! listener.local_addr()}`);
     let will_exit = channel::<bool>();
