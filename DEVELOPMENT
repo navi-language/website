@@ -5,3 +5,13 @@ Default we write the documentation in English. And then you can copy the content
 In you `VS Code`, press `CMD + Ctrl + I`, and tell `Copilot` to "翻译为中文，如果长度不够，请继续翻译", then Copilot will translate the current opened tab to Chinese, and return to you raw Markdown content.
 
 Then you can copy the content to `zh-CN` folder, and make some manual adjustments to make it more readable.
+
+## Generate Release Notes
+
+The script/generate-release.nv is used to generate release notes. It will generate a markdown file with the release notes for the current version. The script will also update the CHANGELOG.md file with the new release notes.
+
+```bash
+$ navi run script/generate-release.nv
+```
+
+And then add `releases.md` into git commit.
