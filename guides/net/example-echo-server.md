@@ -4,26 +4,39 @@ This example demonstrates a basic TCP echo server that binds to a local address 
 
 Here is the overall example and we will break it down into pieces so that it is easy to understand.
 
-```nv,no_run
-use std.io.Bytes;
-use std.io;
-use std.net.TcpListener;
+```nv
+use std.{env, io.{self, Bytes}, net.{http.{Client, Request}, TcpListener}, process};
 
-fn main() throws {
-    let listener = try! TcpListener.bind("127.0.0.1:3000");
-    loop {
-        let stream = try! listener.accept();
-        spawn {
-            let buf = Bytes.new(len: 1024);
-            loop {
-                let n = try! stream.read(buf);
-                if (n == 0) {
-                    break;
+fn main() {
+    let jj = env.get("jj");
+    let listener = try! TcpListener.bind("127.0.0.1:0");
+    io.println(`listening on ${try! listener.local_addr()}`);
+    let will_exit = channel::<bool>();
+    spawn {
+        loop {
+            let stream = try! listener.accept();
+            io.println(`stream.remote_addr() = ${stream.remote_addr()}`);
+            spawn {
+                let buf = Bytes.new(len: 1024);
+                loop {
+                    let n = try! stream.read(buf);
+                    if (n == 0) {
+                        break;
+                    } else {
+                        io.println(`read ${n}`);
+                    }
+                    try! stream.write_all(buf.slice(0, n));
+                    io.println(`written ${n}`);
+                    process.exit(0); // only for the demo
                 }
-                try! stream.write_all(buf.slice(0, n));
             }
         }
     }
+    let client = Client.new(timeout: 15.seconds(), redirect: 5, user_agent: "navi-client");
+    let url = `http://${try! listener.local_addr()}`;
+    let req = Request.new(method: "GET", url:);
+    let res = try! client.execute(req);
+    println(try! res.text());
 }
 ```
 
