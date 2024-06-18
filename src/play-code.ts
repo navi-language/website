@@ -90,9 +90,11 @@ const base64Encode = (str: string) => {
   return btoa(unescape(encodeURIComponent(str)));
 };
 
-if (!import.meta.env.SSR && typeof MutationObserver !== 'undefined') {
-  const observer = new MutationObserver(registerPlayButton);
-  observer.observe(document.body, { childList: true, subtree: true });
-}
+if (!import.meta.env.SSR) {
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(registerPlayButton);
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 
-document.addEventListener('DOMContentLoaded', registerPlayButton);
+  document.addEventListener('DOMContentLoaded', registerPlayButton);
+}
