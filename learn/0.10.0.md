@@ -4,7 +4,9 @@ import Versions from './versions.vue'
 
 <Versions />
 
+::: details Table of Contents
 [[toc]]
+:::
 
 ## Introduction
 

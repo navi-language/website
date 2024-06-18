@@ -47,4 +47,4 @@ Run the program with the following command:
 $ navi run
 ```
 
-[Continue learning](/learn) about Navi.
+[Continue learning](/learn/) about Navi.
