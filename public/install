@@ -119,6 +119,11 @@ get_arch() {
     arch="arm64"
   fi
 
+  # aarch64 => arm64
+  if [ "$arch" = "aarch64" ]; then
+    arch="arm64"
+  fi
+
   # x86_64 => amd64
   if [ "$arch" = "x86_64" ]; then
     arch="amd64"
